@@ -39,6 +39,20 @@ public class LockOnSystem : MonoBehaviour
             
 
         }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy.GetComponent<Rigidbody>() != null)
+                {
+                    var x = Random.Range(-1, 1);
+                    var y = Random.Range(-1, 1);
+                    var z = Random.Range(-1, 1);
+                    var vel = Random.Range(10, 10);
+                    enemy.GetComponent<Rigidbody>().AddForce(new Vector3(x, y, z) * vel, ForceMode.Impulse);
+                }
+            }
+        }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             //remove all targeters

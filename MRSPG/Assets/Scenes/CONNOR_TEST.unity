@@ -713,6 +713,7 @@ GameObject:
   - component: {fileID: 656960128}
   - component: {fileID: 656960127}
   - component: {fileID: 656960130}
+  - component: {fileID: 656960131}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -838,6 +839,20 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &656960131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656960126}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e0996f4958f6341a09d600d6173488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookPos: {x: 0, y: 0, z: 0}
+  speed: 5
 --- !u!1 &906573708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1028,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7f43d227ec2132347830d5db00182f13, type: 2}
+  - {fileID: 2100000, guid: af3b4261c366c9849a1ae37a45797eeb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
