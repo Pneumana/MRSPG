@@ -8,11 +8,11 @@ using static UnityEngine.GraphicsBuffer;
 public class LockOnSystem : MonoBehaviour
 {
     public GameObject player;
-    GameObject closestTarget = null;
-    GameObject closestEnemy = null;
+    public GameObject closestTarget = null;
+    public GameObject closestEnemy = null;
 
-    List<GameObject> enemies = new List<GameObject> ();
-    List<GameObject> targeters = new List<GameObject> ();
+    public List<GameObject> enemies = new List<GameObject> ();
+    public List<GameObject> targeters = new List<GameObject> ();
 
 
     private void Start()
@@ -76,7 +76,7 @@ public class LockOnSystem : MonoBehaviour
         closestEnemy = null;
         if (targeters.Count <= 0)
             return;
-        for (int i =0; i<enemies.Count-1; i++)
+        for (int i =0; i<enemies.Count; i++)
         {
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
@@ -87,6 +87,21 @@ public class LockOnSystem : MonoBehaviour
                 Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
                 //offscreen
                 continue;
+            }
+            else
+            {
+                RaycastHit hit;
+                var vector = enemies[i].transform.position - player.transform.position;
+                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
+                if(hit.collider!=null)
+                    Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
+                if (enemies[i]!=hit.collider.gameObject)
+                {
+                    targeters[i].GetComponent<Image>().color = new Color(1, 0.25f, 0, 0.1f);
+                    Debug.Log(targeters[i].name + " is obscured");
+                    continue;
+                    //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
+                }
             }
             //LOS check should be here
             var dist = Vector2.Distance(targeters[i].transform.position, ui.position + new Vector3(Screen.width/2,Screen.height/2));
@@ -106,8 +121,13 @@ public class LockOnSystem : MonoBehaviour
     {
         if (closestTarget == null||player==null)
             return;
+       
         Vector3 playerStartPos = player.transform.position;
         Vector3 targetedPos = closestEnemy.transform.position;
+
+        
+
+
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
         player.transform.position = targetedPos;
         closestEnemy.transform.position = playerStartPos;
