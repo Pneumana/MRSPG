@@ -15,26 +15,23 @@ public class ConnorCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 inputDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
+        Vector3 rots = transform.rotation.eulerAngles;
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            inputDir.z = 1;
+            rots.x -= speed * Time.unscaledDeltaTime;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            inputDir.z = -1;
+            rots.x += speed * Time.unscaledDeltaTime;
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            inputDir.x = -1;
+            rots.y -= speed * Time.unscaledDeltaTime;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            inputDir.x = 1;
+            rots.y += speed * Time.unscaledDeltaTime;
         }
-        if (inputDir.x != 0 && inputDir.z != 0)
-            inputDir *= 0.7f;
-        transform.position += (inputDir * speed) * Time.unscaledDeltaTime;
-        transform.LookAt(lookPos);
+        transform.rotation = Quaternion.Euler(rots);
     }
 }
