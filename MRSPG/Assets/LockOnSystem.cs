@@ -8,13 +8,14 @@ using static UnityEngine.GraphicsBuffer;
 public class LockOnSystem : MonoBehaviour
 {
     public GameObject player;
-    GameObject closestTarget = null;
-    GameObject closestEnemy = null;
+    public GameObject closestTarget = null;
+    public GameObject closestEnemy = null;
 
-    List<GameObject> enemies = new List<GameObject> ();
-    List<GameObject> targeters = new List<GameObject> ();
+    public List<GameObject> enemies = new List<GameObject> ();
+    public List<GameObject> targeters = new List<GameObject> ();
 
-
+    public Sprite lockedSprite;
+    public Sprite unlockedSprite;
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
@@ -40,7 +41,8 @@ public class LockOnSystem : MonoBehaviour
                 newTargeter.transform.SetParent(ui);
                 newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
                 newTargeter.AddComponent<Image>();
-                newTargeter.GetComponent<Image>().color = new Color(0, 1, 1, 0.1f);
+                newTargeter.GetComponent<Image>().sprite = unlockedSprite;
+                newTargeter.GetComponent<Image>().color = Color.white;
                 targeters.Add(newTargeter);
                 //add Line of sight check here
             }
@@ -76,17 +78,34 @@ public class LockOnSystem : MonoBehaviour
         closestEnemy = null;
         if (targeters.Count <= 0)
             return;
-        for (int i =0; i<enemies.Count-1; i++)
+        for (int i =0; i<enemies.Count; i++)
         {
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
-            targeters[i].GetComponent<Image>().color = new Color(0, 1, 1, 0.1f);
+            targeters[i].GetComponent<Image>().color = Color.white;
+            //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
+            targeters[i].GetComponent<Image>().sprite = unlockedSprite;
             if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
             {
-                targeters[i].GetComponent<Image>().color = new Color(1, 0.25f, 0, 0.1f);
+                targeters[i].GetComponent<Image>().color = Color.clear;
                 Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
                 //offscreen
                 continue;
+            }
+            else
+            {
+                RaycastHit hit;
+                var vector = enemies[i].transform.position - player.transform.position;
+                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
+                if(hit.collider!=null)
+                    Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
+                if (enemies[i]!=hit.collider.gameObject)
+                {
+                    targeters[i].GetComponent<Image>().color = Color.clear;
+                    Debug.Log(targeters[i].name + " is obscured");
+                    continue;
+                    //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
+                }
             }
             //LOS check should be here
             var dist = Vector2.Distance(targeters[i].transform.position, ui.position + new Vector3(Screen.width/2,Screen.height/2));
@@ -99,15 +118,21 @@ public class LockOnSystem : MonoBehaviour
         }
         if (closestTarget != null)
         {
-            closestTarget.GetComponent<Image>().color = new Color(0, 1, 1, 1f);
+            closestTarget.GetComponent<Image>().sprite = lockedSprite;
+            closestTarget.GetComponent<Image>().color = Color.white;
         }
     }
     void SwapPositions()
     {
         if (closestTarget == null||player==null)
             return;
+       
         Vector3 playerStartPos = player.transform.position;
         Vector3 targetedPos = closestEnemy.transform.position;
+
+        
+
+
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
         player.transform.position = targetedPos;
         closestEnemy.transform.position = playerStartPos;
