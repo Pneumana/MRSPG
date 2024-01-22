@@ -1,64 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enegry : MonoBehaviour
 {
     #region variables
-    int _maxEnergy = 5;    
-    int _lightEnemy;
+    int _maxEnergy = 5;
+    int _standardEnemy;
     int _heavyEnemy;
-    int _boss;
+    int _ranged;
     public int currentEnergy;
+
 
     #endregion
 
     private void Awake ( )
     {
-        _lightEnemy = 1;
+        //Gets all Values needed for the start of the game
+        _standardEnemy = 1;
         _heavyEnemy = 3;
-        _boss = 4;
+        _ranged = 4;
         currentEnergy = _maxEnergy;
     }
 
-    public void LoseEnergy ( int amount )
+    private void Update ( )
+    {
+        //Makes sure Energy Level does not go over the Max allowed Level
+        currentEnergy = Mathf.Clamp ( currentEnergy , 0 , _maxEnergy );
+    }
+
+    public void LoseEnergy (int amount )
     {
         currentEnergy = -amount;
     }
 
+
+
+    //adds energy after every enemy killed
     private void OnCollisionExit ( Collision enemy )
     {
-        if ( enemy.collider.tag=="LightEnemy" )
+
+        if ( enemy.collider.name == "StandardEnemy" )
         {
             if ( currentEnergy < 5 )
             {
-                currentEnergy += _lightEnemy;
-                Debug.Log ( "1 Point Added" );
-                Destroy ( enemy.gameObject );
+                currentEnergy += _standardEnemy;
             }
-            
+            Destroy ( enemy.gameObject );
         }
       
-        else if ( enemy.collider.tag=="HeavyEnemy" )
+        else if ( enemy.collider.name=="HeavyEnemy" )
         {
             if ( currentEnergy < 5 )
             {
                 currentEnergy += _heavyEnemy;
-                Debug.Log ( "3 Points Added" );
-                Destroy ( enemy.gameObject );
             }
-           
+            Destroy ( enemy.gameObject );
         }
       
-        else if ( enemy.collider.tag=="Boss" )
+        else if ( enemy.collider.name=="RangedEnemy" )
         {
             if ( currentEnergy < 5 )
             {
-                currentEnergy += _boss;
-                Debug.Log ( "4 Points Added" );
-                Destroy ( enemy.gameObject );
-            }       
-                      
+                currentEnergy += _ranged;
+            }
+            Destroy ( enemy.gameObject );
         }
     }
 
