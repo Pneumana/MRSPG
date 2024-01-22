@@ -6,16 +6,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Type", order = 1)]
 public class EnemySetting : ScriptableObject
 {
-    [SerializeField] private EnemyType _type;
+    public EnemyType type;
     [SerializeField] private AttackStyle[] _pattern;
 }
 
 #region Enums
-enum EnemyType
+public enum EnemyType
 {
-    Standard,
-    Heavy,
-    Ranged
+    Standard, //0
+    Heavy, //1
+    Ranged //2
 };
 enum Attack
 {

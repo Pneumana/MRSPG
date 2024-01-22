@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private EnemySetting EnemySetting;
+    [SerializeField] private EnemySetting _enemy;
     public float speed;
     private GameObject _player;
 
-    public void Awake()
+    public void Start()
     {
         _player = GameObject.Find("Player/PlayerObj");
+        SetTag(_enemy.type);
     }
     public void Update()
     {
+
         Vector3 _target = _player.transform.position;
         float _distFromPlr = Vector3.Distance(transform.position, _target);
         float enemy_speed = speed * Time.deltaTime;
@@ -21,12 +23,46 @@ public class Enemy : MonoBehaviour
         if(CheckForPlayer(transform.position, 10, _player.GetComponent<Collider>()) && !CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
             transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
+            transform.LookAt(_target);
         }
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
-            Debug.Log("YES!");
+            transform.LookAt(_target);
+        }
+
+
+        if (CheckForEnemies(transform.position, 10))
+        {
+            Debug.Log("There are enemies within the big radius.");
         }
     }
+
+    #region Define Enemy
+    private string SetTag(EnemyType _enemytype)
+    {
+        switch(_enemytype)
+        {
+            case EnemyType.Standard:
+                Debug.Log("Standard");
+                gameObject.name = "StandardEnemy";
+                gameObject.tag = "Enemy";
+                break;
+            case EnemyType.Heavy:
+                Debug.Log("Heavy");
+                gameObject.name = "HeavyEnemy";
+                gameObject.tag = "Enemy";
+                break;
+            case EnemyType.Ranged:
+                Debug.Log("Ranged");
+                gameObject.name = "RangedEnemy";
+                gameObject.tag = "Enemy";
+                break;
+
+        }
+        return null;
+    }
+
+    #endregion
 
     #region Enemy Radius
     private bool CheckForPlayer(Vector3 center, float radius, Collider plr)
@@ -36,6 +72,20 @@ public class Enemy : MonoBehaviour
         {
             if(obj == plr)
             {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CheckForEnemies(Vector3 center, float radius)
+    {
+        Collider[] collider = Physics.OverlapSphere(center, radius);
+        foreach(var obj in collider)
+        {
+            if(obj.tag == "Enemy")
+            {
+                obj.GetComponent<Enemy>().speed = 2;
                 return true;
             }
         }
