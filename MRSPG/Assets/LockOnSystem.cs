@@ -14,7 +14,8 @@ public class LockOnSystem : MonoBehaviour
     public List<GameObject> enemies = new List<GameObject> ();
     public List<GameObject> targeters = new List<GameObject> ();
 
-
+    public Sprite lockedSprite;
+    public Sprite unlockedSprite;
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
@@ -40,7 +41,8 @@ public class LockOnSystem : MonoBehaviour
                 newTargeter.transform.SetParent(ui);
                 newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
                 newTargeter.AddComponent<Image>();
-                newTargeter.GetComponent<Image>().color = new Color(0, 1, 1, 0.1f);
+                newTargeter.GetComponent<Image>().sprite = unlockedSprite;
+                newTargeter.GetComponent<Image>().color = Color.white;
                 targeters.Add(newTargeter);
                 //add Line of sight check here
             }
@@ -80,10 +82,12 @@ public class LockOnSystem : MonoBehaviour
         {
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
-            targeters[i].GetComponent<Image>().color = new Color(0, 1, 1, 0.1f);
+            targeters[i].GetComponent<Image>().color = Color.white;
+            //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
+            targeters[i].GetComponent<Image>().sprite = unlockedSprite;
             if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
             {
-                targeters[i].GetComponent<Image>().color = new Color(1, 0.25f, 0, 0.1f);
+                targeters[i].GetComponent<Image>().color = Color.clear;
                 Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
                 //offscreen
                 continue;
@@ -97,7 +101,7 @@ public class LockOnSystem : MonoBehaviour
                     Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
                 if (enemies[i]!=hit.collider.gameObject)
                 {
-                    targeters[i].GetComponent<Image>().color = new Color(1, 0.25f, 0, 0.1f);
+                    targeters[i].GetComponent<Image>().color = Color.clear;
                     Debug.Log(targeters[i].name + " is obscured");
                     continue;
                     //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
@@ -114,7 +118,8 @@ public class LockOnSystem : MonoBehaviour
         }
         if (closestTarget != null)
         {
-            closestTarget.GetComponent<Image>().color = new Color(0, 1, 1, 1f);
+            closestTarget.GetComponent<Image>().sprite = lockedSprite;
+            closestTarget.GetComponent<Image>().color = Color.white;
         }
     }
     void SwapPositions()

@@ -786,6 +786,8 @@ MonoBehaviour:
   closestEnemy: {fileID: 0}
   enemies: []
   targeters: []
+  lockedSprite: {fileID: 21300000, guid: 681f3987569afe14d9772e1212a15a08, type: 3}
+  unlockedSprite: {fileID: 21300000, guid: f31804d61accb0347b7b3efa912e9adf, type: 3}
 --- !u!1 &597343254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2904,6 +2906,7 @@ MonoBehaviour:
   BPM: 120
   beatDuration: 0
   visualizer: {fileID: 2055309037}
+  inst: {fileID: 0}
 --- !u!114 &2055309037
 MonoBehaviour:
   m_ObjectHideFlags: 0
