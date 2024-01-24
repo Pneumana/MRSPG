@@ -31,10 +31,10 @@ public class Enemy : MonoBehaviour
         }
 
 
-        if (CheckForEnemies(transform.position, 10))
+        /*if (CheckForEnemies(transform.position, 10))
         {
             Debug.Log("There are enemies within the big radius.");
-        }
+        }*/
     }
 
     #region Define Enemy
