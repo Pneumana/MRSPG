@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TimeScaler : MonoBehaviour
 {
@@ -24,26 +25,70 @@ public class TimeScaler : MonoBehaviour
     {
         if(cooldown > 0)
             cooldown -= Time.unscaledDeltaTime;
-        if (Input.GetKey(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
+        //InputEventStayLockOn();
+        //InputActionEndLockOn();
+
+    }
+
+    void InputEventStayLockOn()
+    {
+        if (Gamepad.current == null)
         {
-            remainingTime -= Time.unscaledDeltaTime;
-            if(remainingTime <= 0)
+            if (Input.GetKey(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
             {
-                cooldown = cooldownTime;
+                remainingTime -= Time.unscaledDeltaTime;
+                if (remainingTime <= 0)
+                {
+                    cooldown = cooldownTime;
+                }
+                //slow down time
+                Time.timeScale = Mathf.Lerp(Time.timeScale, minTimeScale, Time.unscaledDeltaTime * scaleSpeed);
             }
-            //slow down time
-            Time.timeScale = Mathf.Lerp(Time.timeScale, minTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+            else
+            {
+                if (remainingTime != useTime)
+                    remainingTime = useTime;
+                //speed up time
+                Time.timeScale = Mathf.Lerp(Time.timeScale, maxTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+            }
         }
         else
         {
-            if (remainingTime != useTime)
-                remainingTime = useTime;
-            //speed up time
-            Time.timeScale = Mathf.Lerp(Time.timeScale, maxTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+            if (Input.GetKey(KeyCode.Space) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.rightTrigger.wasPressedThisFrame && remainingTime > 0 && cooldown <= 0)
+            {
+                remainingTime -= Time.unscaledDeltaTime;
+                if (remainingTime <= 0)
+                {
+                    cooldown = cooldownTime;
+                }
+                //slow down time
+                Time.timeScale = Mathf.Lerp(Time.timeScale, minTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+            }
+            else
+            {
+                if (remainingTime != useTime)
+                    remainingTime = useTime;
+                //speed up time
+                Time.timeScale = Mathf.Lerp(Time.timeScale, maxTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+            }
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        Debug.Log(Time.timeScale);
+    }
+    void InputActionEndLockOn()
+    {
+        if (Gamepad.current == null)
         {
-            cooldown = cooldownTime;
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                cooldown = cooldownTime;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyUp(KeyCode.Space) || Gamepad.current.rightTrigger.wasReleasedThisFrame)
+            {
+                cooldown = cooldownTime;
+            }
         }
     }
 }

@@ -846,6 +846,9 @@ MonoBehaviour:
   cooldown: 0
   useTime: 2
   cooldownTime: 5
+  minTimeScale: 0.1
+  maxTimeScale: 1
+  scaleSpeed: 5
   timeJuice: {fileID: 2101124606}
 --- !u!1 &597343254
 GameObject:
@@ -1119,7 +1122,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &620931963

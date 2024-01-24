@@ -23,6 +23,11 @@ public class LockOnSystem : MonoBehaviour
     public float useTime;
     public float cooldownTime;
 
+    public float minTimeScale;
+    public float maxTimeScale = 1;
+    public float scaleSpeed;
+    public float targetTime = 1;
+
     public RectTransform timeJuice;
     Transform ui;
 
@@ -39,6 +44,7 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
+        Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
         if (cooldown > 0)
         {
             cooldown -= Time.unscaledDeltaTime;
@@ -109,6 +115,7 @@ public class LockOnSystem : MonoBehaviour
             Debug.Log("timed out");
             cooldown = cooldownTime;
             remainingTime = useTime;
+            targetTime = maxTimeScale;
             foreach (GameObject targeter in targeters)
             {
                 Destroy(targeter);
@@ -180,22 +187,37 @@ public class LockOnSystem : MonoBehaviour
     }
     void InputEventStayLockOn()
     {
+        if(cooldown > 0)
+        {
+            return;
+        }
         if (Gamepad.current == null)
         {
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
+                targetTime = minTimeScale;
+            }
+            else
+            {
+                targetTime = maxTimeScale;
             }
         }
         else
         {
-            if (Input.GetKey(KeyCode.E) || Gamepad.current.rightTrigger.isPressed)
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || Gamepad.current.rightTrigger.isPressed && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
+                targetTime = minTimeScale;
+            }
+            else
+            {
+                targetTime = maxTimeScale;
             }
         }
+        
     }
     void InputEventEndLockOn()
     {
@@ -214,6 +236,7 @@ public class LockOnSystem : MonoBehaviour
                 targeters.Clear();
                 cooldown = cooldownTime;
                 remainingTime = useTime;
+                targetTime = maxTimeScale;
             }
         }
         else
@@ -231,6 +254,7 @@ public class LockOnSystem : MonoBehaviour
                 targeters.Clear();
                 cooldown = cooldownTime;
                 remainingTime = useTime;
+                targetTime = maxTimeScale;
             }
         }
     }
