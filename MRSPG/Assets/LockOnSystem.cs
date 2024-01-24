@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -23,6 +24,7 @@ public class LockOnSystem : MonoBehaviour
     public float cooldownTime;
 
     public RectTransform timeJuice;
+    Transform ui;
 
     private void Start()
     {
@@ -33,10 +35,10 @@ public class LockOnSystem : MonoBehaviour
     {
         enemies.Clear ();
         enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        ui = GameObject.Find("TargetingUI").transform;
     }
     private void Update()
     {
-        var ui = GameObject.Find("TargetingUI").transform;
         if (cooldown > 0)
         {
             cooldown -= Time.unscaledDeltaTime;
@@ -49,29 +51,9 @@ public class LockOnSystem : MonoBehaviour
             timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
-        if (Input.GetKeyDown(KeyCode.Space) && cooldown <= 0)
-        {
-            remainingTime = useTime;
-            //foreach enemy,
-            //create a UI element that has an image, then check the distance 
-            foreach (GameObject enemy in enemies)
-            {
-                var newTargeter = new GameObject();
-                newTargeter.name = enemy.name+"Target";
-                newTargeter.transform.SetParent(ui);
-                newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
-                newTargeter.AddComponent<Image>();
-                newTargeter.GetComponent<Image>().sprite = unlockedSprite;
-                newTargeter.GetComponent<Image>().color = Color.white;
-                targeters.Add(newTargeter);
-                //add Line of sight check here
-            }
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (remainingTime >= 0)
-                remainingTime -= Time.unscaledDeltaTime;
-        }
+
+        InputEventStartLockOn();
+        InputEventStayLockOn();
         float closest = float.MaxValue;
         closestTarget = null;
         closestEnemy = null;
@@ -121,20 +103,7 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().color = Color.white;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
-        {
-            //remove all targeters
-
-            SwapPositions();
-
-            foreach (GameObject targeter in targeters)
-            {
-                Destroy(targeter);
-            }
-            targeters.Clear();
-            cooldown = cooldownTime;
-            remainingTime = useTime;
-        }
+        InputEventEndLockOn();
         if(remainingTime <= 0)
         {
             Debug.Log("timed out");
@@ -162,5 +131,107 @@ public class LockOnSystem : MonoBehaviour
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
         player.transform.position = targetedPos;
         closestEnemy.transform.position = playerStartPos;
+    }
+
+    void InputEventStartLockOn()
+    {
+        if(Gamepad.current == null)
+        {
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0)
+            {
+                remainingTime = useTime;
+                //foreach enemy,
+                //create a UI element that has an image, then check the distance 
+                foreach (GameObject enemy in enemies)
+                {
+                    var newTargeter = new GameObject();
+                    newTargeter.name = enemy.name + "Target";
+                    newTargeter.transform.SetParent(ui);
+                    newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
+                    newTargeter.AddComponent<Image>();
+                    newTargeter.GetComponent<Image>().sprite = unlockedSprite;
+                    newTargeter.GetComponent<Image>().color = Color.white;
+                    targeters.Add(newTargeter);
+                    //add Line of sight check here
+                }
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.rightTrigger.wasPressedThisFrame && cooldown <= 0)
+            {
+                remainingTime = useTime;
+                //foreach enemy,
+                //create a UI element that has an image, then check the distance 
+                foreach (GameObject enemy in enemies)
+                {
+                    var newTargeter = new GameObject();
+                    newTargeter.name = enemy.name + "Target";
+                    newTargeter.transform.SetParent(ui);
+                    newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
+                    newTargeter.AddComponent<Image>();
+                    newTargeter.GetComponent<Image>().sprite = unlockedSprite;
+                    newTargeter.GetComponent<Image>().color = Color.white;
+                    targeters.Add(newTargeter);
+                    //add Line of sight check here
+                }
+            }
+        }
+    }
+    void InputEventStayLockOn()
+    {
+        if (Gamepad.current == null)
+        {
+            if (Input.GetKey(KeyCode.E))
+            {
+                if (remainingTime >= 0)
+                    remainingTime -= Time.unscaledDeltaTime;
+            }
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.E) || Gamepad.current.rightTrigger.isPressed)
+            {
+                if (remainingTime >= 0)
+                    remainingTime -= Time.unscaledDeltaTime;
+            }
+        }
+    }
+    void InputEventEndLockOn()
+    {
+        if (Gamepad.current == null)
+        {
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0)
+            {
+                //remove all targeters
+
+                SwapPositions();
+
+                foreach (GameObject targeter in targeters)
+                {
+                    Destroy(targeter);
+                }
+                targeters.Clear();
+                cooldown = cooldownTime;
+                remainingTime = useTime;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.rightTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
+            {
+                //remove all targeters
+
+                SwapPositions();
+
+                foreach (GameObject targeter in targeters)
+                {
+                    Destroy(targeter);
+                }
+                targeters.Clear();
+                cooldown = cooldownTime;
+                remainingTime = useTime;
+            }
+        }
     }
 }
