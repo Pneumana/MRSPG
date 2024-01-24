@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private EnemySetting _enemy;
     public float speed;
     private GameObject _player;
+    private Vector3 _target;
 
     public void Start()
     {
@@ -16,16 +17,16 @@ public class Enemy : MonoBehaviour
     public void Update()
     {
 
-        Vector3 _target = _player.transform.position;
+        _target = _player.transform.position;
         float _distFromPlr = Vector3.Distance(transform.position, _target);
         float enemy_speed = speed * Time.deltaTime;
 
-        if(CheckForPlayer(transform.position, 10, _player.GetComponent<Collider>()) && !CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()) && !CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
             transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
             transform.LookAt(_target);
         }
-        if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()))
         {
             transform.LookAt(_target);
         }
@@ -94,8 +95,8 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Gizmos.DrawWireSphere(transform.position, 2);
         Gizmos.DrawWireSphere(transform.position, 5);
-        Gizmos.DrawWireSphere(transform.position, 10);
     }
     #endregion
 }

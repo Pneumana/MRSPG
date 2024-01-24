@@ -8,6 +8,7 @@ public class EnemySetting : ScriptableObject
 {
     public EnemyType type;
     [SerializeField] private AttackStyle[] _pattern;
+    [SerializeField] private float EnemyHealth;
 }
 
 #region Enums
@@ -35,7 +36,7 @@ public class AttackStyle
 }
 public class ChargeUp
 {
-
+    
 }
 
 public class LightAttack
