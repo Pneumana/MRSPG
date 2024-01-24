@@ -8,13 +8,14 @@ public class InputControls : MonoBehaviour
     #region Variables
     public CharacterController controller;
     public float speed;
-    private float smoothAngle = 0.1f;
-    private float smoothedVelocity;
+    public float jump = 10f;
+    private float gravity = 9.81f;
     private Vector3 velocity;
     private Vector3 moveDirection;
-    public float jump = 10f;
 
     public Transform cam;
+    private float smoothAngle = 0.1f;
+    private float smoothedVelocity;
     #endregion
 
     private void Start()
@@ -23,7 +24,7 @@ public class InputControls : MonoBehaviour
     }
 
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (Input.GetKey(KeyCode.X))
         {
@@ -36,14 +37,13 @@ public class InputControls : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         if (!controller.isGrounded) // falling
         {
-            velocity.y -= 9.81f * Time.fixedDeltaTime;
+            velocity.y -= gravity;
         }
         else if (controller.isGrounded && Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("jump");
             velocity.y += jump;
-            controller.Move(velocity* Time.fixedDeltaTime * speed);
-
+            //controller.Move(velocity * Time.deltaTime);
+            Debug.Log(velocity);
         }
         else if (controller.isGrounded) velocity.y = 0; 
         Vector3 movePlayer = new Vector3(horizontal, velocity.y, vertical).normalized;
@@ -57,7 +57,7 @@ public class InputControls : MonoBehaviour
 
             moveDirection.y = velocity.y;
 
-            controller.Move(moveDirection.normalized * Time.fixedDeltaTime * speed);
-         }
+            controller.Move(moveDirection.normalized * Time.deltaTime * speed);
+        }
     }
 }
