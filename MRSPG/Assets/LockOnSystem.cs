@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -49,7 +50,7 @@ public class LockOnSystem : MonoBehaviour
             timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
-        if (Input.GetKeyDown(KeyCode.Space) && cooldown <= 0)
+        if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.rightTrigger.wasPressedThisFrame && cooldown <= 0)
         {
             remainingTime = useTime;
             //foreach enemy,
@@ -67,7 +68,7 @@ public class LockOnSystem : MonoBehaviour
                 //add Line of sight check here
             }
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.E) || Gamepad.current.rightTrigger.isPressed)
         {
             if (remainingTime >= 0)
                 remainingTime -= Time.unscaledDeltaTime;
@@ -121,7 +122,7 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().color = Color.white;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
+        if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.rightTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
         {
             //remove all targeters
 
