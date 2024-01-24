@@ -6,7 +6,7 @@ using UnityEngine;
 public class Enegry : MonoBehaviour
 {
     #region variables
-    int _maxEnergy = 5;
+    int _maxEnergy = 50;
     int _standardEnemy;
     int _heavyEnemy;
     int _ranged;
