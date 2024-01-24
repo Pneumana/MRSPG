@@ -28,10 +28,16 @@ public class ConnorCamHolder : MonoBehaviour
     private void Update()
     {
         var mouseInputX = Input.GetAxis("Mouse X");
-        var ctrlInputX = Gamepad.current.rightStick.x.value;
+        float ctrlInputX = 0;
 
         var mouseInputY = Input.GetAxis("Mouse Y");
-        var ctrlInputY = Gamepad.current.rightStick.y.value;
+        float ctrlInputY = 0;
+
+        if (Gamepad.current != null)
+        {
+            ctrlInputX = Gamepad.current.rightStick.x.value;
+            ctrlInputY = Gamepad.current.rightStick.y.value;
+        }
 
         var decidedXDelta = 0f;
         var decidedYDelta = 0f;

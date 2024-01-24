@@ -47,13 +47,30 @@ public class ConnorController : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && grounded || Gamepad.current.aButton.wasPressedThisFrame && grounded)
-        {
-            rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-            transform.position += Vector3.up * Time.deltaTime;
-            grounded = false;
-        }
+        InputEventJump();
 
+        
+    }
+    void InputEventJump()
+    {
+        if (Gamepad.current == null)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && grounded)
+            {
+                rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+                transform.position += Vector3.up * Time.deltaTime;
+                grounded = false;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && grounded || Gamepad.current.aButton.wasPressedThisFrame && grounded)
+            {
+                rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+                transform.position += Vector3.up * Time.deltaTime;
+                grounded = false;
+            }
+        }
         
     }
 }
