@@ -16,6 +16,14 @@ public class LockOnSystem : MonoBehaviour
 
     public Sprite lockedSprite;
     public Sprite unlockedSprite;
+
+    public float remainingTime = 2;
+    public float cooldown = 0;
+    public float useTime;
+    public float cooldownTime;
+
+    public RectTransform timeJuice;
+
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
@@ -29,9 +37,21 @@ public class LockOnSystem : MonoBehaviour
     private void Update()
     {
         var ui = GameObject.Find("TargetingUI").transform;
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (cooldown > 0)
         {
-            
+            cooldown -= Time.unscaledDeltaTime;
+            timeJuice.localScale = new Vector2(1 -(cooldown / cooldownTime), 1);
+            if(remainingTime!=useTime)
+                remainingTime = useTime;
+        }
+        else
+        {
+            timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
+        }
+        timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
+        if (Input.GetKeyDown(KeyCode.Space) && cooldown <= 0)
+        {
+            remainingTime = useTime;
             //foreach enemy,
             //create a UI element that has an image, then check the distance 
             foreach (GameObject enemy in enemies)
@@ -46,32 +66,11 @@ public class LockOnSystem : MonoBehaviour
                 targeters.Add(newTargeter);
                 //add Line of sight check here
             }
-            
-
         }
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.Space))
         {
-            foreach (GameObject enemy in enemies)
-            {
-                if (enemy.GetComponent<Rigidbody>() != null)
-                {
-                    var x = Random.Range(-1, 1);
-                    var y = Random.Range(-1, 1);
-                    var z = Random.Range(-1, 1);
-                    var vel = Random.Range(10, 10);
-                    enemy.GetComponent<Rigidbody>().AddForce(new Vector3(x, y, z) * vel, ForceMode.Impulse);
-                }
-            }
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            //remove all targeters
-            SwapPositions();
-            foreach(GameObject targeter in targeters)
-            {
-                Destroy(targeter);
-            }
-            targeters.Clear();
+            if (remainingTime >= 0)
+                remainingTime -= Time.unscaledDeltaTime;
         }
         float closest = float.MaxValue;
         closestTarget = null;
@@ -88,7 +87,7 @@ public class LockOnSystem : MonoBehaviour
             if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
             {
                 targeters[i].GetComponent<Image>().color = Color.clear;
-                Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
+                //Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
                 //offscreen
                 continue;
             }
@@ -102,7 +101,7 @@ public class LockOnSystem : MonoBehaviour
                 if (enemies[i]!=hit.collider.gameObject)
                 {
                     targeters[i].GetComponent<Image>().color = Color.clear;
-                    Debug.Log(targeters[i].name + " is obscured");
+                    //Debug.Log(targeters[i].name + " is obscured");
                     continue;
                     //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
                 }
@@ -121,6 +120,33 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
             closestTarget.GetComponent<Image>().color = Color.white;
         }
+
+        if (Input.GetKeyUp(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
+        {
+            //remove all targeters
+
+            SwapPositions();
+
+            foreach (GameObject targeter in targeters)
+            {
+                Destroy(targeter);
+            }
+            targeters.Clear();
+            cooldown = cooldownTime;
+            remainingTime = useTime;
+        }
+        if(remainingTime <= 0)
+        {
+            Debug.Log("timed out");
+            cooldown = cooldownTime;
+            remainingTime = useTime;
+            foreach (GameObject targeter in targeters)
+            {
+                Destroy(targeter);
+            }
+            targeters.Clear();
+        }
+
     }
     void SwapPositions()
     {

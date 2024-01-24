@@ -8,6 +8,11 @@ public class TimeScaler : MonoBehaviour
     public float maxTimeScale = 1;
     public float scaleSpeed;
 
+    float remainingTime = 2;
+    float cooldown = 0;
+    public float useTime;
+    public float cooldownTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,15 +22,28 @@ public class TimeScaler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if(cooldown > 0)
+            cooldown -= Time.unscaledDeltaTime;
+        if (Input.GetKey(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
         {
+            remainingTime -= Time.unscaledDeltaTime;
+            if(remainingTime <= 0)
+            {
+                cooldown = cooldownTime;
+            }
             //slow down time
             Time.timeScale = Mathf.Lerp(Time.timeScale, minTimeScale, Time.unscaledDeltaTime * scaleSpeed);
         }
         else
         {
+            if (remainingTime != useTime)
+                remainingTime = useTime;
             //speed up time
             Time.timeScale = Mathf.Lerp(Time.timeScale, maxTimeScale, Time.unscaledDeltaTime * scaleSpeed);
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            cooldown = cooldownTime;
         }
     }
 }
