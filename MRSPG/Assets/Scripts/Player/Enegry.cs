@@ -7,20 +7,15 @@ public class Enegry : MonoBehaviour
 {
     #region variables
     int _maxEnergy = 50;
-    int _standardEnemy;
-    int _heavyEnemy;
-    int _ranged;
     public int currentEnergy;
 
+    public Metronome metronome;
 
     #endregion
 
     private void Awake ( )
     {
         //Gets all Values needed for the start of the game
-        _standardEnemy = 1;
-        _heavyEnemy = 3;
-        _ranged = 4;
         currentEnergy = _maxEnergy;
     }
 
@@ -34,39 +29,72 @@ public class Enegry : MonoBehaviour
     {
         currentEnergy = -amount;
     }
-
-
-
+      
     //adds energy after every enemy killed
     private void OnCollisionExit ( Collision enemy )
     {
 
         if ( enemy.collider.name == "StandardEnemy" )
         {
-            if ( currentEnergy < 5 )
+            if ( currentEnergy < 50 )
             {
-                currentEnergy += _standardEnemy;
+                StandardEnemy ( );
             }
             Destroy ( enemy.gameObject );
         }
       
         else if ( enemy.collider.name=="HeavyEnemy" )
         {
-            if ( currentEnergy < 5 )
+            if ( currentEnergy < 50 )
             {
-                currentEnergy += _heavyEnemy;
+                HeavyEnemy ( );
             }
             Destroy ( enemy.gameObject );
         }
       
         else if ( enemy.collider.name=="RangedEnemy" )
         {
-            if ( currentEnergy < 5 )
+            if ( currentEnergy < 50 )
             {
-                currentEnergy += _ranged;
+                RangedEnemy ( );
             }
             Destroy ( enemy.gameObject );
         }
     }
 
+    void StandardEnemy ( )
+    {
+        if ( metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 10;
+        }
+        else if ( !metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 5;
+        }
+    }
+
+    void RangedEnemy ( )
+    {
+        if ( metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 10;
+        }
+        else if ( !metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 5;
+        }
+    }
+
+    void HeavyEnemy ( )
+    {
+        if ( metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 20;
+        }
+        else if ( !metronome.inst.IsOnBeat ( ) )
+        {
+            currentEnergy += 10;
+        }
+    }
 }

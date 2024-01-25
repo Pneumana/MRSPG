@@ -46,7 +46,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
+            timeJuice.localScale = new Vector2(remainingTime / useTime, 1); 
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
         if (Input.GetKeyDown(KeyCode.Space) && cooldown <= 0)
@@ -121,7 +121,7 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().color = Color.white;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && remainingTime > 0 && cooldown <= 0)
+        if (Input.GetKeyUp(KeyCode.LeftShift) && remainingTime > 0 && cooldown <= 0)
         {
             //remove all targeters
 
@@ -148,6 +148,7 @@ public class LockOnSystem : MonoBehaviour
         }
 
     }
+
     void SwapPositions()
     {
         if (closestTarget == null||player==null)
