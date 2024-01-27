@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -6,16 +7,26 @@ using UnityEngine;
 public class InputControls : MonoBehaviour
 {
     #region Variables
+    [Header("Player Variables")]
     public CharacterController controller;
     public float speed;
-    public float jump = 10f;
-    private float gravity = 9.81f;
+    public float jump;
+    public float dash;
     private Vector3 velocity;
     private Vector3 moveDirection;
 
+    [Header("Camera")]
     public Transform cam;
     private float smoothAngle = 0.1f;
     private float smoothedVelocity;
+
+    [Header("Ground Variables")]
+    public float gravityMultiplier;
+    private float gravity = -9.81f;
+    public Transform groundCheck;
+    public float groundDistance;
+    public LayerMask groundMask;
+    private bool isGrounded = false;
     #endregion
 
     private void Start()
@@ -30,23 +41,39 @@ public class InputControls : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+        ApplyGravity();
+        ApplyMovement();
+    }
 
+    public void ApplyGravity()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+    }
+
+    public void ApplyMovement()
+    {
         //Get user input
-        /////fix the jump!!!!
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-        if (!controller.isGrounded) // falling
+        Vector3 movePlayer = new Vector3(horizontal, 0f, vertical).normalized;
+
+        velocity.y += gravity * gravityMultiplier * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y -= gravity;
+            Debug.Log("Jump");
+            velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
-        else if (controller.isGrounded && Input.GetKey(KeyCode.Space))
+
+        if(Input.GetKeyDown(KeyCode.E))
         {
-            velocity.y += jump;
-            //controller.Move(velocity * Time.deltaTime);
-            Debug.Log(velocity);
+            movePlayer = movePlayer * 2f;
         }
-        else if (controller.isGrounded) velocity.y = 0; 
-        Vector3 movePlayer = new Vector3(horizontal, velocity.y, vertical).normalized;
+
         if (movePlayer.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(movePlayer.x, movePlayer.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
@@ -54,10 +81,12 @@ public class InputControls : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-
-            moveDirection.y = velocity.y;
-
             controller.Move(moveDirection.normalized * Time.deltaTime * speed);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundCheck.position, 0.4f);
     }
 }

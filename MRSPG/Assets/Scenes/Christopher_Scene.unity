@@ -317,7 +317,6 @@ GameObject:
   - component: {fileID: 261128394}
   - component: {fileID: 261128393}
   - component: {fileID: 261128392}
-  - component: {fileID: 261128391}
   - component: {fileID: 261128390}
   m_Layer: 0
   m_Name: Enemy (1)
@@ -356,32 +355,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
   speed: 6
---- !u!143 &261128391
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 261128388}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &261128392
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -583,8 +556,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 419749768}
-  m_Layer: 0
-  m_Name: GameObject (1)
+  m_Layer: 7
+  m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -603,11 +576,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1052093414}
+  - {fileID: 2084928073}
   - {fileID: 1013013660}
   - {fileID: 1947897278}
-  - {fileID: 2106916073}
-  - {fileID: 763076201}
-  - {fileID: 553626482}
   m_Father: {fileID: 959781705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &432006269
@@ -1139,8 +1111,8 @@ GameObject:
   - component: {fileID: 553626485}
   - component: {fileID: 553626484}
   - component: {fileID: 553626483}
-  m_Layer: 0
-  m_Name: Cube (2)
+  m_Layer: 7
+  m_Name: Floating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1154,12 +1126,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 553626481}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.1, y: 5.49, z: -12.48}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.172478, y: 7.353533, z: 5.300001}
   m_LocalScale: {x: 3.2185, y: 0.3852074, z: 4.224925}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 419749768}
+  m_Father: {fileID: 799913592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &553626483
 BoxCollider:
@@ -1246,7 +1218,7 @@ GameObject:
   - component: {fileID: 635405177}
   - component: {fileID: 635405176}
   - component: {fileID: 635405179}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,7 +1326,6 @@ GameObject:
   - component: {fileID: 664284244}
   - component: {fileID: 664284243}
   - component: {fileID: 664284242}
-  - component: {fileID: 664284241}
   - component: {fileID: 664284240}
   m_Layer: 0
   m_Name: Enemy
@@ -1377,32 +1348,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
   speed: 6
---- !u!143 &664284241
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 664284239}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &664284242
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1740,8 +1685,8 @@ GameObject:
   - component: {fileID: 763076204}
   - component: {fileID: 763076203}
   - component: {fileID: 763076202}
-  m_Layer: 0
-  m_Name: Cube (1)
+  m_Layer: 7
+  m_Name: Floating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1755,12 +1700,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763076200}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.43, y: 3.36, z: -19.25}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.502478, y: 5.223533, z: -1.4699996}
   m_LocalScale: {x: 3.2185, y: 0.3852074, z: 4.224925}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 419749768}
+  m_Father: {fileID: 799913592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &763076202
 BoxCollider:
@@ -1866,6 +1811,10 @@ Transform:
   m_Children:
   - {fileID: 635405178}
   - {fileID: 1310614087}
+  - {fileID: 959781705}
+  - {fileID: 2106916073}
+  - {fileID: 763076201}
+  - {fileID: 553626482}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &856431660
@@ -1991,8 +1940,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 959781705}
-  m_Layer: 0
-  m_Name: GameObject
+  m_Layer: 7
+  m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2006,15 +1955,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959781704}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 7.9275227, y: 0, z: 2.55074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2084928073}
-  - {fileID: 1052093414}
   - {fileID: 419749768}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 799913592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1004388015
 GameObject:
@@ -2063,7 +2010,7 @@ GameObject:
   - component: {fileID: 1013013663}
   - component: {fileID: 1013013662}
   - component: {fileID: 1013013661}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2249,7 +2196,7 @@ GameObject:
   - component: {fileID: 1052093417}
   - component: {fileID: 1052093416}
   - component: {fileID: 1052093415}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2265,11 +2212,11 @@ Transform:
   m_GameObject: {fileID: 1052093413}
   serializedVersion: 2
   m_LocalRotation: {x: -0.09292414, y: -0, z: -0, w: 0.9956732}
-  m_LocalPosition: {x: -0.89752245, y: -0.06646663, z: -9.150741}
-  m_LocalScale: {x: 5.0588, y: 5.0588007, z: 10.698858}
+  m_LocalPosition: {x: -0.89752245, y: -1.9299998, z: -24.380001}
+  m_LocalScale: {x: 5.0588, y: 5.058801, z: 10.698859}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 959781705}
+  m_Father: {fileID: 419749768}
   m_LocalEulerAnglesHint: {x: -10.664, y: 0, z: 0}
 --- !u!65 &1052093415
 BoxCollider:
@@ -3011,7 +2958,7 @@ Transform:
   m_GameObject: {fileID: 1647812339}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.011, y: -1.112, z: 0}
+  m_LocalPosition: {x: -0.011, y: -0.815, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3598,7 +3545,7 @@ GameObject:
   - component: {fileID: 1947897281}
   - component: {fileID: 1947897280}
   - component: {fileID: 1947897279}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3919,7 +3866,7 @@ GameObject:
   - component: {fileID: 2084928076}
   - component: {fileID: 2084928075}
   - component: {fileID: 2084928074}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3935,11 +3882,11 @@ Transform:
   m_GameObject: {fileID: 2084928072}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.89752245, y: 0.87353337, z: 0.96926}
+  m_LocalPosition: {x: -0.89752245, y: -0.9899999, z: -14.26}
   m_LocalScale: {x: 5.0588, y: 5.0588, z: 10.698857}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 959781705}
+  m_Father: {fileID: 419749768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2084928074
 BoxCollider:
@@ -4026,8 +3973,8 @@ GameObject:
   - component: {fileID: 2106916076}
   - component: {fileID: 2106916075}
   - component: {fileID: 2106916074}
-  m_Layer: 0
-  m_Name: Cube
+  m_Layer: 7
+  m_Name: Floating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4041,12 +3988,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106916072}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.23, y: 1.75, z: -23.77}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.302477, y: 3.6135333, z: -5.99}
   m_LocalScale: {x: 3.2185, y: 0.3852074, z: 4.224925}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 419749768}
+  m_Father: {fileID: 799913592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2106916074
 BoxCollider:
@@ -4269,7 +4216,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2140213190}
   - component: {fileID: 2140213191}
-  - component: {fileID: 2140213192}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4308,24 +4254,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 2119414566}
   speed: 8
-  jump: 15
+  jump: 10
+  dash: 0
   cam: {fileID: 522244520}
---- !u!114 &2140213192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140213189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 327dcf24375972644925564d279bcd25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  track: {fileID: 522244523}
-  bpm: 160
-  intervals:
-  - beats: 8
+  gravityMultiplier: 4
+  groundCheck: {fileID: 1647812340}
+  groundDistance: 0.4
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4334,4 +4271,3 @@ SceneRoots:
   - {fileID: 1768554824}
   - {fileID: 526004613}
   - {fileID: 799913592}
-  - {fileID: 959781705}
