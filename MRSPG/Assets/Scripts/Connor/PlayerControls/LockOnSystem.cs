@@ -8,6 +8,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class LockOnSystem : MonoBehaviour
 {
+    public CharacterController characterController;
     public GameObject player;
     public GameObject closestTarget = null;
     public GameObject closestEnemy = null;
@@ -136,7 +137,10 @@ public class LockOnSystem : MonoBehaviour
 
 
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
+        //Disable character controller movement override to swap position with enemy.
+        characterController.enabled = false;
         player.transform.position = targetedPos;
+        characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
     }
 

@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
 {
     #region Variables
     [SerializeField] private EnemySetting _enemy;
+    [SerializeField] private Metronome metronome;
+    [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
     private int health;
     private float speed;
     private float TimeBetweenAttacks;
@@ -20,10 +22,14 @@ public class Enemy : MonoBehaviour
     private GameObject _player;
     private Health _playerhealth;
     private Vector3 _target;
+
+
     #endregion
 
     public void Start()
     {
+        SetTag(_enemy.type);
+        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         _player = GameObject.Find("Player/PlayerObj");
         if(_player != null)
         {
@@ -33,7 +39,6 @@ public class Enemy : MonoBehaviour
         speed = _enemy.speed;
         TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
         ChargeTime = _enemy.ChargeTime;
-        SetTag(_enemy.type);
     }
     public void Update()
     {
@@ -44,7 +49,7 @@ public class Enemy : MonoBehaviour
 
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
-            //transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
+            transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
             transform.LookAt(_target);
         }
         if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && CanAttack)
@@ -53,10 +58,22 @@ public class Enemy : MonoBehaviour
             StartCoroutine(StartAttack(_enemy.pattern));
         }
 
-        /*if (CheckForEnemies(transform.position, 10))
+        if (CheckForEnemies(transform.position, 5))
         {
-            Debug.Log("There are enemies within the big radius.");
-        }*/
+            enemiesInRange.Remove(gameObject);
+            foreach(GameObject enemy in enemiesInRange)
+            {
+                enemy.GetComponent<Enemy>().speed = 1f;
+            }
+        }
+        else
+        {
+            foreach(GameObject enemy in enemiesInRange)
+            {
+                enemy.GetComponent<Enemy>().speed = 6f;
+            }
+            enemiesInRange.Clear();
+        }
     }
 
     #region Define Enemy
@@ -104,7 +121,10 @@ public class Enemy : MonoBehaviour
         {
             if(obj.tag == "Enemy")
             {
-                obj.GetComponent<Enemy>().speed = 2;
+                if(!enemiesInRange.Contains(obj.gameObject))
+                {
+                    enemiesInRange.Add(obj.gameObject);
+                }
                 return true;
             }
         }
@@ -147,7 +167,7 @@ public class Enemy : MonoBehaviour
     {
         foreach(Attack attack in pattern)
         {
-            if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()))
+            if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && metronome.IsOnBeat())
             {
                 switch (attack)
                 {

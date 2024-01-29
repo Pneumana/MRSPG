@@ -45,7 +45,13 @@ public class InputControls : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.X))
         {
-            Cursor.lockState = CursorLockMode.None;
+            if(Cursor.lockState == CursorLockMode.None)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }else if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
         ApplyGravity();
         ApplyMovement();
@@ -67,6 +73,7 @@ public class InputControls : MonoBehaviour
         while (Time.time < startTime + dashTime)
         {
             Debug.Log("dashing");
+            //subtract the camera from the direction to stop the weird movement
             controller.Move(direction * dashSpeed * Time.deltaTime);
             yield return null;
         }
@@ -90,7 +97,7 @@ public class InputControls : MonoBehaviour
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
 
-        if(Input.GetKeyDown(KeyCode.X) && canDash)
+        if(Input.GetKeyDown(KeyCode.Z) && canDash)
         {
             StartCoroutine(ApplyDash(movePlayer));
             StartCoroutine(Waiter(dashCooldown));
