@@ -13,13 +13,13 @@ public class Health : MonoBehaviour
 
     #endregion
 
-    private void Awake ( )
+    private void Awake()
     {
         currentHealth = _maxHealth;
     }
 
-    public void LoseHealth ( int amount)
+    public void LoseHealth(int amount)
     {
-        currentHealth = -amount;
+        currentHealth -= amount;
     }
 }

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154dd5f6c2f75f747a9922db7d336b28, type: 3}
   m_Name: Standard
   m_EditorClassIdentifier: 
-  _type: 0
-  _pattern:
-  - _attack: 0
-  - _attack: 1
-  - _attack: 1
+  type: 0
+  pattern: 000000000100000001000000
+  EnemyHealth: 6
+  speed: 5
+  TimeBetweenAttacks: 3
+  ChargeTime: 1
