@@ -68,7 +68,9 @@ public class ConnorCamHolder : MonoBehaviour
 
         if(hit.point == Vector3.zero)
         {
-            transform.position = pos - Camera.main.gameObject.transform.forward * maxCameraDist;
+            var destination = pos - Camera.main.gameObject.transform.forward * maxCameraDist;
+            //var currentPos = Vector3.MoveTowards(transform.position, destination, cameraSpeed * Time.deltaTime);
+            transform.position = destination;
         }
         else
         {
