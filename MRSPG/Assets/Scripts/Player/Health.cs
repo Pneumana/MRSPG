@@ -20,6 +20,6 @@ public class Health : MonoBehaviour
 
     public void LoseHealth(int amount)
     {
-        currentHealth = -amount;
+        currentHealth -= amount;
     }
 }

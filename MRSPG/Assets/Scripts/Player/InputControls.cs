@@ -1,4 +1,5 @@
 using Mono.Cecil.Cil;
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -11,13 +12,18 @@ public class InputControls : MonoBehaviour
     public CharacterController controller;
     public float speed;
     public float jump;
-    public float dash;
+
+    public float dashSpeed;
+    public float dashTime;
+    private bool canDash = true;
+    public float dashCooldown;
+
     private Vector3 velocity;
     private Vector3 moveDirection;
 
     [Header("Camera")]
     public Transform cam;
-    private float smoothAngle = 0.1f;
+    private float smoothAngle = 0.05f;
     private float smoothedVelocity;
 
     [Header("Ground Variables")]
@@ -54,6 +60,22 @@ public class InputControls : MonoBehaviour
         }
     }
 
+    public IEnumerator ApplyDash(Vector3 direction)
+    {
+        canDash = false;
+        float startTime = Time.time;
+        while (Time.time < startTime + dashTime)
+        {
+            Debug.Log("dashing");
+            controller.Move(direction * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+    }
+    IEnumerator Waiter(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        canDash = true;
+    }
     public void ApplyMovement()
     {
         //Get user input
@@ -65,13 +87,13 @@ public class InputControls : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            Debug.Log("Jump");
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.X) && canDash)
         {
-            movePlayer = movePlayer * 2f;
+            StartCoroutine(ApplyDash(movePlayer));
+            StartCoroutine(Waiter(dashCooldown));
         }
 
         if (movePlayer.magnitude >= 0.1f)

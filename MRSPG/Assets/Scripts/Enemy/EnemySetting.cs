@@ -1,14 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Define the enemies type, attack pattern, and health here.
+/// </summary>
 [CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Type", order = 1)]
 public class EnemySetting : ScriptableObject
 {
     public EnemyType type;
-    [SerializeField] private AttackStyle[] _pattern;
-    [SerializeField] private float EnemyHealth;
+    public Attack[] pattern;
+    public int EnemyHealth;
+    public float speed;
+    public float TimeBetweenAttacks;
+    public float ChargeTime;
 }
 
 #region Enums
@@ -16,9 +23,10 @@ public enum EnemyType
 {
     Standard, //0
     Heavy, //1
-    Ranged //2
+    Ranged, //2
+    Boss // 3
 };
-enum Attack
+public enum Attack
 {
     Charge,
     Light,
@@ -28,27 +36,14 @@ enum Attack
 };
 #endregion
 
-#region Attacks:
+/*#region Attacks:
 [System.Serializable]
 public class AttackStyle
 {
     [SerializeField] private Attack _attack;
 }
-public class ChargeUp
-{
-    
-}
 
-public class LightAttack
-{
-
-}
-
-public class HeavyAttack
-{
-
-}
-#endregion
+#endregion*/
 
 #region Enemy Types
 public class Standard
