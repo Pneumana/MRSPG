@@ -14,7 +14,7 @@ public class Metronome : MonoBehaviour
     public Image visualizer;
     bool onBeat;
 
-    public Metronome inst;
+    public static Metronome inst;
 
     private void Awake()
     {

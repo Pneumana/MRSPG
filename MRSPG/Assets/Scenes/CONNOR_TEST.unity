@@ -153,6 +153,7 @@ MonoBehaviour:
   backstep: 0
   mouseSense: 1
   controllerSense: 0.75
+  cameraSpeed: 2
   offset: {x: 0, y: 1.1, z: 0}
   lookX: 0
 --- !u!4 &98750504
@@ -849,6 +850,7 @@ MonoBehaviour:
   minTimeScale: 0.1
   maxTimeScale: 1
   scaleSpeed: 5
+  targetTime: 1
   timeJuice: {fileID: 2101124606}
 --- !u!1 &597343254
 GameObject:
@@ -1453,6 +1455,9 @@ MonoBehaviour:
   strafeRadiusMin: 5
   strafeRadiusMax: 6
   strafeAngle: 0
+  lungeDistance: 3
+  lungeSpeed: 3
+  lungeCooldown: 5
 --- !u!1 &906573708
 GameObject:
   m_ObjectHideFlags: 0
@@ -3557,7 +3562,6 @@ MonoBehaviour:
   BPM: 120
   beatDuration: 0
   visualizer: {fileID: 2055309037}
-  inst: {fileID: 0}
 --- !u!114 &2055309037
 MonoBehaviour:
   m_ObjectHideFlags: 0
