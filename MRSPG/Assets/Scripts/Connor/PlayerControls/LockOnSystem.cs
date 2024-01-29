@@ -169,7 +169,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.rightTrigger.wasPressedThisFrame && cooldown <= 0)
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.leftTrigger.wasPressedThisFrame && cooldown <= 0)
             {
                 remainingTime = useTime;
                 //foreach enemy,
@@ -210,7 +210,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || Gamepad.current.rightTrigger.isPressed && remainingTime > 0)
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || Gamepad.current.leftTrigger.isPressed && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
@@ -245,7 +245,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.rightTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.leftTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
 

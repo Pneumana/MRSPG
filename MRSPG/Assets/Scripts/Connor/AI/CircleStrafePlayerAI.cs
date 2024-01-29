@@ -70,11 +70,12 @@ public class CircleStrafePlayerAI : MonoBehaviour
     {
         me.enabled = false;
         lungeing = true;
-        transform.forward = player.transform.position - transform.position;
+        //transform.forward = player.transform.position - transform.position;
         float currentLunge = 0;
+        GetComponent<Rigidbody>().AddForce(((player.transform.position - transform.position) + Vector3.up) * lungeSpeed, ForceMode.Impulse);
         do
         {
-            transform.position += transform.forward * (Time.deltaTime * lungeSpeed);
+            //transform.position += transform.forward * (Time.deltaTime * lungeSpeed);
             currentLunge += Time.deltaTime * lungeSpeed;
             yield return new WaitForSeconds(0);
         }while (currentLunge <lungeDistance) ;
@@ -83,4 +84,7 @@ public class CircleStrafePlayerAI : MonoBehaviour
         lungeCD = lungeCooldown;
         yield return null;
     }
+
+
+
 }
