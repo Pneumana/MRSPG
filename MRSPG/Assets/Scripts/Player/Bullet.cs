@@ -19,8 +19,25 @@ public class Bullet : MonoBehaviour
     private void Awake ( )
     {
         energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+
+        if ( energy == null )
+        {
+            Debug.LogError ( "Player is NULL" );
+        }
+
         targeting = GameObject.Find ( "TimeScaler" ).GetComponent<LockOnSystem> ( );
+
+        if ( targeting == null )
+        {
+            Debug.LogError ( "TimeScaler is NULL" );
+        }
+
         tbh=GameObject.Find("Boss").GetComponent<Temp_Boss_health> ( );
+
+        if ( tbh == null )
+        {
+            Debug.LogError ( "Boss is NULL" );
+        }
 
         target = targeting.closestTarget.transform;
     }

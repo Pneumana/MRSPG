@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enegry : MonoBehaviour
 {
@@ -9,7 +10,11 @@ public class Enegry : MonoBehaviour
     int _maxEnergy = 50;
     public int currentEnergy;
 
-    public Metronome metronome;
+    [SerializeField]
+    Image _energyImg;
+
+    [SerializeField]
+    Sprite [ ] _energySprite;
 
     #endregion
 
@@ -23,6 +28,7 @@ public class Enegry : MonoBehaviour
     {
         //Makes sure Energy Level does not go over the Max allowed Level
         currentEnergy = Mathf.Clamp ( currentEnergy , 0 , _maxEnergy );
+        UIUpdateEnergy ( );       
     }
 
     public void LoseEnergy (int amount )
@@ -64,11 +70,11 @@ public class Enegry : MonoBehaviour
 
     void StandardEnemy ( )
     {
-        if ( metronome.inst.IsOnBeat ( ) )
+        if ( Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 10;
         }
-        else if ( !metronome.inst.IsOnBeat ( ) )
+        else if ( !Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 5;
         }
@@ -76,11 +82,11 @@ public class Enegry : MonoBehaviour
 
     void RangedEnemy ( )
     {
-        if ( metronome.inst.IsOnBeat ( ) )
+        if ( Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 10;
         }
-        else if ( !metronome.inst.IsOnBeat ( ) )
+        else if ( !Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 5;
         }
@@ -88,13 +94,61 @@ public class Enegry : MonoBehaviour
 
     void HeavyEnemy ( )
     {
-        if ( metronome.inst.IsOnBeat ( ) )
+        if ( Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 20;
         }
-        else if ( !metronome.inst.IsOnBeat ( ) )
+        else if ( !Metronome.inst.IsOnBeat ( ) )
         {
             currentEnergy += 10;
+        }
+    }
+
+    void UIUpdateEnergy ( )
+    {
+        if ( currentEnergy == 50 )
+        {
+            _energyImg.sprite = _energySprite [ 0 ];
+        }
+        else if ( currentEnergy == 45 )
+        {
+            _energyImg.sprite = _energySprite [ 1 ];
+        }
+        else if ( currentEnergy == 40 )
+        {
+            _energyImg.sprite = _energySprite [ 2 ];
+        }
+        else if ( currentEnergy == 35 )
+        {
+            _energyImg.sprite = _energySprite [ 3 ];
+        }
+        else if ( currentEnergy == 30 )
+        {
+            _energyImg.sprite = _energySprite [ 4 ];
+        }
+        else if ( currentEnergy == 25 )
+        {
+            _energyImg.sprite = _energySprite [ 5 ];
+        }
+        else if ( currentEnergy == 20 )
+        {
+            _energyImg.sprite = _energySprite [ 6 ];
+        }
+        else if ( currentEnergy == 15 )
+        {
+            _energyImg.sprite = _energySprite [ 7 ];
+        }
+        else if ( currentEnergy == 10 )
+        {
+            _energyImg.sprite = _energySprite [ 8 ];
+        }
+        else if ( currentEnergy == 5 )
+        {
+            _energyImg.sprite = _energySprite [ 9 ];
+        }
+        else if ( currentEnergy == 0 )
+        {
+            _energyImg.sprite = _energySprite [ 10 ];
         }
     }
 }

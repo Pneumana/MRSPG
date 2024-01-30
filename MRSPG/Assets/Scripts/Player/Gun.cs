@@ -16,7 +16,17 @@ public class Gun : MonoBehaviour
     private void Start ( )
     {
         energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+
+        if ( energy == null )
+        {
+            Debug.LogError ( "Player is NULL" );
+        }
         targeting = GameObject.Find ( "TimeScaler" ).GetComponent<LockOnSystem> ( );
+
+        if ( targeting == null )
+        {
+            Debug.LogError ( "TimeScaler is NULL" );
+        }
     }
 
     private void Update ( )
