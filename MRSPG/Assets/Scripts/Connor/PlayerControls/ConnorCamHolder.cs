@@ -27,10 +27,10 @@ public class ConnorCamHolder : MonoBehaviour
     }
     private void Update()
     {
-        var mouseInputX = Input.GetAxis("Mouse X");
+        var mouseInputX = Input.GetAxisRaw("Mouse X");
         float ctrlInputX = 0;
 
-        var mouseInputY = Input.GetAxis("Mouse Y");
+        var mouseInputY = Input.GetAxisRaw("Mouse Y");
         float ctrlInputY = 0;
 
         if (Gamepad.current != null)
@@ -57,26 +57,55 @@ public class ConnorCamHolder : MonoBehaviour
         lookY = Mathf.Clamp(lookY, -90f, 90f);
 
         Camera.main.gameObject.transform.rotation = Quaternion.Euler(new Vector3(lookY, lookX, 0));
+        //EndUpdate();
     }
     // Update is called once per frame
-    void LateUpdate()
+    private void LateUpdate()
     {
         RaycastHit hit;
+        RaycastHit nextFrameHit; ;
         var pos = player.transform.position + offset;
         Physics.Raycast(pos, -Camera.main.gameObject.transform.forward, out hit, maxCameraDist);
-        Debug.DrawRay(pos, -Camera.main.gameObject.transform.forward, Color.red, Time.deltaTime);
-
-        if(hit.point == Vector3.zero)
+        Physics.Raycast(pos + (player.GetComponent<Rigidbody>().velocity * Time.deltaTime), -Camera.main.gameObject.transform.forward, out nextFrameHit, maxCameraDist);
+        Debug.DrawRay(pos, -Camera.main.gameObject.transform.forward, Color.red, Time.unscaledDeltaTime * Time.timeScale);
+        var destination = transform.position;
+        var a = Vector3.zero;
+        var b = Vector3.zero;
+        if (hit.point == Vector3.zero)
         {
-            var destination = pos - Camera.main.gameObject.transform.forward * maxCameraDist;
-            //var currentPos = Vector3.MoveTowards(transform.position, destination, cameraSpeed * Time.deltaTime);
-            transform.position = destination;
+
+            if (nextFrameHit.point == Vector3.zero)
+            {
+                a = pos - Camera.main.gameObject.transform.forward * maxCameraDist;
+                b = (pos + (player.GetComponent<Rigidbody>().velocity * Time.deltaTime)) - Camera.main.gameObject.transform.forward * maxCameraDist;
+
+            }
+            else
+            {
+                a = hit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+                b = nextFrameHit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+            }
+            //var currentPos = Vector3.MoveTowards(transform.position, destination, player.GetComponent<Rigidbody>().velocity.magnitude * Time.deltaTime);
+            
         }
         else
         {
-            transform.position = hit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
-        }
+            if (nextFrameHit.point == Vector3.zero)
+            {
+                a = hit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+                b = (pos + (player.GetComponent<Rigidbody>().velocity * Time.deltaTime)) - Camera.main.gameObject.transform.forward * maxCameraDist;
 
+            }
+            else
+            {
+                a = hit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+                b = nextFrameHit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+            }
+            //destination = hit.point + (Camera.main.gameObject.transform.forward * backstep) + (Vector3.up * 0.01f);
+        }
+        //Camera.main.gameObject.transform.position = transform.position;
+        destination = Vector3.Lerp(a, b, 0.5f);
+        transform.position = destination;
 
         //raycast backwards from the player object
 
