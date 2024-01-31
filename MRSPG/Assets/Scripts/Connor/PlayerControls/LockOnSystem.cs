@@ -32,6 +32,9 @@ public class LockOnSystem : MonoBehaviour
     public RectTransform timeJuice;
     Transform ui;
 
+    //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
+    //yep
+
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
@@ -102,6 +105,7 @@ public class LockOnSystem : MonoBehaviour
                 closest = dist;
                 closestTarget = targeters[i];
                 closestEnemy = enemies[i];
+                //Debug.Log(closestEnemy.name + " @ " + closestEnemy.transform.position + " is the closest target");
             }
         }
         if (closestTarget != null)
@@ -119,11 +123,14 @@ public class LockOnSystem : MonoBehaviour
             targetTime = maxTimeScale;
             foreach (GameObject targeter in targeters)
             {
-                Destroy(targeter);
+                //i guess keep the closestTarget?
+                    Destroy(targeter);
             }
             targeters.Clear();
+            //targeters.Add(closestTarget);
         }
-
+        if(closestTarget!=null && closestEnemy!=null)
+            closestTarget.transform.position = Camera.main.WorldToScreenPoint(closestEnemy.transform.position);
     }
     void SwapPositions()
     {
@@ -235,9 +242,10 @@ public class LockOnSystem : MonoBehaviour
 
                 foreach (GameObject targeter in targeters)
                 {
-                    Destroy(targeter);
+                        Destroy(targeter);
                 }
                 targeters.Clear();
+                //targeters.Add(closestTarget);
                 cooldown = cooldownTime;
                 remainingTime = useTime;
                 targetTime = maxTimeScale;
@@ -253,9 +261,10 @@ public class LockOnSystem : MonoBehaviour
 
                 foreach (GameObject targeter in targeters)
                 {
-                    Destroy(targeter);
+                        Destroy(targeter);
                 }
                 targeters.Clear();
+                //targeters.Add(closestTarget);
                 cooldown = cooldownTime;
                 remainingTime = useTime;
                 targetTime = maxTimeScale;

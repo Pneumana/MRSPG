@@ -2266,7 +2266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856431660}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14169662, y: 0.000000017032768, z: -0.0000000024380857, w: 0.9899101}
+  m_LocalRotation: {x: 0.14169662, y: -0.000000017032768, z: 0.0000000024380857, w: 0.9899101}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2554,7 +2554,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029365084}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17756152, y: -0.000000015062609, z: 0.000000002717725, w: 0.9841097}
+  m_LocalRotation: {x: 0.17756154, y: 0.000000021022046, z: -0.0000000037929784, w: 0.9841097}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2701,10 +2701,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1853850664}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -14.4, y: 56.9}
-  m_SizeDelta: {x: 309.6, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.5000076, y: 0.000030517578}
+  m_SizeDelta: {x: -19.522095, y: -12.895699}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068496805
 MonoBehaviour:
@@ -2726,13 +2726,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Walk - WASD
+  m_text: 'Jump: Space / X
 
-    Jump - Space
+    Dash: Left ctrl / O
 
-    Dash - Z
-
-    Slow Down - E'
+    Slowdown: Left trigger'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2759,8 +2757,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 19.8
+  m_fontSizeBase: 19.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4141,8 +4139,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -193.2, y: -107.8}
-  m_SizeDelta: {x: 362.6, y: 185.19}
+  m_AnchoredPosition: {x: -139.8822, y: -58.917114}
+  m_SizeDelta: {x: 255.9644, y: 87.4241}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1853850665
 MonoBehaviour:
@@ -5626,9 +5624,9 @@ MonoBehaviour:
   controller: {fileID: 2119414566}
   speed: 8
   jump: 10
-  dashSpeed: 20
+  dashSpeed: 12
   dashTime: 0.25
-  dashCooldown: 1
+  dashCooldown: 0.5
   cam: {fileID: 522244520}
   gravityMultiplier: 4
   groundCheck: {fileID: 1647812340}

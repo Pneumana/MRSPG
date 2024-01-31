@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputControls : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class InputControls : MonoBehaviour
     public CharacterController controller;
     public float speed;
     public float jump;
-
+    [Header("Dash")]
     public float dashSpeed;
     public float dashTime;
     private bool canDash = true;
@@ -43,15 +44,9 @@ public class InputControls : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.X))
+        if (Input.GetKey(KeyCode.X) && Cursor.lockState == CursorLockMode.None)
         {
-            if(Cursor.lockState == CursorLockMode.None)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }else if(Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
+            Cursor.lockState = CursorLockMode.Locked;
         }
         ApplyGravity();
         ApplyMovement();
@@ -70,11 +65,16 @@ public class InputControls : MonoBehaviour
     {
         canDash = false;
         float startTime = Time.time;
+
         while (Time.time < startTime + dashTime)
         {
-            Debug.Log("dashing");
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
             //subtract the camera from the direction to stop the weird movement
-            controller.Move(direction * dashSpeed * Time.deltaTime);
+            controller.Move(targetDirection * dashSpeed * Time.deltaTime);
             yield return null;
         }
     }
@@ -97,7 +97,7 @@ public class InputControls : MonoBehaviour
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
 
-        if(Input.GetKeyDown(KeyCode.Z) && canDash)
+        if(Input.GetButtonDown("Fire1") && canDash)
         {
             StartCoroutine(ApplyDash(movePlayer));
             StartCoroutine(Waiter(dashCooldown));

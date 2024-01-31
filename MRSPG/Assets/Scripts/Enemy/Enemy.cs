@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
 
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
-            transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
+            //transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
             transform.LookAt(_target);
         }
         if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && CanAttack)
