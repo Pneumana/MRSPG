@@ -13,8 +13,13 @@ public class LockOnSystem : MonoBehaviour
     public GameObject closestTarget = null;
     public GameObject closestEnemy = null;
 
+    public Image lockon;
+
     public List<GameObject> enemies = new List<GameObject> ();
     public List<GameObject> targeters = new List<GameObject> ();
+
+    public GameObject enemyTracker;
+    public GameObject trackedEnemy;
 
     public Sprite lockedSprite;
     public Sprite unlockedSprite;
@@ -48,6 +53,12 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
+        if (trackedEnemy != null)
+        {
+            var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
+            lockon.transform.position = trackedScreenPos;
+        }
+
         Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
         if (cooldown > 0)
         {
@@ -62,58 +73,24 @@ public class LockOnSystem : MonoBehaviour
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            LockOn();
+        }
+        if (Input.GetKeyUp(KeyCode.H))
+        {
+            StopLockOn();
+        }
+
         InputEventStartLockOn();
         InputEventStayLockOn();
-        float closest = float.MaxValue;
-        closestTarget = null;
-        closestEnemy = null;
-        if (targeters.Count <= 0)
-            return;
-        for (int i =0; i<enemies.Count; i++)
-        {
-            var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
-            targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
-            targeters[i].GetComponent<Image>().color = Color.white;
-            //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
-            targeters[i].GetComponent<Image>().sprite = unlockedSprite;
-            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
-            {
-                targeters[i].GetComponent<Image>().color = Color.clear;
-                //Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
-                //offscreen
-                continue;
-            }
-            else
-            {
-                RaycastHit hit;
-                var vector = enemies[i].transform.position - player.transform.position;
-                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
-                if(hit.collider!=null)
-                    Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
-                if (enemies[i]!=hit.collider.gameObject)
-                {
-                    targeters[i].GetComponent<Image>().color = Color.clear;
-                    //Debug.Log(targeters[i].name + " is obscured");
-                    continue;
-                    //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
-                }
-            }
-            //LOS check should be here
-            var dist = Vector2.Distance(targeters[i].transform.position, ui.position + new Vector3(Screen.width/2,Screen.height/2));
-            if (dist < closest)
-            {
-                closest = dist;
-                closestTarget = targeters[i];
-                closestEnemy = enemies[i];
-                //Debug.Log(closestEnemy.name + " @ " + closestEnemy.transform.position + " is the closest target");
-            }
-        }
+        
         if (closestTarget != null)
         {
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
-            closestTarget.GetComponent<Image>().color = Color.white;
+            closestTarget.GetComponent<Image>().color = Color.clear;
         }
-
+        GetTargetedEnemy();
         InputEventEndLockOn();
         if(remainingTime <= 0)
         {
@@ -131,6 +108,8 @@ public class LockOnSystem : MonoBehaviour
         }
         if(closestTarget!=null && closestEnemy!=null)
             closestTarget.transform.position = Camera.main.WorldToScreenPoint(closestEnemy.transform.position);
+
+
     }
     void SwapPositions()
     {
@@ -230,15 +209,15 @@ public class LockOnSystem : MonoBehaviour
         }
         
     }
-    void InputEventEndLockOn()
+    public void InputEventEndLockOn(bool dontSwapPositions = false)
     {
         if (Gamepad.current == null)
         {
             if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
-
-                SwapPositions();
+                if(!dontSwapPositions)
+                    SwapPositions();
 
                 foreach (GameObject targeter in targeters)
                 {
@@ -256,8 +235,8 @@ public class LockOnSystem : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.leftTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
-
-                SwapPositions();
+                if(!dontSwapPositions)
+                    SwapPositions();
 
                 foreach (GameObject targeter in targeters)
                 {
@@ -270,5 +249,87 @@ public class LockOnSystem : MonoBehaviour
                 targetTime = maxTimeScale;
             }
         }
+    }
+    void GetTargetedEnemy()
+    {
+        float closest = float.MaxValue;
+        closestTarget = null;
+        closestEnemy = null;
+        if (targeters.Count <= 0)
+            return;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
+            targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
+            targeters[i].GetComponent<Image>().color = Color.white;
+            //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
+            targeters[i].GetComponent<Image>().sprite = unlockedSprite;
+            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
+            {
+                targeters[i].GetComponent<Image>().color = Color.clear;
+                //Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
+                //offscreen
+                continue;
+            }
+            else
+            {
+                RaycastHit hit;
+                var vector = enemies[i].transform.position - player.transform.position;
+                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
+                if (hit.collider != null)
+                    Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
+                if (enemies[i] != hit.collider.gameObject)
+                {
+                    targeters[i].GetComponent<Image>().color = Color.clear;
+                    //Debug.Log(targeters[i].name + " is obscured");
+                    continue;
+                    //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
+                }
+            }
+            //LOS check should be here
+            var dist = Vector2.Distance(targeters[i].transform.position, ui.position + new Vector3(Screen.width / 2, Screen.height / 2));
+            if (dist < closest)
+            {
+                closest = dist;
+                closestTarget = targeters[i];
+
+                closestEnemy = enemies[i];
+                if (trackedEnemy != closestEnemy && closestEnemy != null)
+                {
+                    //enemyTracker = closestTarget;
+                    trackedEnemy = closestEnemy;
+                }
+                //Debug.Log(closestEnemy.name + " @ " + closestEnemy.transform.position + " is the closest target");
+            }
+        }
+    }
+    public void LockOn()
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            var newTargeter = new GameObject();
+            newTargeter.name = enemy.name + "Target";
+            newTargeter.transform.SetParent(ui);
+            newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
+            newTargeter.AddComponent<Image>();
+            newTargeter.GetComponent<Image>().sprite = unlockedSprite;
+            newTargeter.GetComponent<Image>().color = Color.white;
+            targeters.Add(newTargeter);
+            //add Line of sight check here
+        }
+        GetTargetedEnemy();
+    }
+
+    public void StopLockOn()
+    {
+        foreach (GameObject targeter in targeters)
+        {
+            Destroy(targeter);
+        }
+        targeters.Clear();
+        //targeters.Add(closestTarget);
+        //cooldown = cooldownTime;
+        //remainingTime = useTime;
+        targetTime = maxTimeScale;
     }
 }
