@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour
             Debug.LogError ( "Boss is NULL" );
         }
 
-        target = targeting.closestTarget.transform;
+        target = targeting.trackedEnemy.transform;
     }
 
     private void FixedUpdate ( )
@@ -52,10 +52,13 @@ public class Bullet : MonoBehaviour
         if ( shot.collider.name == "Boss" )
         {
             tbh.LoseHealth ( 5 );
+            Debug.Log ( "Boss took 5 damage" );
+            Destroy ( this.gameObject );
         }
-        else
+        else if (shot.collider.tag=="Enemy")
         {
             Destroy ( shot.gameObject );
+            Destroy ( this.gameObject );
         }
     }
 }

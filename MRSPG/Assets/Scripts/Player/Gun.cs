@@ -32,7 +32,7 @@ public class Gun : MonoBehaviour
     private void Update ( )
     {
 
-        if ( Input.GetKeyDown ( KeyCode.LeftControl ) && targeting.closestTarget != null && energy.currentEnergy == 50 )
+        if ( Input.GetButtonDown ( "Fire1" ) && targeting.trackedEnemy != null && energy.currentEnergy == 50 )
         {
             Instantiate ( bulletPrefab , transform , false );
             energy.LoseEnergy ( 50 );
