@@ -579,6 +579,7 @@ GameObject:
   - component: {fileID: 702418739}
   - component: {fileID: 702418738}
   - component: {fileID: 702418742}
+  - component: {fileID: 702418743}
   m_Layer: 0
   m_Name: HeavyEnemy
   m_TagString: Enemy
@@ -701,6 +702,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &702418743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702418736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &751644116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,6 +1067,7 @@ GameObject:
   - component: {fileID: 957888256}
   - component: {fileID: 957888255}
   - component: {fileID: 957888259}
+  - component: {fileID: 957888260}
   m_Layer: 0
   m_Name: StandardEnemy
   m_TagString: Enemy
@@ -1176,6 +1190,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &957888260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957888253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,13 +1332,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.91646284, z: -0, w: -0.40011996}
+  m_LocalRotation: {x: -0.014366652, y: 0.9947024, z: -0.0583609, w: -0.08339575}
   m_LocalPosition: {x: 2.085, y: 1.924, z: 1.268}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 227.171, z: 0}
+  m_LocalEulerAnglesHint: {x: 6.806, y: 189.52, z: -1.088}
 --- !u!1 &976668396
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,6 +1352,7 @@ GameObject:
   - component: {fileID: 976668398}
   - component: {fileID: 976668397}
   - component: {fileID: 976668401}
+  - component: {fileID: 976668402}
   m_Layer: 0
   m_Name: RangedEnemy
   m_TagString: Enemy
@@ -1450,6 +1477,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &976668402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976668396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1045178365
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,7 +58,10 @@ public class LockOnSystem : MonoBehaviour
             var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
             lockon.transform.position = trackedScreenPos;
         }
-
+        else
+        {
+            lockon.transform.position = new Vector2(-100, -100);
+        }
         Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
         if (cooldown > 0)
         {
