@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate ( )
     {
-        transform.position = Vector3.MoveTowards ( transform.position , target.transform.position , _speed * Time.fixedDeltaTime );
+       transform.position = Vector3.MoveTowards ( transform.position , target.transform.position , _speed * Time.fixedDeltaTime );
     }
 
     private void OnCollisionEnter ( Collision shot )

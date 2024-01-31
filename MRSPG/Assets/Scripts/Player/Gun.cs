@@ -34,7 +34,7 @@ public class Gun : MonoBehaviour
 
         if ( Input.GetButtonDown ( "Fire1" ) && targeting.trackedEnemy != null && energy.currentEnergy == 50 )
         {
-            Instantiate ( bulletPrefab , transform , false );
+            Instantiate ( bulletPrefab , transform.position , Quaternion.identity );
             energy.LoseEnergy ( 50 );
         }
     }
