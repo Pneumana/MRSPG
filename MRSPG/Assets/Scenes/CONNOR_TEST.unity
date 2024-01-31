@@ -962,6 +962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e699b31023b4a3842a3bc7d366bdb59f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterController: {fileID: 0}
   player: {fileID: 620931957}
   closestTarget: {fileID: 0}
   closestEnemy: {fileID: 0}
@@ -1377,7 +1378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   yStart: 0
   yEnd: 0
-  player: {fileID: 0}
+  player: {fileID: 620931957}
 --- !u!1 &656960126
 GameObject:
   m_ObjectHideFlags: 0
