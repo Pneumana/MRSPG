@@ -9,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public class TargetManager : MonoBehaviour
 {
+    public static Transform player;
+    private Vector3 distance;
     [SerializeField] private List<Enemy> enemiesInRange = new List<Enemy>();
 
     // Update is called once per frame
