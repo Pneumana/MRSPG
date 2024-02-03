@@ -106,8 +106,25 @@ public class LockOnSystem : MonoBehaviour
             targeters.Clear();
             //targeters.Add(closestTarget);
         }
-        if(closestTarget!=null && closestEnemy!=null)
-            closestTarget.transform.position = Camera.main.WorldToScreenPoint(closestEnemy.transform.position);
+        if(lockon != null && trackedEnemy != null)
+        {
+            lockon.transform.position = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
+            var view = Camera.main.WorldToViewportPoint(trackedEnemy.transform.position);
+            bool displayTarget = false;
+
+                    if (view.z >= 0)
+                    {
+                        Debug.Log("in veiw z");
+                        displayTarget = true;
+                    }
+                    else
+                    {
+                        displayTarget = false;
+                    }
+            if(lockon.GetComponent<Image>().enabled!=displayTarget)
+                lockon.GetComponent<Image>().enabled = displayTarget;
+        }
+
 
 
     }
@@ -115,11 +132,11 @@ public class LockOnSystem : MonoBehaviour
     {
         if (closestTarget == null||player==null)
             return;
-       
         Vector3 playerStartPos = player.transform.position;
         Vector3 targetedPos = closestEnemy.transform.position;
 
-        
+        if (Camera.main.WorldToViewportPoint(targetedPos).z < 0)
+            return;
 
 
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
@@ -264,7 +281,7 @@ public class LockOnSystem : MonoBehaviour
             targeters[i].GetComponent<Image>().color = Color.white;
             //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
             targeters[i].GetComponent<Image>().sprite = unlockedSprite;
-            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
+            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height || Camera.main.WorldToViewportPoint(enemies[i].transform.position).z < 0)
             {
                 targeters[i].GetComponent<Image>().color = Color.clear;
                 //Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
