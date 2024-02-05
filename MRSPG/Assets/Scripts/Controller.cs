@@ -11,7 +11,7 @@ public class Controller : MonoBehaviour
     public static Controller inst;
     public InputControls movement;
     public LockOnSystem lockOnSystem;
-    ControllerSupport controls;
+    [HideInInspector] public ControllerSupport controls;
 
     private void Awake()
     {
@@ -35,7 +35,6 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Enable();
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
-        controls.Gameplay.Slowdown.performed += lockOnSystem.ConfigureLockOn;
     }
 
     private void OnDisable()

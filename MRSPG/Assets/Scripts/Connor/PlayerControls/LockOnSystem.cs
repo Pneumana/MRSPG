@@ -37,7 +37,8 @@ public class LockOnSystem : MonoBehaviour
     public RectTransform timeJuice;
     Transform ui;
 
-    bool triggerPressed;
+    public Controller controller;
+
 
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
     //yep
@@ -55,6 +56,7 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
+        
         if (trackedEnemy != null)
         {
             var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
@@ -116,7 +118,7 @@ public class LockOnSystem : MonoBehaviour
 
                     if (view.z >= 0)
                     {
-                        Debug.Log("in veiw z");
+                        //Debug.Log("in veiw z");
                         displayTarget = true;
                     }
                     else
@@ -132,7 +134,6 @@ public class LockOnSystem : MonoBehaviour
     }
     void SwapPositions()
     {
-        triggerPressed = false;
         if (closestTarget == null||player==null)
             return;
         Vector3 playerStartPos = player.transform.position;
@@ -149,13 +150,7 @@ public class LockOnSystem : MonoBehaviour
         characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
     }
-    public void ConfigureLockOn(InputAction.CallbackContext context)
-    {
-        if(!triggerPressed)
-        {
-            triggerPressed = true;
-        }
-    }
+
 
     void InputEventStartLockOn()
     {
@@ -182,7 +177,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || triggerPressed && cooldown <= 0)
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
             {
                 remainingTime = useTime;
                 //foreach enemy,
@@ -223,7 +218,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || triggerPressed && remainingTime > 0)
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
@@ -259,7 +254,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || triggerPressed && remainingTime > 0 && cooldown <= 0)
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
                 if (!dontSwapPositions)
