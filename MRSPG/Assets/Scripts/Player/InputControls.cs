@@ -121,6 +121,7 @@ public class InputControls : MonoBehaviour
             Debug.Log("jumping");
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
             isJumping = true;
+            isGrounded = false;
         }
 
     }
