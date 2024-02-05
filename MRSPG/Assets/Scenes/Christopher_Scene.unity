@@ -579,6 +579,7 @@ MonoBehaviour:
   scaleSpeed: 5
   targetTime: 1
   timeJuice: {fileID: 1198134870}
+  controller: {fileID: 0}
 --- !u!114 &296041902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1627,7 +1628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
-  metronome: {fileID: 0}
+  metronome: {fileID: 2106552121}
   enemiesInRange: []
 --- !u!136 &664284242
 CapsuleCollider:
@@ -2633,7 +2634,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029365084}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17756154, y: 0.000000021022046, z: -0.0000000037929784, w: 0.9841097}
+  m_LocalRotation: {x: 0.17756152, y: -0.000000015062609, z: 0.000000002717725, w: 0.9841097}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4012,7 +4013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1788072973
 Transform:
   m_ObjectHideFlags: 0
@@ -4952,7 +4953,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1970690154
 Transform:
   m_ObjectHideFlags: 0
@@ -5767,7 +5768,7 @@ MonoBehaviour:
   speed: 8
   jump: 10
   dashSpeed: 12
-  dashTime: 0.25
+  dashTime: 0.15
   dashCooldown: 0.5
   playerInput: {x: 0, y: 0}
   cam: {fileID: 522244520}
