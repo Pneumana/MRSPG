@@ -1332,13 +1332,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.030286672, y: 0.93049943, z: -0.051914584, w: -0.36132872}
-  m_LocalPosition: {x: 5.79, y: 1.99, z: 3.65}
+  m_LocalRotation: {x: -0.014366652, y: 0.9947024, z: -0.0583609, w: -0.08339575}
+  m_LocalPosition: {x: 2.085, y: 1.924, z: 1.268}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 6.806, y: 222.379, z: -1.088}
+  m_LocalEulerAnglesHint: {x: 6.806, y: 189.52, z: -1.088}
 --- !u!1 &976668396
 GameObject:
   m_ObjectHideFlags: 0
@@ -1924,6 +1924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df449845b5aa154f9d66a66d6f4da5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 50
   currentHealth: 0
 --- !u!136 &1380190504
 CapsuleCollider:
@@ -2673,14 +2674,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
-  _healthImg: {fileID: 751644118}
-  _healthSprite:
-  - {fileID: 21300000, guid: 248d157fca225d149b2c2fd70bba43db, type: 3}
-  - {fileID: 21300000, guid: 6dfd186793baa6f49be63717290739d2, type: 3}
-  - {fileID: 21300000, guid: 0cfc8138e93720d48b91dd4a8722b29c, type: 3}
-  - {fileID: 21300000, guid: 1c33bf2ba6ed7ad4f923772116c45cdb, type: 3}
-  - {fileID: 21300000, guid: 55726d38dd6ae8740ad184c08adff842, type: 3}
-  - {fileID: 21300000, guid: 4111be1e478310348bdb883e6d81392c, type: 3}
 --- !u!114 &1761099839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2693,6 +2686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a9a1514cb5e8d41bbd1ae3365d07b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxEnergy: 50
   currentEnergy: 0
   _energyImg: {fileID: 1197908518}
   _energySprite:

@@ -37,6 +37,9 @@ public class LockOnSystem : MonoBehaviour
     public RectTransform timeJuice;
     Transform ui;
 
+    public Controller controller;
+
+
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
     //yep
 
@@ -53,6 +56,7 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
+        
         if (trackedEnemy != null)
         {
             var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
@@ -109,8 +113,25 @@ public class LockOnSystem : MonoBehaviour
             targeters.Clear();
             //targeters.Add(closestTarget);
         }
-        if(closestTarget!=null && closestEnemy!=null)
-            closestTarget.transform.position = Camera.main.WorldToScreenPoint(closestEnemy.transform.position);
+        if(lockon != null && trackedEnemy != null)
+        {
+            lockon.transform.position = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
+            var view = Camera.main.WorldToViewportPoint(trackedEnemy.transform.position);
+            bool displayTarget = false;
+
+                    if (view.z >= 0)
+                    {
+                        //Debug.Log("in veiw z");
+                        displayTarget = true;
+                    }
+                    else
+                    {
+                        displayTarget = false;
+                    }
+            if(lockon.GetComponent<Image>().enabled!=displayTarget)
+                lockon.GetComponent<Image>().enabled = displayTarget;
+        }
+
 
 
     }
@@ -118,11 +139,11 @@ public class LockOnSystem : MonoBehaviour
     {
         if (closestTarget == null||player==null)
             return;
-       
         Vector3 playerStartPos = player.transform.position;
         Vector3 targetedPos = closestEnemy.transform.position;
 
-        
+        if (Camera.main.WorldToViewportPoint(targetedPos).z < 0)
+            return;
 
 
         Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
@@ -132,6 +153,7 @@ public class LockOnSystem : MonoBehaviour
         characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
     }
+
 
     void InputEventStartLockOn()
     {
@@ -158,7 +180,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.leftTrigger.wasPressedThisFrame && cooldown <= 0)
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
             {
                 remainingTime = useTime;
                 //foreach enemy,
@@ -199,7 +221,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || Gamepad.current.leftTrigger.isPressed && remainingTime > 0)
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
@@ -235,10 +257,10 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.leftTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
-                if(!dontSwapPositions)
+                if (!dontSwapPositions)
                     SwapPositions();
 
                 foreach (GameObject targeter in targeters)
@@ -267,7 +289,7 @@ public class LockOnSystem : MonoBehaviour
             targeters[i].GetComponent<Image>().color = Color.white;
             //add a case to check to sprite so it's not constantly setting the sprite, that might be bad for framerate
             targeters[i].GetComponent<Image>().sprite = unlockedSprite;
-            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
+            if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height || Camera.main.WorldToViewportPoint(enemies[i].transform.position).z < 0)
             {
                 targeters[i].GetComponent<Image>().color = Color.clear;
                 //Debug.Log(targeters[i].name + " is offscreen with pos " + enemyScreenPos);
