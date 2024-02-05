@@ -21,6 +21,8 @@ public class InputControls : MonoBehaviour
 
     private Vector3 velocity;
     private Vector3 moveDirection;
+    private Vector3 movePlayer;
+    [HideInInspector] public Vector2 playerInput;
 
     [Header("Camera")]
     public Transform cam;
@@ -33,8 +35,14 @@ public class InputControls : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance;
     public LayerMask groundMask;
-    private bool isGrounded = false;
+    public bool isGrounded = false;
+
+    //Controller Support:
+    ControllerSupport controls;
+    private bool isJumping;
     #endregion
+
+
 
     private void Start()
     {
@@ -49,7 +57,8 @@ public class InputControls : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
         ApplyGravity();
-        ApplyMovement();
+        MovePlayer(movePlayer);
+        if(isGrounded) { isJumping = false; }
     }
 
     public void ApplyGravity()
@@ -68,40 +77,29 @@ public class InputControls : MonoBehaviour
 
         while (Time.time < startTime + dashTime)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-            //subtract the camera from the direction to stop the weird movement
-            controller.Move(targetDirection * dashSpeed * Time.deltaTime);
+            // Subtract the camera from the direction to stop the weird movement
+            controller.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
             yield return null;
         }
     }
+
+
     IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         canDash = true;
     }
-    public void ApplyMovement()
+    public void MovePlayer(Vector3 movePlayer)
     {
-        //Get user input
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 movePlayer = new Vector3(horizontal, 0f, vertical).normalized;
+        movePlayer = new Vector3(playerInput.x, 0f, playerInput.y).normalized;
 
         velocity.y += gravity * gravityMultiplier * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jump * -2f * gravity);
-        }
-
-        if(Input.GetButtonDown("Fire1") && canDash)
-        {
-            StartCoroutine(ApplyDash(movePlayer));
-            StartCoroutine(Waiter(dashCooldown));
-        }
 
         if (movePlayer.magnitude >= 0.1f)
         {
@@ -113,6 +111,31 @@ public class InputControls : MonoBehaviour
             controller.Move(moveDirection.normalized * Time.deltaTime * speed);
         }
     }
+
+
+#region Actions:
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if(!isJumping)
+        {
+            Debug.Log("jumping");
+            velocity.y = Mathf.Sqrt(jump * -2f * gravity);
+            isJumping = true;
+        }
+
+    }
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if(canDash)
+        {
+            StartCoroutine(ApplyDash(movePlayer));
+            StartCoroutine(Waiter(dashCooldown));
+        }
+    }
+
+
+
+#endregion
 
     private void OnDrawGizmos()
     {

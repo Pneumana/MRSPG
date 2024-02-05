@@ -37,6 +37,8 @@ public class LockOnSystem : MonoBehaviour
     public RectTransform timeJuice;
     Transform ui;
 
+    bool triggerPressed;
+
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
     //yep
 
@@ -130,6 +132,7 @@ public class LockOnSystem : MonoBehaviour
     }
     void SwapPositions()
     {
+        triggerPressed = false;
         if (closestTarget == null||player==null)
             return;
         Vector3 playerStartPos = player.transform.position;
@@ -145,6 +148,13 @@ public class LockOnSystem : MonoBehaviour
         player.transform.position = targetedPos;
         characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
+    }
+    public void ConfigureLockOn(InputAction.CallbackContext context)
+    {
+        if(!triggerPressed)
+        {
+            triggerPressed = true;
+        }
     }
 
     void InputEventStartLockOn()
@@ -172,7 +182,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || Gamepad.current.leftTrigger.wasPressedThisFrame && cooldown <= 0)
+            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || triggerPressed && cooldown <= 0)
             {
                 remainingTime = useTime;
                 //foreach enemy,
@@ -213,7 +223,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || Gamepad.current.leftTrigger.isPressed && remainingTime > 0)
+            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || triggerPressed && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
@@ -249,10 +259,10 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || Gamepad.current.leftTrigger.wasReleasedThisFrame && remainingTime > 0 && cooldown <= 0)
+            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || triggerPressed && remainingTime > 0 && cooldown <= 0)
             {
                 //remove all targeters
-                if(!dontSwapPositions)
+                if (!dontSwapPositions)
                     SwapPositions();
 
                 foreach (GameObject targeter in targeters)
