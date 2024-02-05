@@ -71,6 +71,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LookAtTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""e26448fb-0413-45b1-8ba6-f82a11a92f4d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,28 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""Slowdown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2b210f4-358a-4520-9b50-d869e0d34f77"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookAtTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6dbc101-a550-44f2-9e01-5209d07853dd"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookAtTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +271,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_Slowdown = m_Gameplay.FindAction("Slowdown", throwIfNotFound: true);
+        m_Gameplay_LookAtTarget = m_Gameplay.FindAction("LookAtTarget", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +338,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_Slowdown;
+    private readonly InputAction m_Gameplay_LookAtTarget;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -315,6 +348,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @Slowdown => m_Wrapper.m_Gameplay_Slowdown;
+        public InputAction @LookAtTarget => m_Wrapper.m_Gameplay_LookAtTarget;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +373,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Slowdown.started += instance.OnSlowdown;
             @Slowdown.performed += instance.OnSlowdown;
             @Slowdown.canceled += instance.OnSlowdown;
+            @LookAtTarget.started += instance.OnLookAtTarget;
+            @LookAtTarget.performed += instance.OnLookAtTarget;
+            @LookAtTarget.canceled += instance.OnLookAtTarget;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -358,6 +395,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Slowdown.started -= instance.OnSlowdown;
             @Slowdown.performed -= instance.OnSlowdown;
             @Slowdown.canceled -= instance.OnSlowdown;
+            @LookAtTarget.started -= instance.OnLookAtTarget;
+            @LookAtTarget.performed -= instance.OnLookAtTarget;
+            @LookAtTarget.canceled -= instance.OnLookAtTarget;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -382,5 +422,6 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnSlowdown(InputAction.CallbackContext context);
+        void OnLookAtTarget(InputAction.CallbackContext context);
     }
 }
