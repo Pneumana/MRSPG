@@ -62,6 +62,13 @@ public class CircleStrafePlayerAI : MonoBehaviour
 
 
             }
+            if(lungeing && GetComponent<Rigidbody>().velocity.magnitude < 0.5f)
+            {
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+                me.enabled = true;
+                lungeing = false;
+                lungeCD = lungeCooldown;
+            }
             
         }
     }
@@ -79,12 +86,18 @@ public class CircleStrafePlayerAI : MonoBehaviour
             currentLunge += Time.deltaTime * lungeSpeed;
             yield return new WaitForSeconds(0);
         }while (currentLunge <lungeDistance) ;
-        me.enabled = true;
+/*        me.enabled = true;
         lungeing=false;
-        lungeCD = lungeCooldown;
+        lungeCD = lungeCooldown;*/
         yield return null;
     }
 
 
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "PlayerObj")
+        {
+            GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+        }
+    }
 }
