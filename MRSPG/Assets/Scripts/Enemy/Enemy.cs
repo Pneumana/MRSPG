@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -22,6 +24,13 @@ public class Enemy : MonoBehaviour
     private GameObject _player;
     private Health _playerhealth;
     private Vector3 _target;
+
+    private Vector3 ForcedDashDirection;
+    private float dashTime = 0.1f;
+    private float smoothAngle = 0.05f;
+    private float smoothedVelocity;
+    private float dashSpeed = 12f;
+
 
 
     #endregion
@@ -73,6 +82,11 @@ public class Enemy : MonoBehaviour
                 enemy.GetComponent<Enemy>().speed = 6f;
             }
             enemiesInRange.Clear();
+        }
+
+        if(GameObject.Find("Controller Detection").GetComponent<Controller>().controls.Gameplay.Dash.IsPressed())
+        {
+            //StartCoroutine(ApplyDash(transform.position));
         }
     }
 
@@ -193,6 +207,25 @@ public class Enemy : MonoBehaviour
             }
         }
         CanAttack = true;
+    }
+    #endregion
+
+    #region Player Attacks:
+    public IEnumerator ApplyDash(Vector3 direction)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + dashTime)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
+            // Subtract the camera from the direction to stop the weird movement
+            //controller.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetDirection, dashSpeed * Time.deltaTime);
+            yield return null;
+        }
     }
     #endregion
 }
