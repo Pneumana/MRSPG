@@ -14,7 +14,6 @@ public class Controller : MonoBehaviour
     public string Fire1;
     public string Fire2;
     public string Fire3;
-
     public InputAction fireAction;
 
 
