@@ -71,6 +71,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""93f32a76-9d0a-4d28-9e27-bb8f44383b43"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,17 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""Slowdown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2eec5039-5e3c-4f1e-b51f-8f5b79c23e74"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +260,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_Slowdown = m_Gameplay.FindAction("Slowdown", throwIfNotFound: true);
+        m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +327,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_Slowdown;
+    private readonly InputAction m_Gameplay_Fire;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -315,6 +337,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @Slowdown => m_Wrapper.m_Gameplay_Slowdown;
+        public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +362,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Slowdown.started += instance.OnSlowdown;
             @Slowdown.performed += instance.OnSlowdown;
             @Slowdown.canceled += instance.OnSlowdown;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -358,6 +384,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Slowdown.started -= instance.OnSlowdown;
             @Slowdown.performed -= instance.OnSlowdown;
             @Slowdown.canceled -= instance.OnSlowdown;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -382,5 +411,6 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnSlowdown(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }
