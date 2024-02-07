@@ -25,12 +25,6 @@ public class Enemy : MonoBehaviour
     private Health _playerhealth;
     private Vector3 _target;
 
-    private Vector3 ForcedDashDirection;
-    private float dashTime = 0.1f;
-    private float smoothAngle = 0.05f;
-    private float smoothedVelocity;
-    private float dashSpeed = 12f;
-
 
 
     #endregion
@@ -59,7 +53,7 @@ public class Enemy : MonoBehaviour
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
             //transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
-            transform.LookAt(_target);
+            //transform.LookAt(_target);
         }
         if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && CanAttack)
         {
@@ -86,7 +80,7 @@ public class Enemy : MonoBehaviour
 
         if(GameObject.Find("Controller Detection").GetComponent<Controller>().controls.Gameplay.Dash.IsPressed())
         {
-            //StartCoroutine(ApplyDash(transform.position));
+            //StartCoroutine(ApplyDash());
         }
     }
 
@@ -207,25 +201,6 @@ public class Enemy : MonoBehaviour
             }
         }
         CanAttack = true;
-    }
-    #endregion
-
-    #region Player Attacks:
-    public IEnumerator ApplyDash(Vector3 direction)
-    {
-        float startTime = Time.time;
-        while (Time.time < startTime + dashTime)
-        {
-            float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-            // Subtract the camera from the direction to stop the weird movement
-            //controller.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
-            transform.position = Vector3.MoveTowards(transform.position, targetDirection, dashSpeed * Time.deltaTime);
-            yield return null;
-        }
     }
     #endregion
 }

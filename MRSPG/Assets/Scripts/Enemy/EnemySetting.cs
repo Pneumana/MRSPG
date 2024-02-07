@@ -22,13 +22,15 @@ public class EnemySetting : ScriptableObject
 public enum EnemyType
 {
     Standard, //0
-    Heavy, //1
-    Ranged, //2
-    Boss // 3
+    AnkleBiters, //1
+    Heavy, //2
+    Ranged, //3
+    Boss // 4
 };
 public enum Attack
 {
     Charge,
+    Lunge,
     Light,
     Heavy,
     Load,
