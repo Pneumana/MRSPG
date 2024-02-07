@@ -80,6 +80,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""996a8219-f7fc-4714-a70d-4b892291c382"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -258,6 +267,28 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""LookAtTarget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""038e7d5e-a1e9-4e1b-953e-7dbb4ecea4ff"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""81fbce12-ed04-46e6-856a-1c9b74422fa3"",
+                    ""path"": ""<DualShockGamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -272,6 +303,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_Slowdown = m_Gameplay.FindAction("Slowdown", throwIfNotFound: true);
         m_Gameplay_LookAtTarget = m_Gameplay.FindAction("LookAtTarget", throwIfNotFound: true);
+        m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +371,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_Slowdown;
     private readonly InputAction m_Gameplay_LookAtTarget;
+    private readonly InputAction m_Gameplay_Fire;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -349,6 +382,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @Slowdown => m_Wrapper.m_Gameplay_Slowdown;
         public InputAction @LookAtTarget => m_Wrapper.m_Gameplay_LookAtTarget;
+        public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -376,6 +410,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @LookAtTarget.started += instance.OnLookAtTarget;
             @LookAtTarget.performed += instance.OnLookAtTarget;
             @LookAtTarget.canceled += instance.OnLookAtTarget;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -398,6 +435,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @LookAtTarget.started -= instance.OnLookAtTarget;
             @LookAtTarget.performed -= instance.OnLookAtTarget;
             @LookAtTarget.canceled -= instance.OnLookAtTarget;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -423,5 +463,6 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnSlowdown(InputAction.CallbackContext context);
         void OnLookAtTarget(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }

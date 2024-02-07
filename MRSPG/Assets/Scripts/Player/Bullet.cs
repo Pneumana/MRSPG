@@ -60,5 +60,9 @@ public class Bullet : MonoBehaviour
             Destroy ( shot.gameObject );
             Destroy ( this.gameObject );
         }
+        else if ( shot.collider.name == "Anklebiter" )
+        {
+            return;
+        }
     }
 }
