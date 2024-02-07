@@ -1,8 +1,11 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -99,6 +102,7 @@ public class LockOnSystem : MonoBehaviour
         }
         GetTargetedEnemy();
         InputEventEndLockOn();
+        LookAtTarget();
         if(remainingTime <= 0)
         {
             Debug.Log("timed out");
@@ -142,6 +146,14 @@ public class LockOnSystem : MonoBehaviour
         Vector3 playerStartPos = player.transform.position;
         Vector3 targetedPos = closestEnemy.transform.position;
 
+        //disable closest enemy nav mesh agent
+        try
+        {
+            closestEnemy.GetComponent<NavMeshAgent>().enabled = false;
+        }
+        catch { }
+
+
         if (Camera.main.WorldToViewportPoint(targetedPos).z < 0)
             return;
 
@@ -152,14 +164,19 @@ public class LockOnSystem : MonoBehaviour
         player.transform.position = targetedPos;
         characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
+
+        try
+        {
+            closestEnemy.GetComponent<NavMeshAgent>().enabled = true;
+        }
+        catch { }
     }
 
 
     void InputEventStartLockOn()
     {
-        if(Gamepad.current == null)
-        {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0)
+
+            if (controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
             {
                 remainingTime = useTime;
                 //foreach enemy,
@@ -177,38 +194,49 @@ public class LockOnSystem : MonoBehaviour
                     //add Line of sight check here
                 }
             }
+        
+    }
+
+    void LookAtTarget()
+    {
+        if (trackedEnemy == null)
+            return;
+
+        var cam = Camera.main.gameObject;
+        var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+
+        var dir = trackedEnemy.transform.position - player.transform.position;
+        //
+        dir = Vector3.Normalize(dir);
+        
+
+        Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
+
+        if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
+        {
+            Debug.Log(dir);
+            Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
+
+
+            var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
+            freeLook.m_XAxis.Value = xangle - 180;
+            freeLook.m_YAxis.Value = -dir.y;
+            //cam.transform.LookAt((trackedEnemy.transform.position + player.transform.position) / 2);
         }
-        else
+        if (controller.controls.Gameplay.LookAtTarget.WasReleasedThisFrame())
         {
-            if (Input.GetKeyDown(KeyCode.E) && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
-            {
-                remainingTime = useTime;
-                //foreach enemy,
-                //create a UI element that has an image, then check the distance 
-                foreach (GameObject enemy in enemies)
-                {
-                    var newTargeter = new GameObject();
-                    newTargeter.name = enemy.name + "Target";
-                    newTargeter.transform.SetParent(ui);
-                    newTargeter.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
-                    newTargeter.AddComponent<Image>();
-                    newTargeter.GetComponent<Image>().sprite = unlockedSprite;
-                    newTargeter.GetComponent<Image>().color = Color.white;
-                    targeters.Add(newTargeter);
-                    //add Line of sight check here
-                }
-            }
+
         }
     }
+
     void InputEventStayLockOn()
     {
         if(cooldown > 0)
         {
             return;
         }
-        if (Gamepad.current == null)
-        {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0)
+        
+            if (controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0)
             {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
@@ -218,47 +246,14 @@ public class LockOnSystem : MonoBehaviour
             {
                 targetTime = maxTimeScale;
             }
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.E) && remainingTime > 0 || controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0)
-            {
-                if (remainingTime >= 0)
-                    remainingTime -= Time.unscaledDeltaTime;
-                targetTime = minTimeScale;
-            }
-            else
-            {
-                targetTime = maxTimeScale;
-            }
-        }
         
     }
     public void InputEventEndLockOn(bool dontSwapPositions = false)
     {
-        if (Gamepad.current == null)
-        {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0)
+        
+            if (controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
             {
-                //remove all targeters
-                if(!dontSwapPositions)
-                    SwapPositions();
-
-                foreach (GameObject targeter in targeters)
-                {
-                        Destroy(targeter);
-                }
-                targeters.Clear();
-                //targeters.Add(closestTarget);
-                cooldown = cooldownTime;
-                remainingTime = useTime;
-                targetTime = maxTimeScale;
-            }
-        }
-        else
-        {
-            if (Input.GetKeyUp(KeyCode.E) && remainingTime > 0 && cooldown <= 0 || controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
-            {
+            Debug.Log("end input");
                 //remove all targeters
                 if (!dontSwapPositions)
                     SwapPositions();
@@ -273,7 +268,7 @@ public class LockOnSystem : MonoBehaviour
                 remainingTime = useTime;
                 targetTime = maxTimeScale;
             }
-        }
+        
     }
     void GetTargetedEnemy()
     {

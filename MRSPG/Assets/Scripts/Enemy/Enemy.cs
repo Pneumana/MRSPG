@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -22,6 +24,7 @@ public class Enemy : MonoBehaviour
     private GameObject _player;
     private Health _playerhealth;
     private Vector3 _target;
+
 
 
     #endregion
@@ -50,7 +53,7 @@ public class Enemy : MonoBehaviour
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
             //transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
-            transform.LookAt(_target);
+            //transform.LookAt(_target);
         }
         if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && CanAttack)
         {
@@ -73,6 +76,11 @@ public class Enemy : MonoBehaviour
                 enemy.GetComponent<Enemy>().speed = 6f;
             }
             enemiesInRange.Clear();
+        }
+
+        if(GameObject.Find("Controller Detection").GetComponent<Controller>().controls.Gameplay.Dash.IsPressed())
+        {
+            //StartCoroutine(ApplyDash());
         }
     }
 

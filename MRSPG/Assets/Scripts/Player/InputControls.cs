@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using Mono.Cecil.Cil;
 using NUnit.Framework;
 using System.Collections;
@@ -11,6 +12,7 @@ public class InputControls : MonoBehaviour
     #region Variables
     [Header("Player Variables")]
     public CharacterController controller;
+    public Transform playerObj;
     public float speed;
     public float jump;
     [Header("Dash")]
@@ -18,6 +20,9 @@ public class InputControls : MonoBehaviour
     public float dashTime;
     private bool canDash = true;
     public float dashCooldown;
+    private float targetAngle;
+    public LayerMask enemyLayer;
+    private float dashImpact = 1f;
 
     private Vector3 velocity;
     private Vector3 moveDirection;
@@ -77,17 +82,27 @@ public class InputControls : MonoBehaviour
 
         while (Time.time < startTime + dashTime)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+            targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-            // Subtract the camera from the direction to stop the weird movement
             controller.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
+
+            //Dash into enemy here:
+            Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
+            foreach (Collider enemy in hitEnemies)
+            {
+                Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
+                Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
+                if (enemyRigidbody != null)
+                {
+                    enemyRigidbody.AddForce(enemyDirection * dashImpact, ForceMode.Impulse);
+                }
+            }
             yield return null;
         }
     }
-
 
     IEnumerator Waiter(float seconds)
     {
@@ -121,6 +136,7 @@ public class InputControls : MonoBehaviour
             Debug.Log("jumping");
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
             isJumping = true;
+            isGrounded = false;
         }
 
     }
@@ -132,13 +148,11 @@ public class InputControls : MonoBehaviour
             StartCoroutine(Waiter(dashCooldown));
         }
     }
-
-
-
 #endregion
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, 0.4f);
+        Gizmos.DrawWireSphere(playerObj.position, 1f);
     }
 }
