@@ -18,7 +18,7 @@ public class InputControls : MonoBehaviour
     [Header("Dash")]
     public float dashSpeed;
     public float dashTime;
-    private bool canDash = true;
+    public bool canDash = true;
     public float dashCooldown;
     private float targetAngle;
     public LayerMask enemyLayer;

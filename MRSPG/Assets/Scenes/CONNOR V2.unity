@@ -144,7 +144,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55015125}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.008237454, y: -9.3129104e-10, z: -7.671728e-12, w: 0.9999661}
+  m_LocalRotation: {x: -0.008237455, y: 5.550362e-17, z: 9.617207e-19, w: 0.9999661}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3620,7 +3620,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522244517}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.008237455, y: -0.0000000013170445, z: -1.0849462e-11, w: 0.9999661}
+  m_LocalRotation: {x: -0.008237455, y: 5.549947e-17, z: 4.571899e-19, w: 0.9999661}
   m_LocalPosition: {x: 0, y: 2.97, z: -18.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3715,10 +3715,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b7f5b4012bb9abe43a45d28d006a8a99, type: 3}
-  m_Resource: {fileID: 8300000, guid: b7f5b4012bb9abe43a45d28d006a8a99, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: e9eb410ff4881e84ebc9c4824544af06, type: 3}
+  m_Resource: {fileID: 8300000, guid: e9eb410ff4881e84ebc9c4824544af06, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.01
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -4519,7 +4519,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755026102}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.009904743, y: -5.37673e-10, z: 5.3257745e-12, w: 0.99995095}
+  m_LocalRotation: {x: 0.009904743, y: 5.37673e-10, z: -5.3257745e-12, w: 0.99995095}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -20067,7 +20067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78add849425a27340b98a3f06d28c6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BPM: 120
+  BPM: 90
   beatDuration: 0
   visualizer: {fileID: 2106552122}
 --- !u!114 &2106552122
@@ -20401,11 +20401,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 2119414566}
+  playerObj: {fileID: 2119414561}
   speed: 8
   jump: 10
   dashSpeed: 12
   dashTime: 0.25
+  canDash: 1
   dashCooldown: 0.5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
   playerInput: {x: 0, y: 0}
   cam: {fileID: 522244520}
   gravityMultiplier: 4

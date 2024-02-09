@@ -349,4 +349,9 @@ public class LockOnSystem : MonoBehaviour
         //remainingTime = useTime;
         targetTime = maxTimeScale;
     }
+
+    //ADD LOCK ON DARK SOULS STYLE
+
+
+
 }
