@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.XR;
 using static UnityEngine.InputSystem.InputAction;
 
 public class Controller : MonoBehaviour
@@ -12,6 +13,8 @@ public class Controller : MonoBehaviour
     public InputControls movement;
     public LockOnSystem lockOnSystem;
     [HideInInspector] public ControllerSupport controls;
+
+    public Vector2 lookInput;
 
     private void Awake()
     {
@@ -28,6 +31,9 @@ public class Controller : MonoBehaviour
         controls = new ControllerSupport();
         controls.Gameplay.Move.performed += ctx => movement.playerInput = ctx.ReadValue<Vector2>();
         controls.Gameplay.Move.canceled += ctx => movement.playerInput = Vector2.zero;
+
+        controls.Gameplay.Camera.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
+        controls.Gameplay.Camera.canceled += ctx => lookInput = Vector2.zero;
     }
 
     private void OnEnable()
