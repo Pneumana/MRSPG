@@ -91,11 +91,13 @@ public class LockOnSystem : MonoBehaviour
             {
                 LockOn();
                 freeAim = false;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
             }
             else
             {
                 StopLockOn();
                 freeAim = true;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             }
         }
 
@@ -150,6 +152,7 @@ public class LockOnSystem : MonoBehaviour
 
 
     }
+
     void SwapPositions()
     {
         if (closestTarget == null||player==null)
@@ -354,9 +357,8 @@ public class LockOnSystem : MonoBehaviour
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
             //enemyTracker = closestTarget;
-            if (!freeAim)
-                return;
-            trackedEnemy = closestEnemy;
+            if (freeAim)
+                trackedEnemy = closestEnemy;
         }
         //get valid enemies and get the closest one on the left and the right
         float left = float.MinValue;
