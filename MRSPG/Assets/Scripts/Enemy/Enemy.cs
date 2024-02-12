@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
@@ -21,6 +22,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
+    private Rigidbody rb;
+    private Vector3 targetPos;
+    private Vector3 lookatvector;
     private int health;
     private float speed;
     private float TimeBetweenAttacks;
@@ -47,19 +51,30 @@ public class Enemy : MonoBehaviour
         {
             _playerhealth = GameObject.Find("Player").GetComponent<Health>();
         }else if (_player == null) { Debug.Log("<color=red>Error: </color> Player was not found.");  }
-        ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
-        ChargeParticle.Stop();
+        if(enemyObj.gameObject.GetComponent<ParticleSystem>() != null)
+        {
+            ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
+            ChargeParticle.Stop();
+        }
     }
-    public void Update()
+
+    private void Update()
+    {
+        targetPos = _player.transform.position;
+        lookatvector = targetPos;
+        lookatvector.y = transform.position.y;
+    }
+    public void FixedUpdate()
     {
         playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
-        float enemy_speed = speed * Time.deltaTime;
-        Vector3 lookatvector = _player.transform.position;
-        lookatvector.y = transform.position.y;
+        float enemy_speed = speed * Time.fixedDeltaTime;
 
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
+            Vector3 move = Vector3.MoveTowards(rb.position, targetPos, enemy_speed);
+            move.y = 0f;
+            //rb.MovePosition(move);
         }
         if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
@@ -67,22 +82,24 @@ public class Enemy : MonoBehaviour
         }
         Death();
 
-       /* if (CheckForEnemies(transform.position, 5))
-        {
-            enemiesInRange.Remove(gameObject);
-            foreach(GameObject enemy in enemiesInRange)
-            {
-                enemy.GetComponent<Enemy>().speed = 1f;
-            }
-        }
-        else
-        {
-            foreach(GameObject enemy in enemiesInRange)
-            {
-                enemy.GetComponent<Enemy>().speed = 6f;
-            }
-            enemiesInRange.Clear();
-        }*/
+        #region Slow Other Enemies:
+        /* if (CheckForEnemies(transform.position, 5))
+         {
+             enemiesInRange.Remove(gameObject);
+             foreach(GameObject enemy in enemiesInRange)
+             {
+                 enemy.GetComponent<Enemy>().speed = 1f;
+             }
+         }
+         else
+         {
+             foreach(GameObject enemy in enemiesInRange)
+             {
+                 enemy.GetComponent<Enemy>().speed = 6f;
+             }
+             enemiesInRange.Clear();
+         }*/
+        #endregion
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -95,8 +112,9 @@ public class Enemy : MonoBehaviour
     }
 
     #region Define Enemy
-    private string SetEnemyData(EnemySetting _enemy)
+    private void SetEnemyData(EnemySetting _enemy)
     {
+        rb = gameObject.GetComponent<Rigidbody>();
         EnemyType _enemytype = _enemy.type;
         metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         _player = GameObject.Find("Player/PlayerObj");
@@ -120,7 +138,6 @@ public class Enemy : MonoBehaviour
         speed = _enemy.speed;
         TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
         ChargeTime = _enemy.ChargeTime;
-        return null;
     }
 
     #endregion
