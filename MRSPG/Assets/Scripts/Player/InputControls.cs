@@ -15,6 +15,7 @@ public class InputControls : MonoBehaviour
     public Transform playerObj;
     public float speed;
     public float jump;
+
     [Header("Dash")]
     public float dashSpeed;
     public float dashTime;
@@ -40,11 +41,11 @@ public class InputControls : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance;
     public LayerMask groundMask;
-    public bool isGrounded = false;
+    public bool isGrounded;
 
     //Controller Support:
     ControllerSupport controls;
-    private bool isJumping;
+    public bool canJump;
     #endregion
 
 
@@ -63,7 +64,7 @@ public class InputControls : MonoBehaviour
         }
         ApplyGravity();
         MovePlayer(movePlayer);
-        if(isGrounded) { isJumping = false; }
+        
     }
 
     public void ApplyGravity()
@@ -72,6 +73,7 @@ public class InputControls : MonoBehaviour
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            canJump = true;
         }
     }
 
@@ -131,12 +133,11 @@ public class InputControls : MonoBehaviour
 #region Actions:
     public void OnJump(InputAction.CallbackContext context)
     {
-        if(!isJumping)
+        if (canJump)
         {
-            Debug.Log("jumping");
+            canJump = false;
+            Debug.Log(canJump);
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
-            isJumping = true;
-            isGrounded = false;
         }
 
     }

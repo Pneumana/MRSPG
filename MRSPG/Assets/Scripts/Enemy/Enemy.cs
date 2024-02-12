@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
@@ -12,18 +13,28 @@ using UnityEngine.InputSystem.XR;
 public class Enemy : MonoBehaviour
 {
     #region Variables
+
+    public Transform enemyObj;
+    public Animator animations;
     [SerializeField] private EnemySetting _enemy;
     [SerializeField] private Metronome metronome;
     [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
+
+    [Header("Enemy Parameters")]
     private int health;
     private float speed;
     private float TimeBetweenAttacks;
     private float ChargeTime;
+    private ParticleSystem ChargeParticle;
     private bool CanAttack = true;
 
+    [Header("Target Parameters")]
     private GameObject _player;
     private Health _playerhealth;
-    private Vector3 _target;
+    private bool playerInRange;
+
+    [Header("Damage Numbers")]
+    private int dashDamage = 5;
 
 
 
@@ -31,37 +42,32 @@ public class Enemy : MonoBehaviour
 
     public void Start()
     {
-        SetTag(_enemy.type);
-        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
-        _player = GameObject.Find("Player/PlayerObj");
+        SetEnemyData(_enemy);
         if(_player != null)
         {
             _playerhealth = GameObject.Find("Player").GetComponent<Health>();
         }else if (_player == null) { Debug.Log("<color=red>Error: </color> Player was not found.");  }
-        health = _enemy.EnemyHealth;
-        speed = _enemy.speed;
-        TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
-        ChargeTime = _enemy.ChargeTime;
+        ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
+        ChargeParticle.Stop();
     }
     public void Update()
     {
-
-        _target = _player.transform.position;
-        float _distFromPlr = Vector3.Distance(transform.position, _target);
+        playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
         float enemy_speed = speed * Time.deltaTime;
+        Vector3 lookatvector = _player.transform.position;
+        lookatvector.y = transform.position.y;
 
         if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
         {
-            //transform.position = Vector3.MoveTowards(transform.position, _target, enemy_speed);
-            //transform.LookAt(_target);
+            enemyObj.LookAt(lookatvector);
         }
-        if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && CanAttack)
+        if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
-            CanAttack = false;
             StartCoroutine(StartAttack(_enemy.pattern));
         }
+        Death();
 
-        if (CheckForEnemies(transform.position, 5))
+       /* if (CheckForEnemies(transform.position, 5))
         {
             enemiesInRange.Remove(gameObject);
             foreach(GameObject enemy in enemiesInRange)
@@ -76,18 +82,25 @@ public class Enemy : MonoBehaviour
                 enemy.GetComponent<Enemy>().speed = 6f;
             }
             enemiesInRange.Clear();
-        }
+        }*/
+    }
 
-        if(GameObject.Find("Controller Detection").GetComponent<Controller>().controls.Gameplay.Dash.IsPressed())
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Wall")
         {
-            //StartCoroutine(ApplyDash());
+            Debug.Log(health);
+            health -= dashDamage;
         }
     }
 
     #region Define Enemy
-    private string SetTag(EnemyType _enemytype)
+    private string SetEnemyData(EnemySetting _enemy)
     {
-        switch(_enemytype)
+        EnemyType _enemytype = _enemy.type;
+        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
+        _player = GameObject.Find("Player/PlayerObj");
+        switch (_enemytype)
         {
             case EnemyType.Standard:
                 gameObject.name = "StandardEnemy";
@@ -103,6 +116,10 @@ public class Enemy : MonoBehaviour
                 break;
 
         }
+        health = _enemy.EnemyHealth;
+        speed = _enemy.speed;
+        TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
+        ChargeTime = _enemy.ChargeTime;
         return null;
     }
 
@@ -147,15 +164,24 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Attack Types
-    private IEnumerator Charge(float seconds)
+    private IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        animations.SetBool("InRange", false);
+    }
+    private IEnumerator Charge(float seconds)
+    {
+        ChargeParticle.Play();
+        yield return new WaitForSeconds(seconds);
+        ChargeParticle.Stop();
         Debug.Log("Charged!");
     }
     private void LightAttack(int Damage)
     {
         Debug.Log("Used the light attack function");
+        animations.SetBool("InRange", true);
         _playerhealth.LoseHealth(Damage);
+        StartCoroutine(Waiter(1f));
     }
     private void HeavyAttack(int Damage)
     {
@@ -173,9 +199,10 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator StartAttack(Attack[] pattern)
     {
-        foreach(Attack attack in pattern)
+        CanAttack = false;
+        foreach (Attack attack in pattern)
         {
-            if(CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>()) && metronome.IsOnBeat())
+            if(playerInRange)
             {
                 switch (attack)
                 {
@@ -201,6 +228,17 @@ public class Enemy : MonoBehaviour
             }
         }
         CanAttack = true;
+    }
+    #endregion
+
+    #region Death Conditions:
+    void Death()
+    {
+        if (health <= 0)
+        {
+            Debug.Log("The enemy has died");
+            Destroy(gameObject);
+        }
     }
     #endregion
 }
