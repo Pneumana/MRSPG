@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class InputControls : MonoBehaviour
 {
@@ -95,11 +96,14 @@ public class InputControls : MonoBehaviour
             Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
             foreach (Collider enemy in hitEnemies)
             {
+                enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
                 if (enemyRigidbody != null)
                 {
                     enemyRigidbody.AddForce(enemyDirection * dashImpact, ForceMode.Impulse);
+                    yield return new WaitForSeconds(1f);
+                    enemy.gameObject.GetComponent<NavMeshAgent>().enabled = true;
                 }
             }
             yield return null;
