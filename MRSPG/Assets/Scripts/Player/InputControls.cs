@@ -24,7 +24,7 @@ public class InputControls : MonoBehaviour
     public float dashCooldown;
     private float targetAngle;
     public LayerMask enemyLayer;
-    private float dashImpact = 1f;
+    private float dashImpact = 30f;
 
     private Vector3 velocity;
     private Vector3 moveDirection;
@@ -101,10 +101,10 @@ public class InputControls : MonoBehaviour
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
                 if (enemyRigidbody != null)
                 {
-                    enemyRigidbody.AddForce(enemyDirection * dashImpact, ForceMode.Impulse);
-                    yield return new WaitForSeconds(1f);
-                    enemy.gameObject.GetComponent<NavMeshAgent>().enabled = true;
+                    enemyRigidbody.velocity = (enemyDirection * dashImpact + Vector3.up * 2);
                 }
+                yield return new WaitForSeconds(1f);
+                if (enemy != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = true; }
             }
             yield return null;
         }
@@ -140,7 +140,6 @@ public class InputControls : MonoBehaviour
         if (canJump)
         {
             canJump = false;
-            Debug.Log(canJump);
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
 
