@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoomBarrel : MonoBehaviour
@@ -7,13 +8,11 @@ public class BoomBarrel : MonoBehaviour
     #region Variables
 
     int _boomRadius = 3;
+    int _maxHealth = 1;
+    public int currentHealth;
 
     [SerializeField]
     Health _playerHealth;
-    [SerializeField]
-    GameObject _player;
-    [SerializeField]
-    GameObject [ ] _enemies;
     [SerializeField]
     EnemySetting _enemyHealth;
 
@@ -22,26 +21,41 @@ public class BoomBarrel : MonoBehaviour
 
     private void Awake ( )
     {
-        _player = GameObject.Find ( "Player" );
-        _playerHealth=GameObject.Find("Player").GetComponent<Health>();
+        _playerHealth = GameObject.Find ( "Player" ).GetComponent<Health> ( );
 
-        if ( _player || _playerHealth == null )
+        if ( _playerHealth == null )
         {
             Debug.LogError ( "Player is NULL" );
         }
+
+        _enemyHealth = GameObject.FindWithTag ( "Enemy" ).GetComponent<EnemySetting> ( );
+
+        if (_enemyHealth == null )
+        {
+            Debug.LogError ( "EnemySetting is NULL" );
+        }
+
+        currentHealth = _maxHealth;
     }
 
-    void DealDamage ( )
+    private void OnCollisionEnter ( Collision boom )
     {
-        _playerHealth.LoseHealth ( 5 );
-        _enemyHealth.EnemyHealth -= 5;
-        if(transform.name=="Boom Barrel" )
+        if ( boom.collider.tag == ( "Enemy" ) )
         {
-            
+            Explode ( );
         }
     }
 
-    void DetectionForExplosion ( )
+    void Explode ( )
+    {
+        if ( currentHealth == 0 )
+        {
+            DetectionAfterExplosion ( );
+            Destroy ( this.gameObject );
+        }
+    }
+
+    void DetectionAfterExplosion ( )
     {
         var colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
 
@@ -51,6 +65,11 @@ public class BoomBarrel : MonoBehaviour
         }
     }
 
+    void DealDamage ( )
+    {
+        _playerHealth.LoseHealth ( 5 );
+        _enemyHealth.EnemyHealth -= 5;
+    }
 
 
 }
