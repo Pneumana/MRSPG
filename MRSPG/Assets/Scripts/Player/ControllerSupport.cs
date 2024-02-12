@@ -282,7 +282,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""81fbce12-ed04-46e6-856a-1c9b74422fa3"",
-                    ""path"": ""<DualShockGamepad>/rightTrigger"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
