@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -23,6 +24,8 @@ public class LockOnSystem : MonoBehaviour
 
     public GameObject enemyTracker;
     public GameObject trackedEnemy;
+    public GameObject leftTrackedEnemy;
+    public GameObject rightTrackedEnemy;
 
     public Sprite lockedSprite;
     public Sprite unlockedSprite;
@@ -42,7 +45,8 @@ public class LockOnSystem : MonoBehaviour
 
     public Controller controller;
 
-
+    bool freeAim = true;
+    float swapTargetCD;
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
     //yep
 
@@ -59,7 +63,8 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
-        
+        if(swapTargetCD>0)
+            swapTargetCD-=Time.deltaTime;
         if (trackedEnemy != null)
         {
             var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
@@ -83,13 +88,20 @@ public class LockOnSystem : MonoBehaviour
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
         {
-            LockOn();
-        }
-        if (Input.GetKeyUp(KeyCode.H))
-        {
-            StopLockOn();
+            if (freeAim)
+            {
+                LockOn();
+                freeAim = false;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            }
+            else
+            {
+                StopLockOn();
+                freeAim = true;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+            }
         }
 
         InputEventStartLockOn();
@@ -100,9 +112,13 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
             closestTarget.GetComponent<Image>().color = Color.clear;
         }
-        GetTargetedEnemy();
+        
         InputEventEndLockOn();
-        LookAtTarget();
+        if (!freeAim)
+        {
+            GetTargetedEnemy();
+            LookAtTarget();
+        }
         if(remainingTime <= 0)
         {
             Debug.Log("timed out");
@@ -139,6 +155,7 @@ public class LockOnSystem : MonoBehaviour
 
 
     }
+
     void SwapPositions()
     {
         if (closestTarget == null||player==null)
@@ -201,6 +218,25 @@ public class LockOnSystem : MonoBehaviour
     {
         if (trackedEnemy == null)
             return;
+        if(swapTargetCD <= 0)
+        {
+            if (controller.lookInput.x > 0)
+            {
+                Debug.Log("looking right");
+                //right
+                if (rightTrackedEnemy != null)
+                    trackedEnemy = rightTrackedEnemy;
+            }
+            else if (controller.lookInput.x < 0)
+            {
+                Debug.Log("looking left");
+                //left
+                if (leftTrackedEnemy != null)
+                    trackedEnemy = leftTrackedEnemy;
+            }
+            swapTargetCD = 0.1f;
+        }
+        
 
         var cam = Camera.main.gameObject;
         var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
@@ -212,9 +248,9 @@ public class LockOnSystem : MonoBehaviour
 
         Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
 
-        if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
-        {
-            Debug.Log(dir);
+        //if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
+        //{
+            //Debug.Log(dir);
             Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
 
 
@@ -222,11 +258,11 @@ public class LockOnSystem : MonoBehaviour
             freeLook.m_XAxis.Value = xangle - 180;
             freeLook.m_YAxis.Value = -dir.y;
             //cam.transform.LookAt((trackedEnemy.transform.position + player.transform.position) / 2);
-        }
+        /*}
         if (controller.controls.Gameplay.LookAtTarget.WasReleasedThisFrame())
         {
 
-        }
+        }*/
     }
 
     void InputEventStayLockOn()
@@ -272,11 +308,13 @@ public class LockOnSystem : MonoBehaviour
     }
     void GetTargetedEnemy()
     {
+        
         float closest = float.MaxValue;
         closestTarget = null;
         closestEnemy = null;
         if (targeters.Count <= 0)
             return;
+        List<int> validEnemies = new List<int>();
         for (int i = 0; i < enemies.Count; i++)
         {
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
@@ -306,6 +344,7 @@ public class LockOnSystem : MonoBehaviour
                     //Debug.DrawLine(playerStartPos, hit.point, Color.red, 15);
                 }
             }
+            validEnemies.Add(i);
             //LOS check should be here
             var dist = Vector2.Distance(targeters[i].transform.position, ui.position + new Vector3(Screen.width / 2, Screen.height / 2));
             if (dist < closest)
@@ -314,12 +353,41 @@ public class LockOnSystem : MonoBehaviour
                 closestTarget = targeters[i];
 
                 closestEnemy = enemies[i];
-                if (trackedEnemy != closestEnemy && closestEnemy != null)
-                {
-                    //enemyTracker = closestTarget;
-                    trackedEnemy = closestEnemy;
-                }
+                
                 //Debug.Log(closestEnemy.name + " @ " + closestEnemy.transform.position + " is the closest target");
+            }
+        }
+        if (trackedEnemy != closestEnemy && closestEnemy != null)
+        {
+            //enemyTracker = closestTarget;
+            if (freeAim)
+                trackedEnemy = closestEnemy;
+        }
+        //get valid enemies and get the closest one on the left and the right
+        float left = float.MinValue;
+        float right = float.MaxValue;
+        foreach (int i in validEnemies)
+        {
+            if (targeters[i] == closestTarget)
+                continue;
+            var check = targeters[i].transform.position.x - closestTarget.transform.position.x;
+            if(check > 0)
+            {
+                //right
+                if (check < right)
+                {
+                    right = check;
+                    rightTrackedEnemy = enemies[i];
+                }
+            }
+            else if(check < 0)
+            {
+                //left
+                if(check > left)
+                {
+                    left = check;
+                    leftTrackedEnemy = enemies[i];
+                }
             }
         }
     }
@@ -352,4 +420,9 @@ public class LockOnSystem : MonoBehaviour
         //remainingTime = useTime;
         targetTime = maxTimeScale;
     }
+
+    //ADD LOCK ON DARK SOULS STYLE
+
+
+
 }

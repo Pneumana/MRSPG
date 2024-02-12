@@ -57,7 +57,8 @@ public class CircleStrafePlayerAI : MonoBehaviour
                 //re-set 
                 var rolledRadius = Random.Range(strafeRadiusMin, strafeRadiusMax);
                 strafeAngle += Random.Range(-45,45);
-                me.destination = player.transform.position + new Vector3(Mathf.Cos(strafeAngle * Mathf.Deg2Rad) * rolledRadius, 0, Mathf.Sin(strafeAngle * Mathf.Deg2Rad) * rolledRadius);
+                if(me.enabled)
+                    me.destination = player.transform.position + new Vector3(Mathf.Cos(strafeAngle * Mathf.Deg2Rad) * rolledRadius, 0, Mathf.Sin(strafeAngle * Mathf.Deg2Rad) * rolledRadius);
                 
 
 
@@ -66,10 +67,18 @@ public class CircleStrafePlayerAI : MonoBehaviour
             {
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
                 me.enabled = true;
-                lungeing = false;
-                lungeCD = lungeCooldown;
+                
+                    lungeing = false;
+                    lungeCD = lungeCooldown;
             }
-            
+            if (!me.enabled)
+            {
+                if(Mathf.Abs(GetComponent<Rigidbody>().velocity.magnitude) < 0.1f)
+                {
+                    me.enabled = true;
+                    Debug.Log("recovered");
+                }
+            }
         }
     }
 
@@ -97,7 +106,20 @@ public class CircleStrafePlayerAI : MonoBehaviour
     {
         if(collision.gameObject.name == "PlayerObj")
         {
-            GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+            Debug.Log("hit player");
+            if(lungeing)
+                GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+            else
+            {
+                if (!collision.gameObject.transform.parent.gameObject.GetComponent<InputControls>().canDash)
+                {
+                    Debug.Log("knockback from player dash");
+                    me.enabled = false;
+                    GetComponent<Rigidbody>().velocity = (collision.gameObject.transform.forward * 30 + Vector3.up * 2);
+
+                    Debug.Log(GetComponent<Rigidbody>().velocity);
+                }
+            }
         }
     }
 }

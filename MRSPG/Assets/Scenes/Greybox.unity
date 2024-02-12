@@ -945,7 +945,7 @@ MonoBehaviour:
   scaleSpeed: 5
   targetTime: 1
   timeJuice: {fileID: 133387597}
-  controller: {fileID: 0}
+  controller: {fileID: 1420186384}
 --- !u!114 &484629149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1161,11 +1161,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1833281800}
+  playerObj: {fileID: 1833281799}
   speed: 15
   jump: 15
   dashSpeed: 30
   dashTime: 0.25
   dashCooldown: 0.5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
   playerInput: {x: 0, y: 0}
   cam: {fileID: 739497210}
   gravityMultiplier: 4
