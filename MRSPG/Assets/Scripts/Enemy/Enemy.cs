@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     public Transform enemyObj;
     public Animator animations;
     [SerializeField] private EnemySetting _enemy;
-    [SerializeField] private Metronome metronome;
+    Metronome metronome;
     [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
@@ -179,7 +179,11 @@ public class Enemy : MonoBehaviour
     private void LightAttack(int Damage)
     {
         Debug.Log("Used the light attack function");
+        if(animations != null)
+        {
+
         animations.SetBool("InRange", true);
+        }
         _playerhealth.LoseHealth(Damage);
         StartCoroutine(Waiter(1f));
     }
@@ -196,6 +200,10 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("Used the shoot function");
     }
+    /*private void Lunge()
+    {
+        StartCoroutine(Lunge());
+    }*/
 
     private IEnumerator StartAttack(Attack[] pattern)
     {

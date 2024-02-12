@@ -107,9 +107,9 @@ public class CircleStrafePlayerAI : MonoBehaviour
         if(collision.gameObject.name == "PlayerObj")
         {
             Debug.Log("hit player");
-            if(lungeing)
-                GetComponent<Rigidbody>().velocity = -transform.forward * 7;
-            else
+            if (lungeing)
+            { GetComponent<Rigidbody>().velocity = -transform.forward * 7; }
+            /*else
             {
                 if (!collision.gameObject.transform.parent.gameObject.GetComponent<InputControls>().canDash)
                 {
@@ -119,7 +119,7 @@ public class CircleStrafePlayerAI : MonoBehaviour
 
                     Debug.Log(GetComponent<Rigidbody>().velocity);
                 }
-            }
+            }*/
         }
     }
 }
