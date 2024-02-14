@@ -392,6 +392,7 @@ public class LockOnSystem : MonoBehaviour
         {
             freeAim = false;
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Camera.main.gameObject.transform.right * 2 + Vector3.up * 1.5f - Camera.main.gameObject.transform.forward * 2;
         }
         foreach (int i in validEnemies)
         {
@@ -421,6 +422,8 @@ public class LockOnSystem : MonoBehaviour
     public void LockOn()
     {
         Debug.Log("creating targeters");
+        //update enemy list
+        UpdateEnemyList();
         foreach (GameObject enemy in enemies)
         {
             var newTargeter = new GameObject();
@@ -452,6 +455,7 @@ public class LockOnSystem : MonoBehaviour
 
         freeAim = true;
         GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+        GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
     }
 
     //ADD LOCK ON DARK SOULS STYLE

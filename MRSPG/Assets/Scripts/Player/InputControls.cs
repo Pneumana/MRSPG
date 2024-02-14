@@ -29,7 +29,7 @@ public class InputControls : MonoBehaviour
     private Vector3 velocity;
     private Vector3 moveDirection;
     private Vector3 movePlayer;
-    [HideInInspector] public Vector2 playerInput;
+    public Vector2 playerInput;
 
     [Header("Camera")]
     public Transform cam;
@@ -117,7 +117,7 @@ public class InputControls : MonoBehaviour
     }
     public void MovePlayer(Vector3 movePlayer)
     {
-        movePlayer = new Vector3(playerInput.x, 0f, playerInput.y).normalized;
+        movePlayer = new Vector3(playerInput.x, 0f, playerInput.y);
 
         velocity.y += gravity * gravityMultiplier * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
@@ -128,8 +128,8 @@ public class InputControls : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            controller.Move(moveDirection.normalized * Time.deltaTime * speed);
+            moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward * playerInput.magnitude;
+            controller.Move(moveDirection * Time.deltaTime * speed);
         }
     }
 

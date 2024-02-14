@@ -32,7 +32,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""535b169a-74ae-4c25-9804-9ad41fac0fd1"",
                     ""expectedControlType"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone(min=1.401298E-45)"",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
@@ -141,7 +141,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""id"": ""cda92b1b-2843-45f9-8087-9680017fcbd3"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone(min=1.401298E-45)"",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,
