@@ -8,7 +8,7 @@ public class Gun : MonoBehaviour
     #region Variables
 
     public LockOnSystem targeting;
-    public Enegry energy;
+    public Energy energy;
     public GameObject bulletPrefab;
     public Controller control;
 

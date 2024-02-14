@@ -10,12 +10,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Type", order = 1)]
 public class EnemySetting : ScriptableObject
 {
+    [Header("Main Settings")]
     public EnemyType type;
     public Attack[] pattern;
+
+    [Header("Enemy Parameters")]
     public int EnemyHealth;
     public float speed;
     public float TimeBetweenAttacks;
     public float ChargeTime;
+    [Header("Beat Values")]
+    public int EnergyGainedOnBeat;
+    public int EnergyGainedOffBeat;
 }
 
 #region Enums

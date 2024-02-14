@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Target Parameters")]
     private GameObject _player;
+    private Energy energy;
     private Health _playerhealth;
     private bool playerInRange;
     private float maxdistance = 6f;
@@ -126,6 +127,7 @@ public class Enemy : MonoBehaviour
         EnemyType _enemytype = _enemy.type;
         metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         _player = GameObject.Find("Player/PlayerObj");
+        energy = GameObject.Find("Player").GetComponent<Energy>();
         switch (_enemytype)
         {
             case EnemyType.Standard:
@@ -275,6 +277,10 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("The enemy has died");
+            if (energy.currentEnergy < 50)
+            {
+                energy.GainEnergy(_enemy.EnergyGainedOnBeat, _enemy.EnergyGainedOffBeat);
+            }
             Destroy(gameObject);
         }
     }

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enegry : MonoBehaviour
+public class Energy : MonoBehaviour
 {
     #region variables
     int _maxEnergy = 50;
@@ -45,6 +45,7 @@ public class Enegry : MonoBehaviour
             if ( currentEnergy < 50 )
             {
                 GainEnergy(10, 5);
+                Debug.Log("Killed a standard enemy.");
             }
             Destroy ( enemy.gameObject );
         }
@@ -70,7 +71,7 @@ public class Enegry : MonoBehaviour
     /// <summary>
     /// standard: 10/5, ranged:10,5, heavy: 20/10
     /// </summary>
-    void GainEnergy(int onBeat, int offBeat) 
+    public void GainEnergy(int onBeat, int offBeat) 
     {
         if ( Metronome.inst.IsOnBeat ( ) )
         {

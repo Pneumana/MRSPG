@@ -32,6 +32,7 @@ public class HitscanBullet : MonoBehaviour
             if (enemyCast.Length > 0)
             {
                 Debug.Log("Hit enemy x " + enemyCast.Length + " " + enemyCast[0].collider.gameObject.name, enemyCast[0].collider.gameObject);
+                Destroy(enemyCast[0].collider.gameObject);
                 Debug.DrawLine(transform.position, groundCast.point, Color.red, 10);
                 foreach (RaycastHit hit in enemyCast)
                 {

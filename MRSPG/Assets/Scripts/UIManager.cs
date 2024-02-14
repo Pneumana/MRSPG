@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
 {
     #region  Variables
     Health _playerHealth;
-    Enegry _playerEnergy;
+    Energy _playerEnergy;
 
     [SerializeField]
     Image _healthImg, _energyImg;
@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
     private void Start ( )
     {
         _playerHealth = GameObject.Find ( "Player" ).GetComponent<Health> ( );
-        _playerEnergy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+        _playerEnergy = GameObject.Find ( "Player" ).GetComponent<Energy> ( );
 
         if ( _playerHealth == null )
         {
