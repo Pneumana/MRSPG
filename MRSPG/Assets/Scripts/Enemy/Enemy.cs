@@ -5,6 +5,7 @@ using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 
 /// <summary>
@@ -15,11 +16,11 @@ public class Enemy : MonoBehaviour
 {
     #region Variables
 
-    public Transform enemyObj;
+    private Transform enemyObj;
     public Animator animations;
     [SerializeField] private EnemySetting _enemy;
     Metronome metronome;
-    [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
+    private List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
     private Rigidbody rb;
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour
     private GameObject _player;
     private Health _playerhealth;
     private bool playerInRange;
+    private float maxdistance = 6f;
 
     [Header("Damage Numbers")]
     private int dashDamage = 5;
@@ -58,24 +60,30 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        targetPos = _player.transform.position;
-        lookatvector = targetPos;
-        lookatvector.y = transform.position.y;
-    }
-    public void FixedUpdate()
-    {
-        playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
-        float enemy_speed = speed * Time.fixedDeltaTime;
-
-        if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, maxdistance, _player.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
-            Vector3 move = Vector3.MoveTowards(rb.position, targetPos, enemy_speed);
-            move.y = 0f;
-            //rb.MovePosition(move);
+            float distanceToPlayer = targetPos.magnitude;
+            if (distanceToPlayer > 2f)
+            {
+                float adjustedSpeed = Mathf.Lerp(0, speed, Mathf.Clamp01(distanceToPlayer / maxdistance));
+
+                Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
+                rb.MovePosition(transform.position + move);
+
+            }
         }
+    }
+
+    public void Update()
+    {
+        targetPos = _player.transform.position - transform.position;
+        lookatvector = _player.transform.position;
+        lookatvector.y = transform.position.y;
+        playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
+
         if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
             StartCoroutine(StartAttack(_enemy.pattern));
@@ -138,6 +146,7 @@ public class Enemy : MonoBehaviour
         speed = _enemy.speed;
         TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
         ChargeTime = _enemy.ChargeTime;
+        enemyObj = gameObject.transform.GetChild(0);
     }
 
     #endregion
@@ -176,7 +185,7 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, 2);
-        Gizmos.DrawWireSphere(transform.position, 5);
+        Gizmos.DrawWireSphere(transform.position, maxdistance);
     }
     #endregion
 
@@ -188,10 +197,14 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(float seconds)
     {
+
+        float begginingspeed = speed;
+        speed = 0f;
         ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
         ChargeParticle.Stop();
         Debug.Log("Charged!");
+        speed = begginingspeed;
     }
     private void LightAttack(int Damage)
     {

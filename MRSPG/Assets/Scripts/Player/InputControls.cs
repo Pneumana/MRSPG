@@ -82,7 +82,7 @@ public class InputControls : MonoBehaviour
     {
         canDash = false;
         float startTime = Time.time;
-
+        
         while (Time.time < startTime + dashTime)
         {
             targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
@@ -96,16 +96,16 @@ public class InputControls : MonoBehaviour
             Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
             foreach (Collider enemy in hitEnemies)
             {
-                enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
                 Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
+                enemyDirection.y = 0f;
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
                 if (enemyRigidbody != null)
                 {
                     enemyRigidbody.velocity = (enemyDirection * dashImpact + Vector3.up * 2);
                 }
-                yield return new WaitForSeconds(1f);
-                if (enemy != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = true; }
             }
+
             yield return null;
         }
     }

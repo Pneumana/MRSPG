@@ -44,7 +44,7 @@ public class Enegry : MonoBehaviour
         {
             if ( currentEnergy < 50 )
             {
-                StandardEnemy ( );
+                GainEnergy(10, 5);
             }
             Destroy ( enemy.gameObject );
         }
@@ -53,7 +53,7 @@ public class Enegry : MonoBehaviour
         {
             if ( currentEnergy < 50 )
             {
-                HeavyEnemy ( );
+                GainEnergy(20, 10);
             }
             Destroy ( enemy.gameObject );
         }
@@ -62,45 +62,23 @@ public class Enegry : MonoBehaviour
         {
             if ( currentEnergy < 50 )
             {
-                RangedEnemy ( );
+                GainEnergy(10, 5);
             }
             Destroy ( enemy.gameObject );
         }
     }
-
-    void StandardEnemy ( )
+    /// <summary>
+    /// standard: 10/5, ranged:10,5, heavy: 20/10
+    /// </summary>
+    void GainEnergy(int onBeat, int offBeat) 
     {
         if ( Metronome.inst.IsOnBeat ( ) )
         {
-            currentEnergy += 10;
+            currentEnergy += onBeat;
         }
         else if ( !Metronome.inst.IsOnBeat ( ) )
         {
-            currentEnergy += 5;
-        }
-    }
-
-    void RangedEnemy ( )
-    {
-        if ( Metronome.inst.IsOnBeat ( ) )
-        {
-            currentEnergy += 10;
-        }
-        else if ( !Metronome.inst.IsOnBeat ( ) )
-        {
-            currentEnergy += 5;
-        }
-    }
-
-    void HeavyEnemy ( )
-    {
-        if ( Metronome.inst.IsOnBeat ( ) )
-        {
-            currentEnergy += 20;
-        }
-        else if ( !Metronome.inst.IsOnBeat ( ) )
-        {
-            currentEnergy += 10;
+            currentEnergy += offBeat;
         }
     }
 
