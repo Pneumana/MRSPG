@@ -38,14 +38,26 @@ public class Gun : MonoBehaviour
         }
     }
 
-    private void Update ( )
+    public IEnumerator ShootGun()
     {
-        if ( control.controls.Gameplay.Fire.WasPressedThisFrame() && targeting.trackedEnemy!=null && energy.currentEnergy == 50 )
+        GameObject bullet = null;
+        if (targeting.trackedEnemy != null && energy.currentEnergy == 50)
         {
-            var bullet = Instantiate ( bulletPrefab , transform.position , Quaternion.identity );
-            bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
+            bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
             Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
-            energy.LoseEnergy ( 0 );
+            energy.LoseEnergy(0);
+        }
+        while(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
+        {
+            bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
+            yield return null;
         }
     }
+
+    public void Shoot(InputAction.CallbackContext context)
+    {
+        Debug.Log("The gun was shot");
+        StartCoroutine(ShootGun());
+    }
 }
+
