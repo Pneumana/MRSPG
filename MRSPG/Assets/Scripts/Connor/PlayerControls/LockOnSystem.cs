@@ -218,7 +218,12 @@ public class LockOnSystem : MonoBehaviour
     void LookAtTarget()
     {
         if (trackedEnemy == null)
+        {
+            StopLockOn();
+            //break lock on
             return;
+        }
+
         if(swapTargetCD <= 0)
         {
             if (controller.lookInput.x > 0)
@@ -318,6 +323,13 @@ public class LockOnSystem : MonoBehaviour
         List<int> validEnemies = new List<int>();
         for (int i = 0; i < enemies.Count; i++)
         {
+            if (enemies[i]==null)
+            {
+                StopLockOn();
+                UpdateEnemyList();
+                LockOn();
+                return;
+            }
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].GetComponent<Image>().color = Color.white;
