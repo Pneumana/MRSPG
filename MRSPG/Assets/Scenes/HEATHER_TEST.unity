@@ -657,8 +657,6 @@ GameObject:
   - component: {fileID: 702418738}
   - component: {fileID: 702418742}
   - component: {fileID: 702418743}
-  - component: {fileID: 702418745}
-  - component: {fileID: 702418744}
   m_Layer: 6
   m_Name: HeavyEnemy
   m_TagString: Enemy
@@ -793,45 +791,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &702418744
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702418736}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d2f02d2bd1af110449f0c8ee6b223aa3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &702418745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702418736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a7c794e1d8a11408bb96e5fc623361, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyObj: {fileID: 702418741}
-  animations: {fileID: 702418744}
-  _enemy: {fileID: 11400000, guid: 339b90f467b27fb4e9706385dfdcbc27, type: 2}
-  metronome: {fileID: 1045178367}
-  enemiesInRange: []
 --- !u!1 &751644116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,8 +1145,6 @@ GameObject:
   - component: {fileID: 957888255}
   - component: {fileID: 957888259}
   - component: {fileID: 957888260}
-  - component: {fileID: 957888262}
-  - component: {fileID: 957888261}
   m_Layer: 6
   m_Name: StandardEnemy
   m_TagString: Enemy
@@ -1322,45 +1279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &957888261
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 957888253}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d2f02d2bd1af110449f0c8ee6b223aa3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &957888262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 957888253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a7c794e1d8a11408bb96e5fc623361, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyObj: {fileID: 957888258}
-  animations: {fileID: 957888261}
-  _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
-  metronome: {fileID: 1045178367}
-  enemiesInRange: []
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,8 +1430,6 @@ GameObject:
   - component: {fileID: 976668397}
   - component: {fileID: 976668401}
   - component: {fileID: 976668402}
-  - component: {fileID: 976668404}
-  - component: {fileID: 976668403}
   m_Layer: 6
   m_Name: RangedEnemy
   m_TagString: Enemy
@@ -1650,45 +1566,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a610b79e7ca174eb4a8df630dd2cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &976668403
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976668396}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d2f02d2bd1af110449f0c8ee6b223aa3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &976668404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976668396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a7c794e1d8a11408bb96e5fc623361, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyObj: {fileID: 976668400}
-  animations: {fileID: 976668403}
-  _enemy: {fileID: 11400000, guid: a456d77fc676c27459020cd22c64cdfe, type: 2}
-  metronome: {fileID: 1045178367}
-  enemiesInRange: []
 --- !u!1 &1045178365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2105,7 @@ GameObject:
   - component: {fileID: 1423568113}
   - component: {fileID: 1423568112}
   - component: {fileID: 1423568111}
+  - component: {fileID: 1423568116}
   m_Layer: 0
   m_Name: Boom Barrel
   m_TagString: Untagged
@@ -2249,7 +2127,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 0
   _playerHealth: {fileID: 0}
-  _enemyHealth: {fileID: 0}
 --- !u!136 &1423568112
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2340,6 +2217,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1423568116
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423568110}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1526344645
 GameObject:
   m_ObjectHideFlags: 0
