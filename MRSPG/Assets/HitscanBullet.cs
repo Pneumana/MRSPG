@@ -5,9 +5,11 @@ using UnityEngine.AI;
 
 public class HitscanBullet : MonoBehaviour
 {
+    LineRenderer lr;
     // Start is called before the first frame update
     void Start()
     {
+        lr = GetComponent<LineRenderer>();
         RaycastHit groundCast;
         RaycastHit[] enemyCast;
 
@@ -18,14 +20,15 @@ public class HitscanBullet : MonoBehaviour
         enemyMask = ~enemyMask;
 
         //Physics.Raycast(transform.position, transform.forward, out groundCast, Mathf.Infinity);
-        Debug.DrawLine(transform.position, transform.position + transform.forward * 100, Color.blue, 10);
-        if (Physics.Raycast(transform.position, transform.forward, out groundCast, Mathf.Infinity, groundMask))
+        
+        if (Physics.Raycast(transform.position, transform.forward, out groundCast, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
+            Debug.DrawLine(transform.position, transform.position + transform.forward * groundCast.distance, Color.blue, 10);
             Debug.Log("ground target = " + groundCast.distance);
             GetComponent<LineRenderer>().SetPosition(0, transform.position);
             GetComponent<LineRenderer>().SetPosition(1, groundCast.point);
             //Debug.DrawLine(transform.position, groundCast.point, Color.blue, 10);
-            enemyCast = Physics.RaycastAll(transform.position, transform.forward, groundCast.distance);
+            enemyCast = Physics.RaycastAll(transform.position, transform.forward, groundCast.distance, LayerMask.GetMask("Enemy"));
             if (enemyCast.Length > 0)
             {
                 Debug.Log("Hit enemy x " + enemyCast.Length + " " + enemyCast[0].collider.gameObject.name, enemyCast[0].collider.gameObject);
@@ -53,6 +56,20 @@ public class HitscanBullet : MonoBehaviour
             //Debug.Log("Hit ground");
             //Debug.DrawLine(transform.position, groundCast.point, Color.blue, 10);
         }
-        Destroy(gameObject, 10f);
+        //Destroy(gameObject, 10f);
+        StartCoroutine(Dissipate());
+    }
+    IEnumerator Dissipate()
+    {
+        float t = 0;
+        do
+        {
+            t += Time.deltaTime;
+            lr.widthMultiplier = (t * 4) + 1;
+            lr.material.SetFloat("_Fade", t);
+            yield return new WaitForSeconds(0);
+        } while (t < 1);
+        Destroy(gameObject);
+        yield return null;
     }
 }
