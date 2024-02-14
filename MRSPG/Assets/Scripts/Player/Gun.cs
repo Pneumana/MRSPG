@@ -8,7 +8,7 @@ public class Gun : MonoBehaviour
     #region Variables
 
     public LockOnSystem targeting;
-    public Enegry energy;
+    public Energy energy;
     public GameObject bulletPrefab;
     public Controller control;
 
@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour
 
     private void Start ( )
     {
-        energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+        //energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
 
         if ( energy == null )
         {
@@ -42,8 +42,10 @@ public class Gun : MonoBehaviour
     {
         if ( control.controls.Gameplay.Fire.WasPressedThisFrame() && targeting.trackedEnemy!=null && energy.currentEnergy == 50 )
         {
-            Instantiate ( bulletPrefab , transform.position , Quaternion.identity );
-            energy.LoseEnergy ( 50 );
+            var bullet = Instantiate ( bulletPrefab , transform.position , Quaternion.identity );
+            bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
+            Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
+            energy.LoseEnergy ( 0 );
         }
     }
 }

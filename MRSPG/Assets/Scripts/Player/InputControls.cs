@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class InputControls : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class InputControls : MonoBehaviour
     public float dashCooldown;
     private float targetAngle;
     public LayerMask enemyLayer;
-    private float dashImpact = 1f;
+    private float dashImpact = 30f;
 
     private Vector3 velocity;
     private Vector3 moveDirection;
@@ -81,7 +82,7 @@ public class InputControls : MonoBehaviour
     {
         canDash = false;
         float startTime = Time.time;
-
+        
         while (Time.time < startTime + dashTime)
         {
             targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
@@ -95,13 +96,16 @@ public class InputControls : MonoBehaviour
             Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
             foreach (Collider enemy in hitEnemies)
             {
+                if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
                 Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
+                enemyDirection.y = 0f;
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
                 if (enemyRigidbody != null)
                 {
-                    enemyRigidbody.AddForce(enemyDirection * dashImpact, ForceMode.Impulse);
+                    enemyRigidbody.velocity = (enemyDirection * dashImpact + Vector3.up * 2);
                 }
             }
+
             yield return null;
         }
     }
@@ -136,7 +140,6 @@ public class InputControls : MonoBehaviour
         if (canJump)
         {
             canJump = false;
-            Debug.Log(canJump);
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
         }
 

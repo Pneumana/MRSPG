@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     float _speed = 5;
     
     public LockOnSystem targeting;
-    public Enegry energy;
+    public Energy energy;
     public Temp_Boss_health tbh;
     public Transform target;
 
@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
 
     private void Awake ( )
     {
-        energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+        energy = GameObject.Find ( "PlayerObj" ).GetComponent<Energy> ( );
 
         if ( energy == null )
         {
@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
             Debug.LogError ( "TimeScaler is NULL" );
         }
 
-        tbh=GameObject.Find("Boss").GetComponent<Temp_Boss_health> ( );
+        //tbh=GameObject.Find("Boss").GetComponent<Temp_Boss_health> ( );
 
         if ( tbh == null )
         {

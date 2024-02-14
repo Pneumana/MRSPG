@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 
 /// <summary>
@@ -14,13 +16,16 @@ public class Enemy : MonoBehaviour
 {
     #region Variables
 
-    public Transform enemyObj;
+    private Transform enemyObj;
     public Animator animations;
     [SerializeField] private EnemySetting _enemy;
-    [SerializeField] private Metronome metronome;
-    [SerializeField] private List<GameObject> enemiesInRange = new List<GameObject>();
+    Metronome metronome;
+    private List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
+    private Rigidbody rb;
+    private Vector3 targetPos;
+    private Vector3 lookatvector;
     private int health;
     private float speed;
     private float TimeBetweenAttacks;
@@ -30,8 +35,10 @@ public class Enemy : MonoBehaviour
 
     [Header("Target Parameters")]
     private GameObject _player;
+    private Energy energy;
     private Health _playerhealth;
     private bool playerInRange;
+    private float maxdistance = 6f;
 
     [Header("Damage Numbers")]
     private int dashDamage = 5;
@@ -47,42 +54,61 @@ public class Enemy : MonoBehaviour
         {
             _playerhealth = GameObject.Find("Player").GetComponent<Health>();
         }else if (_player == null) { Debug.Log("<color=red>Error: </color> Player was not found.");  }
-        ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
-        ChargeParticle.Stop();
+        if(enemyObj.gameObject.GetComponent<ParticleSystem>() != null)
+        {
+            ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
+            ChargeParticle.Stop();
+        }
     }
-    public void Update()
-    {
-        playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
-        float enemy_speed = speed * Time.deltaTime;
-        Vector3 lookatvector = _player.transform.position;
-        lookatvector.y = transform.position.y;
 
-        if(CheckForPlayer(transform.position, 5, _player.GetComponent<Collider>()))
+    private void FixedUpdate()
+    {
+        if(CheckForPlayer(transform.position, maxdistance, _player.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
+            float distanceToPlayer = targetPos.magnitude;
+            if (distanceToPlayer > 2f)
+            {
+                float adjustedSpeed = Mathf.Lerp(0, speed, Mathf.Clamp01(distanceToPlayer / maxdistance));
+
+                Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
+                rb.MovePosition(transform.position + move);
+
+            }
         }
+    }
+
+    public void Update()
+    {
+        targetPos = _player.transform.position - transform.position;
+        lookatvector = _player.transform.position;
+        lookatvector.y = transform.position.y;
+        playerInRange = CheckForPlayer(transform.position, 2, _player.GetComponent<Collider>());
+
         if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
             StartCoroutine(StartAttack(_enemy.pattern));
         }
         Death();
 
-       /* if (CheckForEnemies(transform.position, 5))
-        {
-            enemiesInRange.Remove(gameObject);
-            foreach(GameObject enemy in enemiesInRange)
-            {
-                enemy.GetComponent<Enemy>().speed = 1f;
-            }
-        }
-        else
-        {
-            foreach(GameObject enemy in enemiesInRange)
-            {
-                enemy.GetComponent<Enemy>().speed = 6f;
-            }
-            enemiesInRange.Clear();
-        }*/
+        #region Slow Other Enemies:
+        /* if (CheckForEnemies(transform.position, 5))
+         {
+             enemiesInRange.Remove(gameObject);
+             foreach(GameObject enemy in enemiesInRange)
+             {
+                 enemy.GetComponent<Enemy>().speed = 1f;
+             }
+         }
+         else
+         {
+             foreach(GameObject enemy in enemiesInRange)
+             {
+                 enemy.GetComponent<Enemy>().speed = 6f;
+             }
+             enemiesInRange.Clear();
+         }*/
+        #endregion
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -95,11 +121,13 @@ public class Enemy : MonoBehaviour
     }
 
     #region Define Enemy
-    private string SetEnemyData(EnemySetting _enemy)
+    private void SetEnemyData(EnemySetting _enemy)
     {
+        rb = gameObject.GetComponent<Rigidbody>();
         EnemyType _enemytype = _enemy.type;
         metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         _player = GameObject.Find("Player/PlayerObj");
+        energy = GameObject.Find("Player").GetComponent<Energy>();
         switch (_enemytype)
         {
             case EnemyType.Standard:
@@ -120,7 +148,7 @@ public class Enemy : MonoBehaviour
         speed = _enemy.speed;
         TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
         ChargeTime = _enemy.ChargeTime;
-        return null;
+        enemyObj = gameObject.transform.GetChild(0);
     }
 
     #endregion
@@ -159,7 +187,7 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, 2);
-        Gizmos.DrawWireSphere(transform.position, 5);
+        Gizmos.DrawWireSphere(transform.position, maxdistance);
     }
     #endregion
 
@@ -171,15 +199,23 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(float seconds)
     {
+
+        float begginingspeed = speed;
+        speed = 0f;
         ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
         ChargeParticle.Stop();
         Debug.Log("Charged!");
+        speed = begginingspeed;
     }
     private void LightAttack(int Damage)
     {
         Debug.Log("Used the light attack function");
+        if(animations != null)
+        {
+
         animations.SetBool("InRange", true);
+        }
         _playerhealth.LoseHealth(Damage);
         StartCoroutine(Waiter(1f));
     }
@@ -196,6 +232,10 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("Used the shoot function");
     }
+    /*private void Lunge()
+    {
+        StartCoroutine(Lunge());
+    }*/
 
     private IEnumerator StartAttack(Attack[] pattern)
     {
@@ -237,6 +277,10 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("The enemy has died");
+            if (energy.currentEnergy < 50)
+            {
+                energy.GainEnergy(_enemy.EnergyGainedOnBeat, _enemy.EnergyGainedOffBeat);
+            }
             Destroy(gameObject);
         }
     }

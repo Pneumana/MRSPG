@@ -93,14 +93,13 @@ public class LockOnSystem : MonoBehaviour
             if (freeAim)
             {
                 LockOn();
-                freeAim = false;
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+                
             }
             else
             {
                 StopLockOn();
-                freeAim = true;
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+                /*freeAim = true;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;*/
             }
         }
 
@@ -196,8 +195,10 @@ public class LockOnSystem : MonoBehaviour
             if (controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
             {
                 remainingTime = useTime;
-                //foreach enemy,
-                //create a UI element that has an image, then check the distance 
+
+            //foreach enemy,
+            //create a UI element that has an image, then check the distance '
+            /*Debug.Log("creating targeters");
                 foreach (GameObject enemy in enemies)
                 {
                     var newTargeter = new GameObject();
@@ -209,7 +210,7 @@ public class LockOnSystem : MonoBehaviour
                     newTargeter.GetComponent<Image>().color = Color.white;
                     targeters.Add(newTargeter);
                     //add Line of sight check here
-                }
+                }*/
             }
         
     }
@@ -217,7 +218,12 @@ public class LockOnSystem : MonoBehaviour
     void LookAtTarget()
     {
         if (trackedEnemy == null)
+        {
+            StopLockOn();
+            //break lock on
             return;
+        }
+
         if(swapTargetCD <= 0)
         {
             if (controller.lookInput.x > 0)
@@ -294,11 +300,11 @@ public class LockOnSystem : MonoBehaviour
                 if (!dontSwapPositions)
                     SwapPositions();
 
-                foreach (GameObject targeter in targeters)
+                /*foreach (GameObject targeter in targeters)
                 {
                         Destroy(targeter);
                 }
-                targeters.Clear();
+                targeters.Clear();*/
                 //targeters.Add(closestTarget);
                 cooldown = cooldownTime;
                 remainingTime = useTime;
@@ -317,6 +323,13 @@ public class LockOnSystem : MonoBehaviour
         List<int> validEnemies = new List<int>();
         for (int i = 0; i < enemies.Count; i++)
         {
+            if (enemies[i]==null)
+            {
+                StopLockOn();
+                UpdateEnemyList();
+                LockOn();
+                return;
+            }
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].transform.position = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
             targeters[i].GetComponent<Image>().color = Color.white;
@@ -334,8 +347,9 @@ public class LockOnSystem : MonoBehaviour
                 RaycastHit hit;
                 var vector = enemies[i].transform.position - player.transform.position;
                 Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
-                if (hit.collider != null)
-                    Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
+                if (hit.collider == null)
+                    continue;
+                    //Debug.DrawLine(player.transform.position, hit.collider.gameObject.transform.position, Color.white, Time.unscaledDeltaTime);
                 if (enemies[i] != hit.collider.gameObject)
                 {
                     targeters[i].GetComponent<Image>().color = Color.clear;
@@ -366,6 +380,19 @@ public class LockOnSystem : MonoBehaviour
         //get valid enemies and get the closest one on the left and the right
         float left = float.MinValue;
         float right = float.MaxValue;
+        //Debug.Log(validEnemies.Count + "valid enemies");
+        if(validEnemies.Count == 0)
+        {
+            Debug.Log("stopping lock on, no targets");
+            StopLockOn();
+            
+            return;
+        }
+        else
+        {
+            freeAim = false;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+        }
         foreach (int i in validEnemies)
         {
             if (targeters[i] == closestTarget)
@@ -393,6 +420,7 @@ public class LockOnSystem : MonoBehaviour
     }
     public void LockOn()
     {
+        Debug.Log("creating targeters");
         foreach (GameObject enemy in enemies)
         {
             var newTargeter = new GameObject();
@@ -406,10 +434,12 @@ public class LockOnSystem : MonoBehaviour
             //add Line of sight check here
         }
         GetTargetedEnemy();
+        
     }
 
     public void StopLockOn()
     {
+        Debug.Log("stopping lock on");
         foreach (GameObject targeter in targeters)
         {
             Destroy(targeter);
@@ -419,6 +449,9 @@ public class LockOnSystem : MonoBehaviour
         //cooldown = cooldownTime;
         //remainingTime = useTime;
         targetTime = maxTimeScale;
+
+        freeAim = true;
+        GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
     }
 
     //ADD LOCK ON DARK SOULS STYLE
