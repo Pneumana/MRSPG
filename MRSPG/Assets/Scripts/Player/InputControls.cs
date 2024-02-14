@@ -49,8 +49,6 @@ public class InputControls : MonoBehaviour
     public bool canJump;
     #endregion
 
-
-
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
