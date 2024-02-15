@@ -57,6 +57,6 @@ public class Metronome : MonoBehaviour
     }
     public float GetInterval()
     {
-        return interval;
+        return 1 / ((float)BPM / 60);
     }
 }

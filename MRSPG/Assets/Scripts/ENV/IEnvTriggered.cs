@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IEnvTriggered 
 {
-    public void Activated()
+    public void Activated(float delay)
     {
 
     }
