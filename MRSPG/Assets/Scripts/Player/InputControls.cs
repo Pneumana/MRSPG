@@ -49,11 +49,19 @@ public class InputControls : MonoBehaviour
     public bool canJump;
     #endregion
 
-
+    public static InputControls instance;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
 
