@@ -32,7 +32,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""535b169a-74ae-4c25-9804-9ad41fac0fd1"",
                     ""expectedControlType"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone(min=1.401298E-45)"",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
@@ -89,6 +89,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ce3b6e11-eb09-4945-9082-94d9be20d8b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -141,7 +150,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""id"": ""cda92b1b-2843-45f9-8087-9680017fcbd3"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone(min=1.401298E-45)"",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -289,6 +298,39 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2fa946a1-9bcd-4ee8-9014-dfb4819445a9"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""613372e1-ef3a-47b5-aafb-b0856faf0e57"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""722bedd2-59e5-4f57-84f6-e254033ea301"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -304,6 +346,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Slowdown = m_Gameplay.FindAction("Slowdown", throwIfNotFound: true);
         m_Gameplay_LookAtTarget = m_Gameplay.FindAction("LookAtTarget", throwIfNotFound: true);
         m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
+        m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -372,6 +415,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Slowdown;
     private readonly InputAction m_Gameplay_LookAtTarget;
     private readonly InputAction m_Gameplay_Fire;
+    private readonly InputAction m_Gameplay_Attack;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -383,6 +427,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Slowdown => m_Wrapper.m_Gameplay_Slowdown;
         public InputAction @LookAtTarget => m_Wrapper.m_Gameplay_LookAtTarget;
         public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
+        public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -413,6 +458,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -438,6 +486,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -464,5 +515,6 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnSlowdown(InputAction.CallbackContext context);
         void OnLookAtTarget(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

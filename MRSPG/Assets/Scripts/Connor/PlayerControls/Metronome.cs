@@ -55,4 +55,8 @@ public class Metronome : MonoBehaviour
     {
         return onBeat;
     }
+    public float GetInterval()
+    {
+        return interval;
+    }
 }
