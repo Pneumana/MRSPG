@@ -51,6 +51,7 @@ public class InputControls : MonoBehaviour
 
     public static InputControls instance;
 
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
