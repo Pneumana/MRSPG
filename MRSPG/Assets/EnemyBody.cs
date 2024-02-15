@@ -8,7 +8,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 public class EnemyBody : MonoBehaviour
 {
     GameObject player;
-    [SerializeField] private EnemySetting _enemy;
+    public EnemySetting _enemy;
     private int health;
     private float speed;
     private int maxHealth;
@@ -78,23 +78,27 @@ public class EnemyBody : MonoBehaviour
             Debug.Log(health);
             ModifyHealth(-5);
         }
-        if(collision.gameObject == player)
+/*        if(collision.gameObject == player)
         {
-            if (!InputControls.instance.canDash)
-            {
-                Shoved(-transform.forward * 7);
-            }
-            else
-            {
-                if (bounceOffPlayer)
-                {
-                    GetComponent<Rigidbody>().velocity = -transform.forward * 7;
-                }
-            }
-        }
+            
+        }*/
         //do ground detection/falling here
     }
-
+    public void HitByPlayerDash()
+    {
+        Debug.Log(gameObject.name + " pushed by player");
+        if (!InputControls.instance.canDash)
+        {
+            Shoved(-transform.forward * 7);
+        }
+        else
+        {
+            if (bounceOffPlayer)
+            {
+                GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+            }
+        }
+    }
     void Shoved(Vector3 dir, ForceMode mode = ForceMode.Impulse)
     {
         Debug.Log("shoved");
@@ -105,6 +109,6 @@ public class EnemyBody : MonoBehaviour
     public void Recover()
     {
         me.enabled = true;
-        Debug.Log("recovered");
+        Debug.Log(gameObject.name + "recovered");
     }
 }

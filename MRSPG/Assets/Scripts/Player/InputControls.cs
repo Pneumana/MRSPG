@@ -108,10 +108,10 @@ public class InputControls : MonoBehaviour
                 if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
                 Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
                 enemyDirection.y = 0f;
-                Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
-                if (enemyRigidbody != null)
+                var body = enemy.GetComponent<EnemyBody>();
+                if (body != null)
                 {
-                    enemyRigidbody.velocity = (enemyDirection * dashImpact + Vector3.up * 2);
+                    body.HitByPlayerDash();
                 }
             }
 

@@ -57,8 +57,11 @@ public class CircleStrafePlayerAI : MonoBehaviour
                 //re-set 
                 var rolledRadius = Random.Range(strafeRadiusMin, strafeRadiusMax);
                 strafeAngle += Random.Range(-45,45);
-                if(body.me.enabled)
+                if (body.me.enabled)
+                {
                     body.me.destination = player.transform.position + new Vector3(Mathf.Cos(strafeAngle * Mathf.Deg2Rad) * rolledRadius, 0, Mathf.Sin(strafeAngle * Mathf.Deg2Rad) * rolledRadius);
+                }
+                    
                 
 
 
