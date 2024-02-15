@@ -12,6 +12,7 @@ public class Controller : MonoBehaviour
     public static Controller inst;
     public InputControls movement;
     public LockOnSystem lockOnSystem;
+    public Gun gun;
     [HideInInspector] public ControllerSupport controls;
 
     public Vector2 lookInput;
@@ -41,6 +42,7 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Enable();
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
+        controls.Gameplay.Fire.performed += gun.Shoot;
     }
 
     private void OnDisable()
