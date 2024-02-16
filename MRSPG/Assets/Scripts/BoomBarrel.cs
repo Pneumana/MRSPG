@@ -13,6 +13,8 @@ public class BoomBarrel : MonoBehaviour
 
     [SerializeField]
     Health _playerHealth;
+    [SerializeField]
+    BoomBarrel _boomAgain;
 
     #endregion
 
@@ -23,6 +25,13 @@ public class BoomBarrel : MonoBehaviour
         if ( _playerHealth == null )
         {
             Debug.LogError ( "Player is NULL" );
+        }
+
+        _boomAgain= GameObject.Find("Boom Barrel").GetComponent<BoomBarrel>();
+
+        if ( _boomAgain == null )
+        {
+            Debug.LogError ( "Boom Barrel is NULL" );
         }
 
         currentHealth = _maxHealth;
@@ -36,7 +45,7 @@ public class BoomBarrel : MonoBehaviour
         }
     }
 
-    void Explode ( )
+    public void Explode ( )
     {
         currentHealth -= 1;
 
@@ -49,30 +58,31 @@ public class BoomBarrel : MonoBehaviour
 
     void DetectionAfterExplosion ( )
     {
-        var colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
+        Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
 
-        foreach ( var collider in colliders )
+        foreach( var collider in colliders )
         {
             DealDamage ( );
+            return;
         }
     }
 
     void DealDamage ( )
     {
         _playerHealth.LoseHealth ( 5 );
+
         Debug.Log ( "Enemy Took 5 Damage" );
+
+        if ( GameObject.Find ( "Boom Barrel" ) )
+        {
+            _boomAgain.Explode ( );
+        }
     }
 
     IEnumerator PauseBeforeGone ( )
     {
         yield return new WaitForSeconds ( .5f );
         Destroy ( this.gameObject );
-    }
-
-    private void OnDrawGizmos ( )
-    {
-        Gizmos.color=Color.red;
-        Gizmos.DrawSphere(transform.position, _boomRadius );        
     }
 
 

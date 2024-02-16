@@ -7,7 +7,7 @@ public class Temp_Boss_health : MonoBehaviour
 
     #region variables
 
-    int _maxHealth = 50;
+    int _maxHealth = 1;
     public int currentHealth;
 
 
