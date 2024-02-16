@@ -44,7 +44,7 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
         controls.Gameplay.Fire.performed += gun.Shoot;
-        controls.Gameplay.Attack.performed += playerAttack.Attack;
+        if (playerAttack != null) { controls.Gameplay.Attack.performed += playerAttack.Attack; } //temporary null check until melee is functional
     }
 
     private void OnDisable()

@@ -20286,7 +20286,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: 2140213191}
   lockOnSystem: {fileID: 296041901}
-  gun: {fileID: 0}
+  gun: {fileID: 2118025195}
+  playerAttack: {fileID: 2140213195}
   lookInput: {x: 0, y: 0}
 --- !u!43 &1800008685
 Mesh:
@@ -24462,6 +24463,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106916072}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2118025195 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4247233985874746351, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+  m_PrefabInstance: {fileID: 554667022522079187}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 561cd6b3f112f3f4a8b81094bb4fa234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2118311356 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 550715680081051089, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
@@ -24519,6 +24531,7 @@ MonoBehaviour:
   MeleeCombo: 0
   AttackDelay: 0
   AttackHitbox: {fileID: 1107175832}
+  control: {fileID: 0}
 --- !u!1001 &554667022522079187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24537,7 +24550,7 @@ PrefabInstance:
       objectReference: {fileID: 1069604057}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.008237453
+      value: -0.008237455
       objectReference: {fileID: 0}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.y
@@ -24545,7 +24558,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 9.617203e-19
+      value: 9.617207e-19
       objectReference: {fileID: 0}
     - target: {fileID: 1387221332289506120, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: _energyImg
