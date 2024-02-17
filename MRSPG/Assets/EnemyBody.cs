@@ -20,6 +20,9 @@ public class EnemyBody : MonoBehaviour
 
     Rigidbody rb;
     public NavMeshAgent me;
+
+    [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,9 +40,19 @@ public class EnemyBody : MonoBehaviour
     public void ModifyHealth(int mod)
     {
         health -= mod;
-        
+        if(health >= 0)
+        {
+            Die();
+        }
     }
-
+    void Die()
+    {
+        foreach(EnemyAbsenceTrigger trigger in triggerList)
+        {
+            trigger.UpdateEnemyList(this);
+        }
+        disablePathfinding = true;
+    }
     private void Update()
     {
         if (pushedBack)
