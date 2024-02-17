@@ -15,6 +15,8 @@ public class Health : MonoBehaviour
 
     [SerializeField]
     Sprite [ ] _healthSprite;
+
+    [HideInInspector] public CheckpointObelisk currentCheckpoint;
     #endregion
 
     private void Awake()
@@ -24,12 +26,13 @@ public class Health : MonoBehaviour
 
     private void Update ( )
     {
-        UIUpdateHealth ( );
+        
     }
 
     public void LoseHealth(int amount)
     {
         currentHealth -= amount;
+        UIUpdateHealth();
     }
 
     void UIUpdateHealth ( )
@@ -57,8 +60,15 @@ public class Health : MonoBehaviour
         else if ( currentHealth == 0 )
         {
             _healthImg.sprite = _healthSprite [ 5 ];
+            Die();
         }
     }
 
+    public void Die()
+    {
+        transform.Find("PlayerObj").position = currentCheckpoint.spawnPosition + Vector3.up;
+        currentHealth = 5;
+        UIUpdateHealth();
+    }
 
 }
