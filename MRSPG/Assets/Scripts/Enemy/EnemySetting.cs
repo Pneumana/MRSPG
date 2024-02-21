@@ -19,6 +19,7 @@ public class EnemySetting : ScriptableObject
     public float speed;
     public float TimeBetweenAttacks;
     public float ChargeTime;
+    public Animator Animations;
     [Header("Beat Values")]
     public int EnergyGainedOnBeat;
     public int EnergyGainedOffBeat;
