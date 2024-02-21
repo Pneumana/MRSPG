@@ -43,6 +43,10 @@ public class Enemy : MonoBehaviour
     [Header("Damage Numbers")]
     private int dashDamage = 5;
 
+    [Header("Wall Effects")]
+    private bool hasCollided;
+    private DecalPainter painter;
+
 
 
     #endregion
@@ -65,6 +69,7 @@ public class Enemy : MonoBehaviour
     {
         if(CheckForPlayer(transform.position, maxdistance, _player.GetComponent<Collider>()))
         {
+            hasCollided = false;
             enemyObj.LookAt(lookatvector);
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
@@ -73,7 +78,6 @@ public class Enemy : MonoBehaviour
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
                 rb.MovePosition(transform.position + move);
-
             }
         }
     }
@@ -113,10 +117,16 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Wall")
+        if(collision.gameObject.tag == "Wall" && !hasCollided)
         {
+            hasCollided = true;
             Debug.Log(health);
             health -= dashDamage;
+            ContactPoint contact = collision.contacts[0];
+            Vector3 point = contact.point;
+            point.y += 0.1f;
+            Vector3 normal = contact.normal;
+            StartCoroutine(painter.PaintDecal(point, normal, collision));
         }
     }
 
@@ -128,6 +138,7 @@ public class Enemy : MonoBehaviour
         metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         _player = GameObject.Find("Player/PlayerObj");
         energy = GameObject.Find("Player").GetComponent<Energy>();
+        painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
         switch (_enemytype)
         {
             case EnemyType.Standard:
@@ -271,7 +282,7 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
-    #region Death Conditions:
+    #region Damage Conditions:
     void Death()
     {
         if (health <= 0)

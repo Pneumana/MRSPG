@@ -12,6 +12,7 @@ public class EnemyBody : MonoBehaviour
     private int health;
     private float speed;
     private int maxHealth;
+    private float dashImpact = 3f;
 
     public bool pushedBack;
     public bool disablePathfinding;
@@ -102,13 +103,13 @@ public class EnemyBody : MonoBehaviour
         Debug.Log(gameObject.name + " pushed by player");
         if (!InputControls.instance.canDash)
         {
-            Shoved(-transform.forward * 7);
+            Shoved(-transform.forward * dashImpact);
         }
         else
         {
             if (bounceOffPlayer)
             {
-                GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+                GetComponent<Rigidbody>().velocity = -transform.forward * dashImpact;
             }
         }
     }

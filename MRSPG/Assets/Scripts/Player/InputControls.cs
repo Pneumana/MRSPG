@@ -24,7 +24,6 @@ public class InputControls : MonoBehaviour
     public float dashCooldown;
     private float targetAngle;
     public LayerMask enemyLayer;
-    private float dashImpact = 30f;
 
     private Vector3 velocity;
     private Vector3 moveDirection;
@@ -107,11 +106,12 @@ public class InputControls : MonoBehaviour
             {
                 if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
                 Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
-                enemyDirection.y = 0f;
+                enemyDirection.y = 0f; 
                 var body = enemy.GetComponent<EnemyBody>();
                 if (body != null)
                 {
                     body.HitByPlayerDash();
+                    Debug.Log("Hit by player dash");
                 }
             }
 
