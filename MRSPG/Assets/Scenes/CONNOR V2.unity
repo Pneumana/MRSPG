@@ -11881,7 +11881,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 69, y: 0}
+  m_AnchoredPosition: {x: 69, y: -55.9}
   m_SizeDelta: {x: 236.74, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &710768030
@@ -35863,7 +35863,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -713, y: 461}
+  m_AnchoredPosition: {x: -713, y: 431.8}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1913830531
@@ -35879,8 +35879,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 3473716573192987744, guid: bbe96d87397e62b45a21780ac4d04b75, type: 3}
+  comboLabel: {fileID: 710768030}
+  comboBar: {fileID: 1448714970}
   eventParent: {fileID: 1501928024}
   eventObjs: []
+  removeEventTick: 2
+  eventAddedTimeStamp: []
+  comboTier:
+  - Meh
+  - Mid
+  - Something
+  - Cool
+  - Gaming?!
+  - Awesome!
+  - Wowzers!
+  - Epic Swag Sauce!
+  pointsPerTier: c80000002c01000090010000f4010000bc02000052030000e8030000dc050000
+  currentPoints: 0
+  startedTimestamp: 0
 --- !u!1 &1929855984
 GameObject:
   m_ObjectHideFlags: 0
@@ -37558,7 +37574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.008237455
+      value: -0.008237453
       objectReference: {fileID: 0}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.y
@@ -37566,7 +37582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 9.617207e-19
+      value: 9.617203e-19
       objectReference: {fileID: 0}
     - target: {fileID: 1387221332289506120, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: _energyImg
