@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
     #region Variables
 
     private Transform enemyObj;
-    [SerializeField] private EnemySetting _enemy;
+    public EnemySetting _enemy;
     List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
@@ -244,7 +244,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator StartAttack(Attack[] pattern)
+    public IEnumerator StartAttack(Attack[] pattern)
     {
         CanAttack = false;
         foreach (Attack attack in pattern)

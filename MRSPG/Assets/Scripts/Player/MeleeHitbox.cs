@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MeleeHitbox : MonoBehaviour
 {
-    //public EnemyBody enemyBody;
     void OnEnable()
     {
         StartCoroutine(EnableTime(0.4f));
@@ -18,8 +17,10 @@ public class MeleeHitbox : MonoBehaviour
 
     void OnTriggerEnter(UnityEngine.Collider collision)
     {
-        if (collision.gameObject.GetComponent<EnemyBody>() == null) { return; }
-        collision.gameObject.GetComponent<EnemyBody>().ModifyHealth(-1);
-        Debug.Log("EnemyHit");
+        if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
+        if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
+        enemyBody.ModifyHealth(-1);
+        if (true /*timed on beat*/) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); }
+
     }
 }
