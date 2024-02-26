@@ -12,6 +12,7 @@ public class EnemyBody : MonoBehaviour
     private int health;
     private float speed;
     private int maxHealth;
+    private float dashImpact = 3f;
 
     public bool pushedBack;
     public bool disablePathfinding;
@@ -20,6 +21,9 @@ public class EnemyBody : MonoBehaviour
 
     Rigidbody rb;
     public NavMeshAgent me;
+
+    [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,9 +41,19 @@ public class EnemyBody : MonoBehaviour
     public void ModifyHealth(int mod)
     {
         health -= mod;
-        
+        if(health >= 0)
+        {
+            Die();
+        }
     }
-
+    void Die()
+    {
+        foreach(EnemyAbsenceTrigger trigger in triggerList)
+        {
+            trigger.UpdateEnemyList(this);
+        }
+        disablePathfinding = true;
+    }
     private void Update()
     {
         if (pushedBack)
@@ -89,13 +103,13 @@ public class EnemyBody : MonoBehaviour
         Debug.Log(gameObject.name + " pushed by player");
         if (!InputControls.instance.canDash)
         {
-            Shoved(-transform.forward * 7);
+            Shoved(-transform.forward * dashImpact);
         }
         else
         {
             if (bounceOffPlayer)
             {
-                GetComponent<Rigidbody>().velocity = -transform.forward * 7;
+                GetComponent<Rigidbody>().velocity = -transform.forward * dashImpact;
             }
         }
     }

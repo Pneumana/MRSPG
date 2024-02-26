@@ -1,49 +1,91 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.Universal;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
 /// Will keep track and play through attack cycles.
 /// </summary>
+
 public class Enemy : MonoBehaviour
 {
     #region Variables
 
     private Transform enemyObj;
-    public Animator animations;
     [SerializeField] private EnemySetting _enemy;
     Metronome metronome;
-    private List<GameObject> enemiesInRange = new List<GameObject>();
+    List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
-    private Rigidbody rb;
-    private Vector3 targetPos;
-    private Vector3 lookatvector;
-    private int health;
-    private float speed;
-    private float TimeBetweenAttacks;
-    private float ChargeTime;
-    private ParticleSystem ChargeParticle;
-    private bool CanAttack = true;
-
+    Rigidbody rb;
+    Vector3 targetPos;
+    Vector3 lookatvector;
+    int health;
+    float speed;
+    float TimeBetweenAttacks;
+    float ChargeTime;
+    ParticleSystem ChargeParticle;
+    bool CanAttack = true;
+    bool isGrounded;
+    Animator animations;
     [Header("Target Parameters")]
-    private GameObject _player;
-    private Energy energy;
-    private Health _playerhealth;
-    private bool playerInRange;
-    private float maxdistance = 6f;
+    GameObject _player;
+    Energy energy;
+    Health _playerhealth;
+    bool playerInRange;
+    float maxdistance = 6f;
 
     [Header("Damage Numbers")]
-    private int dashDamage = 5;
+    int dashDamage = 5;
 
+    [Header("Wall Effects")]
+    bool hasCollided;
+    DecalPainter painter;
 
+    #endregion
+
+    #region Define Enemy
+
+    private void SetEnemyData(EnemySetting _enemy)
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
+        _player = GameObject.Find("Player/PlayerObj");
+        energy = GameObject.Find("Player").GetComponent<Energy>();
+        painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+        EnemyType _enemytype = _enemy.type;
+        switch (_enemytype)
+        {
+            case EnemyType.Standard:
+                gameObject.name = "StandardEnemy";
+                gameObject.tag = "Enemy";
+                animations = _enemy.Animations;
+                break;
+            case EnemyType.Heavy:
+                gameObject.name = "HeavyEnemy";
+                gameObject.tag = "Enemy";
+                animations = _enemy.Animations;
+                break;
+            case EnemyType.Ranged:
+                gameObject.name = "RangedEnemy";
+                gameObject.tag = "Enemy";
+                break;
+
+        }
+        health = _enemy.EnemyHealth;
+        speed = _enemy.speed;
+        TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
+        ChargeTime = _enemy.ChargeTime;
+        enemyObj = gameObject.transform.GetChild(0);
+    }
 
     #endregion
 
@@ -65,6 +107,7 @@ public class Enemy : MonoBehaviour
     {
         if(CheckForPlayer(transform.position, maxdistance, _player.GetComponent<Collider>()))
         {
+            hasCollided = false;
             enemyObj.LookAt(lookatvector);
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
@@ -73,7 +116,6 @@ public class Enemy : MonoBehaviour
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
                 rb.MovePosition(transform.position + move);
-
             }
         }
     }
@@ -89,8 +131,20 @@ public class Enemy : MonoBehaviour
         {
             StartCoroutine(StartAttack(_enemy.pattern));
         }
-        Death();
-
+        #region Ground Check + Falling rate
+        if (Physics.Raycast(transform.position, Vector3.down, 2))
+        {
+            isGrounded = true;
+        }
+        if(!isGrounded)
+        {
+            rb.drag = 0;
+        }
+        else if(isGrounded)
+        {
+            rb.drag = 3;
+        }
+        #endregion
         #region Slow Other Enemies:
         /* if (CheckForEnemies(transform.position, 5))
          {
@@ -109,49 +163,8 @@ public class Enemy : MonoBehaviour
              enemiesInRange.Clear();
          }*/
         #endregion
+        Death();
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Wall")
-        {
-            Debug.Log(health);
-            health -= dashDamage;
-        }
-    }
-
-    #region Define Enemy
-    private void SetEnemyData(EnemySetting _enemy)
-    {
-        rb = gameObject.GetComponent<Rigidbody>();
-        EnemyType _enemytype = _enemy.type;
-        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
-        _player = GameObject.Find("Player/PlayerObj");
-        energy = GameObject.Find("Player").GetComponent<Energy>();
-        switch (_enemytype)
-        {
-            case EnemyType.Standard:
-                gameObject.name = "StandardEnemy";
-                gameObject.tag = "Enemy";
-                break;
-            case EnemyType.Heavy:
-                gameObject.name = "HeavyEnemy";
-                gameObject.tag = "Enemy";
-                break;
-            case EnemyType.Ranged: 
-                gameObject.name = "RangedEnemy";
-                gameObject.tag = "Enemy";
-                break;
-
-        }
-        health = _enemy.EnemyHealth;
-        speed = _enemy.speed;
-        TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
-        ChargeTime = _enemy.ChargeTime;
-        enemyObj = gameObject.transform.GetChild(0);
-    }
-
-    #endregion
 
     #region Enemy Radius
     private bool CheckForPlayer(Vector3 center, float radius, Collider plr)
@@ -208,6 +221,10 @@ public class Enemy : MonoBehaviour
         Debug.Log("Charged!");
         speed = begginingspeed;
     }
+    private void Lunge()
+    {
+        Debug.Log("Used the lunge function");
+    }
     private void LightAttack(int Damage)
     {
         Debug.Log("Used the light attack function");
@@ -231,11 +248,8 @@ public class Enemy : MonoBehaviour
     private void Shoot()
     {
         Debug.Log("Used the shoot function");
+        GameObject bullet = Instantiate(gameObject, _player.transform.position, Quaternion.identity);
     }
-    /*private void Lunge()
-    {
-        StartCoroutine(Lunge());
-    }*/
 
     private IEnumerator StartAttack(Attack[] pattern)
     {
@@ -271,7 +285,7 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
-    #region Death Conditions:
+    #region Damage Conditions:
     void Death()
     {
         if (health <= 0)
@@ -284,5 +298,28 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Wall" && !hasCollided)
+        {
+            hasCollided = true;
+            Debug.Log(health);
+            health -= dashDamage;
+            ContactPoint contact = collision.contacts[0];
+            Vector3 point = contact.point;
+            point.y += 0.1f;
+            Vector3 normal = contact.normal;
+            StartCoroutine(painter.PaintDecal(point, normal, collision));
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "DeathPanel")
+        {
+            health -= health;
+        }
+    }
+
     #endregion
 }
