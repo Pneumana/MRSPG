@@ -7,24 +7,6 @@ using UnityEngine;
 /// <summary>
 /// Define the enemies type, attack pattern, and health here.
 /// </summary>
-[CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Type", order = 1)]
-public class EnemySetting : ScriptableObject
-{
-    [Header("Main Settings")]
-    public EnemyType type;
-    public Attack[] pattern;
-
-    [Header("Enemy Parameters")]
-    public int EnemyHealth;
-    public float speed;
-    public float TimeBetweenAttacks;
-    public float ChargeTime;
-    public Animator Animations;
-    [Header("Beat Values")]
-    public int EnergyGainedOnBeat;
-    public int EnergyGainedOffBeat;
-}
-
 #region Enums
 public enum EnemyType
 {
@@ -44,30 +26,37 @@ public enum Attack
     Shoot
 };
 #endregion
-
-/*#region Attacks:
-[System.Serializable]
-public class AttackStyle
+[CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Standard", order = 1)]
+public class EnemySetting : ScriptableObject
 {
-    [SerializeField] private Attack _attack;
+    [Header("Main Variables")]
+    public EnemyType type;
+    public Attack[] pattern;
+
+    [Header("Beat Variables")]
+    public int EnergyGainedOnBeat;
+    public int EnergyGainedOffBeat;
+
+    [Header("Enemy Variables")]
+    public int EnemyHealth;
+    public float speed;
+    public Rigidbody Rigidbody;
+
+    [Header("Attack Variables")]
+    public float AttackRange;
+    public float TimeBetweenAttacks;
+    public float ChargeTime;
+    public float BaseDamage;
+    public GameObject Hitbox;
+    public ParticleSystem ChargeParticle;
+    public Animator Animations;
+
+    [Header("Ranged Variables")]
+    public GameObject Bullet;
+    public float BulletDamage;
+
+    [Header("Target Variables")]
+    public Metronome Metronome;
+    public GameObject PlayerSettings;
+    public GameObject PlayerObject;
 }
-
-#endregion*/
-
-#region Enemy Types
-public class Standard
-{
-    
-}
-
-public class Heavy
-{
-
-}
-
-public class Ranged
-{
-
-}
-
-#endregion

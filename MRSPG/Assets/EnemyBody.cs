@@ -41,7 +41,7 @@ public class EnemyBody : MonoBehaviour
     public void ModifyHealth(int mod)
     {
         health -= mod;
-        if(health >= 0)
+        if(health <= 0)
         {
             Die();
         }
@@ -90,14 +90,23 @@ public class EnemyBody : MonoBehaviour
         if (collision.gameObject.tag == "Wall" && pushedBack)
         {
             Debug.Log(health);
-            ModifyHealth(-5);
+            ModifyHealth(5);
+            ContactPoint contact = collision.contacts[0];
+            Vector3 point = contact.point;
+            point.y += 0.1f;
+            Vector3 normal = contact.normal;
+            DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+            StartCoroutine(painter.PaintDecal(point, normal, collision));
         }
-/*        if(collision.gameObject == player)
-        {
-            
-        }*/
-        //do ground detection/falling here
     }
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "DeathPanel")
+        {
+            Die();
+        }
+    }
+
     public void HitByPlayerDash()
     {
         Debug.Log(gameObject.name + " pushed by player");

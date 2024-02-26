@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: Ranged
   m_EditorClassIdentifier: 
   type: 3
-  pattern: 04000000040000000400000005000000
-  EnemyHealth: 3
-  speed: 0
-  TimeBetweenAttacks: 0
-  ChargeTime: 0
-  Animations: {fileID: 0}
+  pattern: 05000000
   EnergyGainedOnBeat: 0
   EnergyGainedOffBeat: 0
+  EnemyHealth: 3
+  speed: 0
+  Rigidbody: {fileID: 0}
+  AttackRange: 10
+  TimeBetweenAttacks: 5
+  ChargeTime: 0
+  BaseDamage: 0
+  Hitbox: {fileID: 0}
+  ChargeParticle: {fileID: 0}
+  Animations: {fileID: 0}
+  Bullet: {fileID: 6623790709723217225, guid: 82fffb1bd9fedbd4293040543be693d3, type: 3}
+  BulletDamage: 3
+  Metronome: {fileID: 0}
+  PlayerSettings: {fileID: 0}
+  PlayerObject: {fileID: 0}

@@ -14,9 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   pattern: 000000000200000002000000
-  EnemyHealth: 6
-  speed: 13
-  TimeBetweenAttacks: 2
-  ChargeTime: 1
   EnergyGainedOnBeat: 10
   EnergyGainedOffBeat: 5
+  EnemyHealth: 6
+  speed: 13
+  Rigidbody: {fileID: 0}
+  AttackRange: 2
+  TimeBetweenAttacks: 2
+  ChargeTime: 1
+  BaseDamage: 0
+  Hitbox: {fileID: 0}
+  ChargeParticle: {fileID: 0}
+  Animations: {fileID: 0}
+  Bullet: {fileID: 0}
+  BulletDamage: 0
+  Metronome: {fileID: 0}
+  PlayerSettings: {fileID: 0}
+  PlayerObject: {fileID: 0}
