@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
         _enemy.Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         enemyObj = gameObject.transform.GetChild(0);
+        _enemy.Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
     }
 
     #endregion
@@ -231,16 +232,40 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("Used the load function");
     }
-    private IEnumerator Shoot()
+    private IEnumerator Shoot(int Damage)
     {
-        Debug.Log("Used the shoot function");
+        LayerMask Player = LayerMask.GetMask("Player");
+        LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(_enemy.Bullet, Gun.position, Quaternion.identity);
+        bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
-            bullet.transform.forward = distance;
-        while (distance.magnitude > 3f)//bullet.transform.forward != distance || 
+        bullet.transform.forward = distance;
+        while (!Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, _enemy.PlayerObject.transform.position, 1 * Time.fixedDeltaTime);
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, _enemy.PlayerObject.transform.position, 0.5f * Time.fixedDeltaTime);
             yield return null;
+        }
+        if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && _enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+        {
+            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            Destroy(bullet);
+            Debug.Log("shot the player");
+        }
+        else if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && !_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+        {
+            Debug.Log("hit the player while dashing, now needs to change direction");
+            while (!Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
+            {
+                bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, Gun.position, 0.5f * Time.fixedDeltaTime);
+                yield return null;
+            }
+            Debug.Log("is at the enemy position");
+            if (Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
+            {
+                gameObject.GetComponent<EnemyBody>().ModifyHealth(3);
+                Destroy(bullet);
+                Debug.Log("shot the enemy");
+            }
         }
     }
 
@@ -259,16 +284,16 @@ public class Enemy : MonoBehaviour
                         StartCoroutine(Charge(_enemy.ChargeTime));
                         break;
                     case Attack.Light:
-                        LightAttack(1);
+                        LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
-                        HeavyAttack(3);
+                        HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
                         Load();
                         break;
                     case Attack.Shoot:
-                        StartCoroutine(Shoot());
+                        StartCoroutine(Shoot(_enemy.BulletDamage));
                         break;
                 }
                 yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);
@@ -281,13 +306,16 @@ public class Enemy : MonoBehaviour
     #region Damage Conditions:
     void Death()
     {
+        Energy energy = _enemy.PlayerSettings.GetComponent<Energy>();
         if (_enemy.EnemyHealth <= 0)
         {
             Debug.Log("The enemy has died");
-            if (_enemy.PlayerSettings.GetComponent<Energy>().currentEnergy < 50)
+            if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
+            else { energy.GainEnergy(5); }
+            /*if (_enemy.PlayerSettings.GetComponent<Energy>().currentEnergy < 50)
             {
                 _enemy.PlayerSettings.GetComponent<Energy>().GainEnergy(_enemy.EnergyGainedOnBeat, _enemy.EnergyGainedOffBeat);
-            }
+            }*/
             Destroy(gameObject);
         }
     }

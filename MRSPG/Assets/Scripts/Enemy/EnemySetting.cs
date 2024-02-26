@@ -43,6 +43,7 @@ public class EnemySetting : ScriptableObject
     public Rigidbody Rigidbody;
 
     [Header("Attack Variables")]
+    public int Damage;
     public float AttackRange;
     public float TimeBetweenAttacks;
     public float ChargeTime;
@@ -53,7 +54,7 @@ public class EnemySetting : ScriptableObject
 
     [Header("Ranged Variables")]
     public GameObject Bullet;
-    public float BulletDamage;
+    public int BulletDamage;
 
     [Header("Target Variables")]
     public Metronome Metronome;

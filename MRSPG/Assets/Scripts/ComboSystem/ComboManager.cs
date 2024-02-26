@@ -11,9 +11,12 @@ public class ComboManager : MonoBehaviour
     public GameObject prefab;
     [SerializeField]TextMeshProUGUI comboLabel;
     [SerializeField] Image comboBar;
+    [SerializeField] Image prevFillComboBar;
     public Transform eventParent;
 
     public List<GameObject> eventObjs = new List<GameObject>();
+
+
     public static ComboManager inst;
 
     float timeLeftInCombo;
@@ -24,6 +27,7 @@ public class ComboManager : MonoBehaviour
 
     public List<string> comboTier;
     public List<int> pointsPerTier;
+    public List<Color> tierColors = new List<Color>();
 
     public float currentPoints;
     public int currentTier;
@@ -59,30 +63,45 @@ public class ComboManager : MonoBehaviour
         if(currentPoints > 0)
         {
             currentPoints -= Time.deltaTime * 15;
-
+            if(currentTier< pointsPerTier.Count - 1)
+            {
             while(currentPoints > pointsPerTier[currentTier])
             {
                 Debug.Log("tier up");
                 currentTier++;
             }
+
+            }
             if(currentTier > 0)
             {
+                prevFillComboBar.color = tierColors[currentTier - 1];
                 if (currentPoints < pointsPerTier[currentTier - 1])
                 {
                     currentTier--;
                 }
-
+                
             }
+            else
+            {
+                prevFillComboBar.color = Color.clear;
+            }
+            comboBar.color = tierColors[currentTier];
             comboLabel.text = comboTier[currentTier];
+            comboLabel.color = tierColors[currentTier];
             if (currentTier != 0)
             {
                 comboBar.fillAmount = (currentPoints - pointsPerTier[currentTier-1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]);
+                prevFillComboBar.fillAmount = 1f - comboBar.fillAmount;
                 Debug.Log("difference = " + currentPoints + " - " + pointsPerTier[currentTier-1] + " = " + (currentPoints - pointsPerTier[currentTier - 1]));
                 Debug.Log("difference = " + pointsPerTier[currentTier] + " - " + pointsPerTier[currentTier - 1] + " = " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]));
                 Debug.Log("divide = " + (currentPoints - pointsPerTier[currentTier - 1]) + " / " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]) + " = " + ((currentPoints - pointsPerTier[currentTier - 1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1])));
             }
             else
+            {
+
                 comboBar.fillAmount = currentPoints / (float)pointsPerTier[currentTier];
+                prevFillComboBar.fillAmount = 1f - comboBar.fillAmount;
+            }
         }
 
         if (eventObjs.Count == 0)
@@ -190,6 +209,7 @@ public class ComboManager : MonoBehaviour
         {
             n.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 0);
         }
+        currentPoints = Mathf.Clamp(currentPoints, 0, pointsPerTier[pointsPerTier.Count - 1]);
     }
 
 }

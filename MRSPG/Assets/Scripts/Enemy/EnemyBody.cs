@@ -89,8 +89,8 @@ public class EnemyBody : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall" && pushedBack)
         {
-            ModifyHealth(5);
             Debug.Log(health);
+            ModifyHealth(5);
             ContactPoint contact = collision.contacts[0];
             Vector3 point = contact.point;
             point.y += 0.1f;

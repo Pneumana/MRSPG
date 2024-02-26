@@ -111,7 +111,6 @@ public class InputControls : MonoBehaviour
                 if (body != null)
                 {
                     body.HitByPlayerDash();
-                    Debug.Log("Hit by player dash");
                 }
             }
 
