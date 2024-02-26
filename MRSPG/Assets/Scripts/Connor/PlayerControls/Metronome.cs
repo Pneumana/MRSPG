@@ -7,6 +7,7 @@ public class Metronome : MonoBehaviour
 {
     public float BPM;
     public float beatDuration;
+    public int BeatsPassed;
 
     float interval;
     float intervalHalfPoint;
@@ -18,6 +19,7 @@ public class Metronome : MonoBehaviour
 
     private void Awake()
     {
+        BeatsPassed = 0;
         if (inst == null)
         {
             inst = this;
@@ -39,11 +41,13 @@ public class Metronome : MonoBehaviour
             intervalHalfPoint = (float)BPM / 60;
             if (onBeat)
             {
+                BeatsPassed++;
                 onBeat = false;
                 visualizer.color = Color.red;
             }
             else
             {
+                BeatsPassed++;
                 onBeat = true;
                 visualizer.color = Color.green;
             }
