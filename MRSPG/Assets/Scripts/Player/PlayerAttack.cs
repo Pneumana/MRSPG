@@ -5,28 +5,24 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public int MeleeCombo;
+    #region variables
+    public int MeleeCombo; //Only updates when an attack is attempted
     public int RecentAttack;
     public GameObject AttackHitbox;
     private Metronome Metronome;
     private MeleeHitbox MeleeHitbox;
     public Controller control;
+    #endregion
     void Start()
     {
         Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         MeleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
-        MeleeCombo = 1;
+        MeleeCombo = 0;
     }
-
-    void Update()
+    public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
-        
-    }
-
-    public void Attack(InputAction.CallbackContext context)
-    {
-        if(RecentAttack == Metronome.BeatsPassed) { return; }
-        if (RecentAttack + 2 <= Metronome.BeatsPassed)
+        if (RecentAttack == Metronome.BeatsPassed) { return; }
+        if (RecentAttack + 2 <= Metronome.BeatsPassed || MeleeCombo == 3)
         {
             MeleeCombo = 1;
         }

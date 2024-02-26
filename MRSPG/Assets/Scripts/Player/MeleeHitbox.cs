@@ -13,7 +13,7 @@ public class MeleeHitbox : MonoBehaviour
         Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         BoxCollider = GetComponent<BoxCollider>();
     }
-    public IEnumerator MeleeAttack(int meleeCombo)
+    public IEnumerator MeleeAttack(int meleeCombo) //enables collider and reads MeleeCombo
     {
         MeleeCombo = meleeCombo;
         BoxCollider.enabled = true;
@@ -21,7 +21,7 @@ public class MeleeHitbox : MonoBehaviour
         BoxCollider.enabled = false;
     }
 
-    void OnTriggerEnter(UnityEngine.Collider collision)
+    void OnTriggerEnter(UnityEngine.Collider collision) //runs once per enemy in collider
     {
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
         if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
@@ -38,7 +38,7 @@ public class MeleeHitbox : MonoBehaviour
                 enemyBody.ModifyHealth(-2);
                 break;
         }
-        if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); }
+        if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
 
     }
 }
