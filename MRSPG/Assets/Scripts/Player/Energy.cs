@@ -39,47 +39,37 @@ public class Energy : MonoBehaviour
     //adds energy after every enemy killed
     private void OnCollisionExit ( Collision enemy )
     {
-
-        if ( enemy.collider.name == "StandardEnemy" )
+        if ( enemy.collider.name == "StandardEnemy")
         {
-            if ( currentEnergy < 50 )
-            {
-                GainEnergy(10, 5);
-                Debug.Log("Killed a standard enemy.");
-            }
+            if (Metronome.inst.IsOnBeat()) { GainEnergy(10); }
+            else { GainEnergy(5); }
+            Debug.Log("Killed a standard enemy.");
             Destroy ( enemy.gameObject );
         }
       
         else if ( enemy.collider.name=="HeavyEnemy" )
         {
-            if ( currentEnergy < 50 )
-            {
-                GainEnergy(20, 10);
-            }
+            if (Metronome.inst.IsOnBeat()) { GainEnergy(20); }
+            else { GainEnergy(10); }
             Destroy ( enemy.gameObject );
         }
       
         else if ( enemy.collider.name=="RangedEnemy" )
         {
-            if ( currentEnergy < 50 )
-            {
-                GainEnergy(10, 5);
-            }
+            if (Metronome.inst.IsOnBeat()) { GainEnergy(10); }
+            else { GainEnergy(5); }
             Destroy ( enemy.gameObject );
         }
     }
     /// <summary>
     /// standard: 10/5, ranged:10,5, heavy: 20/10
     /// </summary>
-    public void GainEnergy(int onBeat, int offBeat) 
+    public void GainEnergy(int energy) 
     {
-        if ( Metronome.inst.IsOnBeat ( ) )
+        currentEnergy += energy;
+        if (currentEnergy > 50)
         {
-            currentEnergy += onBeat;
-        }
-        else if ( !Metronome.inst.IsOnBeat ( ) )
-        {
-            currentEnergy += offBeat;
+            currentEnergy = 50;
         }
     }
 
@@ -129,5 +119,6 @@ public class Energy : MonoBehaviour
         {
             _energyImg.sprite = _energySprite [ 10 ];
         }
+        else { return; }
     }
 }

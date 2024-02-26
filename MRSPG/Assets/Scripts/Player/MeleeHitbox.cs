@@ -25,8 +25,19 @@ public class MeleeHitbox : MonoBehaviour
     {
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
         if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
-        if (MeleeCombo == 3) { enemyBody.ModifyHealth(-2); }
-        else { enemyBody.ModifyHealth(-1); }
+        switch (MeleeCombo) {
+            default:
+                break;
+            case 1:
+                enemyBody.ModifyHealth(-1);
+                break;
+            case 2:
+                enemyBody.ModifyHealth(-1);
+                break;
+            case 3:
+                enemyBody.ModifyHealth(-2);
+                break;
+        }
         if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); }
 
     }
