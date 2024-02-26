@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
 
 public class ComboManager : MonoBehaviour
 {
     public GameObject prefab;
-
+    [SerializeField]TextMeshProUGUI comboLabel;
+    [SerializeField] Image comboBar;
     public Transform eventParent;
 
     public List<GameObject> eventObjs = new List<GameObject>();
@@ -19,6 +21,13 @@ public class ComboManager : MonoBehaviour
     bool removing;
 
     public List<float> eventAddedTimeStamp = new List<float> ();
+
+    public List<string> comboTier;
+    public List<int> pointsPerTier;
+
+    public float currentPoints;
+    public int currentTier;
+
     public float startedTimestamp;
     // Start is called before the first frame update
     void Start()
@@ -46,6 +55,36 @@ public class ComboManager : MonoBehaviour
         {
             AddEvent();
         }
+
+        if(currentPoints > 0)
+        {
+            currentPoints -= Time.deltaTime * 15;
+
+            while(currentPoints > pointsPerTier[currentTier])
+            {
+                Debug.Log("tier up");
+                currentTier++;
+            }
+            if(currentTier > 0)
+            {
+                if (currentPoints < pointsPerTier[currentTier - 1])
+                {
+                    currentTier--;
+                }
+
+            }
+            comboLabel.text = comboTier[currentTier];
+            if (currentTier != 0)
+            {
+                comboBar.fillAmount = (currentPoints - pointsPerTier[currentTier-1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]);
+                Debug.Log("difference = " + currentPoints + " - " + pointsPerTier[currentTier-1] + " = " + (currentPoints - pointsPerTier[currentTier - 1]));
+                Debug.Log("difference = " + pointsPerTier[currentTier] + " - " + pointsPerTier[currentTier - 1] + " = " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]));
+                Debug.Log("divide = " + (currentPoints - pointsPerTier[currentTier - 1]) + " / " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]) + " = " + ((currentPoints - pointsPerTier[currentTier - 1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1])));
+            }
+            else
+                comboBar.fillAmount = currentPoints / (float)pointsPerTier[currentTier];
+        }
+
         if (eventObjs.Count == 0)
             return;
         if(removeEventTick>0)
@@ -115,9 +154,13 @@ public class ComboManager : MonoBehaviour
     [ContextMenu("Add Event")]
     public void AddEvent()
     {
+        //needs string for label and int for score value
+
+        currentPoints += 100;
         var n = Instantiate(prefab);
         n.GetComponent<TextMeshProUGUI>().text = "On beat";
         n.transform.SetParent(eventParent);
+
         /*        if (eventObjs.Count == 0)
                 {
                     //go.transform.SetParent(eventParent);
@@ -148,4 +191,5 @@ public class ComboManager : MonoBehaviour
             n.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 0);
         }
     }
+
 }
