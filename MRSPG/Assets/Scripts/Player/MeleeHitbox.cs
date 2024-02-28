@@ -7,12 +7,14 @@ public class MeleeHitbox : MonoBehaviour
     private Metronome Metronome;
     private BoxCollider BoxCollider;
     private PlayerAttack PlayerAttack;
+    private Energy Energy;
     public int MeleeCombo;
 
     void Start()
     {
         Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         PlayerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
+        Energy = GameObject.Find("Player").GetComponent<Energy>();
         BoxCollider = GetComponent<BoxCollider>();
     }
     public IEnumerator MeleeAttack(int meleeCombo) //enables collider and reads MeleeCombo
@@ -33,12 +35,15 @@ public class MeleeHitbox : MonoBehaviour
                 break;
             case 1:
                 enemyBody.ModifyHealth(-1);
+                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(1); }
                 break;
             case 2:
                 enemyBody.ModifyHealth(-1);
+                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(2); }
                 break;
             case 3:
                 enemyBody.ModifyHealth(-2);
+                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
                 break;
         }
         if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
