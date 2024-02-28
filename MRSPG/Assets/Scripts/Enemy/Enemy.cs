@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering.Universal;
+using Color = UnityEngine.Color;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour
     private Transform Gun;
     [Header("Target Parameters")]
     bool playerInRange;
+    public bool PlayerIsInSight;
 
     #endregion
 
@@ -62,7 +64,7 @@ public class Enemy : MonoBehaviour
         }
         _enemy.PlayerSettings = GameObject.Find("Player");
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
-        _enemy.Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
+        _enemy.Metronome = Metronome.inst;
         enemyObj = gameObject.transform.GetChild(0);
         _enemy.Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
     }
@@ -109,6 +111,20 @@ public class Enemy : MonoBehaviour
         targetPos = _enemy.PlayerObject.transform.position - transform.position;
         lookatvector = _enemy.PlayerObject.transform.position;
         lookatvector.y = transform.position.y;
+
+        LayerMask Player = LayerMask.GetMask("Player");
+        LayerMask Enemy = LayerMask.GetMask("Enemy");
+        RaycastHit ray;
+        if (Physics.Raycast(enemyObj.position, lookatvector - transform.position, out ray))
+        {
+            if (ray.collider.tag == _enemy.PlayerSettings.tag)
+            {
+                PlayerIsInSight = true;
+            }
+        }
+        else PlayerIsInSight = false;
+        Debug.DrawRay(enemyObj.position, lookatvector - transform.position, Color.green);
+
 
         //Begin the attack cycle:
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
@@ -227,41 +243,42 @@ public class Enemy : MonoBehaviour
         Debug.Log("Used the heavy attack function");
         _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
     }
-    private void Load()
+    private IEnumerator Load(float seconds)
     {
-        Debug.Log("Used the load function");
+        _enemy.ChargeParticle.Play();
+        yield return new WaitForSeconds(seconds);
+        _enemy.ChargeParticle.Stop();
     }
     private IEnumerator Shoot(int Damage)
     {
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
+
         GameObject bullet = Instantiate(_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
         bullet.transform.forward = distance;
-        while (!Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
+        Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
+        while (bullet.transform.position != PositionOnBeat)
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, _enemy.PlayerObject.transform.position, 0.5f * Time.fixedDeltaTime);
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 4f * Time.fixedDeltaTime);
             yield return null;
-        }
-        if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && _enemy.PlayerSettings.GetComponent<InputControls>().canDash)
-        {
-            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            Destroy(bullet);
-        }
-        else if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && !_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
-        {
-            while (!Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
+            if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && _enemy.PlayerSettings.GetComponent<InputControls>().canDash)
             {
-                bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, transform.position, 0.5f * Time.fixedDeltaTime);
-                yield return null;
-            }
-            if (Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
-            {
-                gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
+                _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
                 Destroy(bullet);
+                break;
+            }
+            else if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && !_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+            {
+                PositionOnBeat = transform.position;
             }
         }
+        if (bullet != null && Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
+        {
+            gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
+            Destroy(bullet);
+        }else if (bullet != null) { Destroy(bullet); Debug.Log("The bullet reached its position but did not collide with anything"); }
     }
 
     public IEnumerator StartAttack(Attack[] pattern)
@@ -285,10 +302,10 @@ public class Enemy : MonoBehaviour
                         HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
-                        Load();
+                        StartCoroutine(Load(_enemy.ChargeTime));
                         break;
                     case Attack.Shoot:
-                        StartCoroutine(Shoot(_enemy.BulletDamage));
+                        if (PlayerIsInSight == true) StartCoroutine(Shoot(_enemy.BulletDamage));
                         break;
                 }
                 yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);

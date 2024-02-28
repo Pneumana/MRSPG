@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ranged
   m_EditorClassIdentifier: 
   type: 3
-  pattern: 05000000
+  pattern: 040000000400000005000000
   EnergyGainedOnBeat: 0
   EnergyGainedOffBeat: 0
   EnemyHealth: 3
@@ -21,8 +21,8 @@ MonoBehaviour:
   Rigidbody: {fileID: 0}
   Damage: 0
   AttackRange: 15
-  TimeBetweenAttacks: 2
-  ChargeTime: 0
+  TimeBetweenAttacks: 0.5
+  ChargeTime: 1
   BaseDamage: 0
   Hitbox: {fileID: 0}
   ChargeParticle: {fileID: 0}
