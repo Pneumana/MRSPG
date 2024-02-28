@@ -12,7 +12,7 @@ public class EnemyBody : MonoBehaviour
     private int health;
     private float speed;
     private int maxHealth;
-    private float dashImpact = 3f;
+    private float dashImpact = 3;
 
     public bool pushedBack;
     public bool disablePathfinding;
@@ -41,6 +41,12 @@ public class EnemyBody : MonoBehaviour
     public void ModifyHealth(int mod)
     {
         health -= mod;
+
+        if (Metronome.inst.IsOnBeat())
+        {
+            ComboManager.inst.AddEvent("On Beat Attack", 15);
+        }
+
         if(health <= 0)
         {
             Die();
@@ -57,16 +63,33 @@ public class EnemyBody : MonoBehaviour
     }
     private void Update()
     {
+        //add some sort of airborne check?
+
         if (pushedBack)
         {
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime))
+            {
+                Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
+                Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
+
+                ModifyHealth(5);
+                rb.velocity = Vector3.zero;
+                //ContactPoint contact = hit.point;
+                //Vector3 point = contact.point;
+                //point.y += 0.1f;
+                //Vector3 normal = contact.normal;
+                //DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+                //StartCoroutine(painter.PaintDecal(point, normal, collision));
+            }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
             {
                 if (me != null)
                 {
                     if (!me.enabled)
                     {
-                        Debug.Log("recovered");
                         me.enabled = true;
+                        Debug.Log(gameObject.name + " recovered from pushback");
                     }
                 }
                 pushedBack = false;
@@ -88,7 +111,7 @@ public class EnemyBody : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Wall" && pushedBack)
+        /*if (collision.gameObject.tag == "Wall" && pushedBack)
         {
             Debug.Log(health);
             ModifyHealth(5);
@@ -98,7 +121,7 @@ public class EnemyBody : MonoBehaviour
             Vector3 normal = contact.normal;
             DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
             StartCoroutine(painter.PaintDecal(point, normal, collision));
-        }
+        }*/
     }
     private void OnTriggerEnter(Collider collider)
     {
@@ -108,12 +131,13 @@ public class EnemyBody : MonoBehaviour
         }
     }
 
-    public void HitByPlayerDash()
+    public void HitByPlayerDash(Transform player)
     {
         Debug.Log(gameObject.name + " pushed by player");
+        //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
-            Shoved(-transform.forward * dashImpact);
+            Shoved((player.forward) * dashImpact);
         }
         else
         {
@@ -125,9 +149,13 @@ public class EnemyBody : MonoBehaviour
     }
     void Shoved(Vector3 dir, ForceMode mode = ForceMode.Impulse)
     {
+        if (!pushedBack)
+        {
+
+        }
         Debug.Log("shoved");
         pushedBack = true;
-        rb.AddForce(dir, mode);
+        rb.AddForce( dir, mode);
     }
 
     public void Recover()

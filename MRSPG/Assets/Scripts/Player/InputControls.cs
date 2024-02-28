@@ -26,9 +26,14 @@ public class InputControls : MonoBehaviour
     public LayerMask enemyLayer;
 
     private Vector3 velocity;
-    private Vector3 moveDirection;
+    public Vector3 moveDirection;
     private Vector3 movePlayer;
     public Vector2 playerInput;
+
+    [Header("Push")]
+    public Vector3 pushDirection;
+    public float pushSpeed;
+    public float pushDecay;
 
     [Header("Camera")]
     public Transform cam;
@@ -72,8 +77,13 @@ public class InputControls : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
         ApplyGravity();
+        ApplyPush();
         MovePlayer(movePlayer);
-        
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            AddPush(moveDirection, 30, 0.98f);
+        }
     }
 
     public void ApplyGravity()
@@ -85,6 +95,26 @@ public class InputControls : MonoBehaviour
             canJump = true;
         }
     }
+
+    public void ApplyPush()
+    {
+        if (pushSpeed != 0)
+        {
+            controller.Move(pushSpeed * Time.deltaTime * pushDirection.normalized);
+            pushDirection.y -= 0.01f;
+            pushDirection.Normalize();
+            pushSpeed *= pushDecay;
+            if (isGrounded) { pushSpeed *= 0.98f; }
+            if(pushSpeed < 0) { pushSpeed = 0; }
+        }
+
+    }
+    public void AddPush(Vector3 newDir, float newSpeed, float newDecay)
+    {
+        pushDirection = newDir.normalized;
+        pushSpeed = newSpeed;
+        pushDecay = newDecay;
+    }   
 
     public IEnumerator ApplyDash(Vector3 direction)
     {
@@ -110,7 +140,7 @@ public class InputControls : MonoBehaviour
                 var body = enemy.GetComponent<EnemyBody>();
                 if (body != null)
                 {
-                    body.HitByPlayerDash();
+                    body.HitByPlayerDash(transform);
                 }
             }
 

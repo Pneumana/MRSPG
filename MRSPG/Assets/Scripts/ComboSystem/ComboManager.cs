@@ -57,7 +57,7 @@ public class ComboManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
-            AddEvent();
+            AddEvent("Test", 100);
         }
 
         if(currentPoints > 0)
@@ -134,12 +134,12 @@ public class ComboManager : MonoBehaviour
         if (removing)
             yield return null;
         removing = true;
-        Debug.Log("squish");
+        //Debug.Log("squish");
         float time = 0;
         do
         {
             time+=Time.deltaTime * 3;
-            Debug.Log("squish anim % = " + time);
+            //Debug.Log("squish anim % = " + time);
             eventObjs[0].GetComponent<RectTransform>().localScale = new Vector3(1f, 1f - time);
             float pos = 0;
             for(int i = 0; i < eventObjs.Count; i++)
@@ -171,13 +171,13 @@ public class ComboManager : MonoBehaviour
         yield return null;
     }
     [ContextMenu("Add Event")]
-    public void AddEvent()
+    public void AddEvent(string name, int points)
     {
         //needs string for label and int for score value
 
-        currentPoints += 100;
+        currentPoints += points;
         var n = Instantiate(prefab);
-        n.GetComponent<TextMeshProUGUI>().text = "On beat";
+        n.GetComponent<TextMeshProUGUI>().text = name;
         n.transform.SetParent(eventParent);
 
         /*        if (eventObjs.Count == 0)

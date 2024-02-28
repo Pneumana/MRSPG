@@ -228,6 +228,8 @@ public class BasicEnemyAI : MonoBehaviour
         ChargeParticle.Stop();
         Debug.Log("Charged!");
         speed = begginingspeed;
+        body.EnablePathfinding();
+        body.Recover();
     }
     private void LightAttack(int Damage)
     {
@@ -239,11 +241,15 @@ public class BasicEnemyAI : MonoBehaviour
         }
         _playerhealth.LoseHealth(Damage);
         StartCoroutine(Waiter(1f));
+        body.EnablePathfinding();
+        body.Recover();
     }
     private void HeavyAttack(int Damage)
     {
         Debug.Log("Used the heavy attack function");
         _playerhealth.LoseHealth(Damage);
+        body.EnablePathfinding();
+        body.Recover();
     }
     private void Load()
     {
@@ -260,8 +266,10 @@ public class BasicEnemyAI : MonoBehaviour
 
     private IEnumerator StartAttack(Attack[] pattern)
     {
-        body.DisablePathfinding();
         CanAttack = false;
+        body.DisablePathfinding();
+
+
         foreach (Attack attack in pattern)
         {
             if(playerInRange)
@@ -289,7 +297,7 @@ public class BasicEnemyAI : MonoBehaviour
                 yield return new WaitForSeconds(TimeBetweenAttacks);
             }
         }
-        body.EnablePathfinding();
+
         //body.me.enabled = true;
         CanAttack = true;
     }
