@@ -53,6 +53,7 @@ public class EnemyBody : MonoBehaviour
             trigger.UpdateEnemyList(this);
         }
         disablePathfinding = true;
+        Destroy(gameObject);
     }
     private void Update()
     {

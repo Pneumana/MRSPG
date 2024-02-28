@@ -33,7 +33,6 @@ public class Enemy : MonoBehaviour
     private Transform Gun;
     [Header("Target Parameters")]
     bool playerInRange;
-    float maxdistance = 6f;
 
     #endregion
 
@@ -87,13 +86,13 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         //Move and change the rotation of the enemy towards the player.
-        if(CheckForPlayer(transform.position, maxdistance, _enemy.PlayerObject.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
             {
-                float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / maxdistance));
+                float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.AttackRange));
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
                 if (Rigidbody != null)
@@ -187,7 +186,7 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, 2);
-        Gizmos.DrawWireSphere(transform.position, maxdistance);
+        Gizmos.DrawWireSphere(transform.position, _enemy.AttackRange);
     }
     #endregion
 
@@ -249,22 +248,18 @@ public class Enemy : MonoBehaviour
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
             Destroy(bullet);
-            Debug.Log("shot the player");
         }
         else if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && !_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
         {
-            Debug.Log("hit the player while dashing, now needs to change direction");
             while (!Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
             {
-                bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, Gun.position, 0.5f * Time.fixedDeltaTime);
+                bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, transform.position, 0.5f * Time.fixedDeltaTime);
                 yield return null;
             }
-            Debug.Log("is at the enemy position");
             if (Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
             {
-                gameObject.GetComponent<EnemyBody>().ModifyHealth(3);
+                gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
                 Destroy(bullet);
-                Debug.Log("shot the enemy");
             }
         }
     }
