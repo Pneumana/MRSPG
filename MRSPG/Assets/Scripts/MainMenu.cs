@@ -1,19 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
 public class MainMenu : MonoBehaviour
 {
-    #region variables
-
-    [SerializeField]
-    Button _newGame, _settings, _howTo, _credits, _quit;
-
-    #endregion
-
+    public void BackMainMenu ( )
+    {
+        SceneManager.LoadScene ( 0 );
+    }
 
     public void NewGame ( )
     {
@@ -22,7 +18,7 @@ public class MainMenu : MonoBehaviour
 
     public void Settings ( )
     {
-        SceneManager .LoadScene ( 2 );
+        SceneManager.LoadScene ( 2 );
     }
 
     public void HowTo ( )
@@ -40,4 +36,5 @@ public class MainMenu : MonoBehaviour
         Application.Quit ();
         Debug.Log ( "You Have Quit" );
     }
+
 }
