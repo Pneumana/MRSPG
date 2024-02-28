@@ -66,7 +66,7 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
-        transform.Find("PlayerObj").position = currentCheckpoint.spawnPosition + Vector3.up;
+        GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
         currentHealth = 5;
         UIUpdateHealth();
     }
