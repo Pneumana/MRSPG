@@ -25,7 +25,7 @@ public class PlayerAttack : MonoBehaviour
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
         if (RecentAttack == Metronome.BeatsPassed) { return; }
-        if (RecentAttack + 2 <= Metronome.BeatsPassed || MeleeCombo == 3)
+        if (RecentAttack + 2 <= Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
         {
             MeleeCombo = 1;
         }
@@ -47,6 +47,7 @@ public class PlayerAttack : MonoBehaviour
                 inputControls.AddPush(inputControls.moveDirection, 10, 0.98f);
                 break;
         }
+        DealtDamage = false;
         RecentAttack = Metronome.BeatsPassed;
         StartCoroutine(MeleeHitbox.MeleeAttack(MeleeCombo));
     }

@@ -6,11 +6,13 @@ public class MeleeHitbox : MonoBehaviour
 {
     private Metronome Metronome;
     private BoxCollider BoxCollider;
+    private PlayerAttack PlayerAttack;
     public int MeleeCombo;
 
     void Start()
     {
         Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
+        PlayerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
         BoxCollider = GetComponent<BoxCollider>();
     }
     public IEnumerator MeleeAttack(int meleeCombo) //enables collider and reads MeleeCombo
@@ -25,6 +27,7 @@ public class MeleeHitbox : MonoBehaviour
     {
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
         if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
+        PlayerAttack.DealtDamage = true;
         switch (MeleeCombo) {
             default:
                 break;
