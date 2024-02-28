@@ -140,7 +140,7 @@ public class InputControls : MonoBehaviour
                 var body = enemy.GetComponent<EnemyBody>();
                 if (body != null)
                 {
-                    body.HitByPlayerDash();
+                    body.HitByPlayerDash(transform);
                 }
             }
 
