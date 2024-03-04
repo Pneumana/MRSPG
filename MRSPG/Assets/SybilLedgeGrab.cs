@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class SybilLedgeGrab : MonoBehaviour
 {
     [SerializeField] Vector3 grabPosition;
+    [SerializeField] Vector3 grabBounds;
     [SerializeField] LayerMask groundMask;
     [SerializeField] float grabForward;
 
@@ -13,6 +14,9 @@ public class SybilLedgeGrab : MonoBehaviour
 
     [SerializeField] float ledgeJumpStr;
     bool dropping;
+
+    [SerializeField] Animator animator;
+
     //the way this controls is as close as possible to the ledge grab from Pseudoregalia
     void Start()
     {
@@ -30,14 +34,39 @@ public class SybilLedgeGrab : MonoBehaviour
             return;
         if(InputControls.instance.velocity.y < 0)
         {
-            var handPos = Physics.CheckBox(transform.position + grabPosition + (grabForward * transform.forward), new Vector3(0.1f, 0.1f, 0.1f), transform.rotation);
-            var abovePos = Physics.CheckBox(transform.position + grabPosition + new Vector3(0, 0.1f, 0) + (grabForward * transform.forward), new Vector3(0.1f, 0.1f, 0.1f), transform.rotation);
+            RaycastHit handGrabbed;
+            var pos = transform.position + grabPosition + (grabForward * transform.forward);
+            var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
+            var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
-                Debug.Log("grabbed");
+                var start = transform.position + grabPosition + (grabForward * transform.forward);
+                var closeLowerLeft = new Vector3(grabBounds.x, -grabBounds.y, -grabBounds.z);
+                var closeLowerRight = new Vector3(-grabBounds.x, -grabBounds.y, -grabBounds.z);
+                //Debug.DrawLine(start + closeLowerLeft, start + closeLowerRight, Color.green, 10);
+
+                DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.green);
+
+                if (handGrabbed.collider!=null)
+                    Debug.Log("grabbed " + handGrabbed.collider.name);
                 grabbed = true;
                 InputControls.instance.gravityMultiplier = 0;
                 InputControls.instance.velocity.y = 0;
+                InputControls.instance.doMovement = false;
+                animator.SetBool("LedgeGrabbed", true);
+                //Controller.inst.controls.Gameplay.Move.Can
+            }
+            if (!handPos)
+            {
+                DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.red);
+            }
+            if (abovePos)
+            {
+                DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.green);
+            }
+            else
+            {
+                DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.red);
             }
         }
         
@@ -65,6 +94,8 @@ public class SybilLedgeGrab : MonoBehaviour
                 dropping = true;
                 grabbed = false;
                 InputControls.instance.gravityMultiplier = 4;
+                InputControls.instance.doMovement = true;
+                animator.SetBool("LedgeGrabbed", false);
             }
         }
 
@@ -92,12 +123,70 @@ public class SybilLedgeGrab : MonoBehaviour
         InputControls.instance.gravityMultiplier = 4;
         grabbed = false;
         InputControls.instance.velocity.y += ledgeJumpStr;
-
+        InputControls.instance.doMovement = true;
+        animator.SetBool("LedgeGrabbed", false);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawCube(transform.position + grabPosition + (grabForward * transform.forward), new Vector3(0.1f, 0.1f, 0.1f));
-        Gizmos.DrawWireCube(transform.position + grabPosition + new Vector3(0, 0.1f, 0) + (grabForward * transform.forward), new Vector3(0.1f, 0.1f, 0.1f));
+        var pos = transform.position + grabPosition + (grabForward * transform.forward);
+        //DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, true);
+        //Gizmos.DrawCube(transform.position + grabPosition + (grabForward * transform.forward), grabBounds);
+        //Gizmos.DrawWireCube(transform.position + grabPosition + new Vector3(0, grabBounds.y, 0) + (grabForward * transform.forward), grabBounds);
     }
+
+    protected void DrawBoxLines(Vector3 p1, Vector3 p2, Vector3 extents, Color color)
+
+    {
+
+        var length = (p2 - p1).magnitude;
+
+        var halfExtents = extents / 2;
+
+        var halfExtentsZ = transform.forward * halfExtents.z;
+
+        var halfExtentsY = transform.up * halfExtents.y;
+
+        var halfExtentsX = transform.right * halfExtents.x;
+
+        /*if (boxes)
+
+        {
+
+            var matrix = Gizmos.matrix;
+
+            Gizmos.matrix = Matrix4x4.TRS(p1, transform.rotation, Vector3.one);
+
+            Gizmos.DrawWireCube(Vector3.zero, extents);
+
+            Gizmos.matrix = Matrix4x4.TRS(p2, transform.rotation, Vector3.one);
+
+            Gizmos.DrawWireCube(Vector3.zero, extents);
+
+            Gizmos.matrix = matrix;
+
+        }*/
+
+        // draw connect lines 1
+
+        Debug.DrawLine(p1 - halfExtentsX - halfExtentsY - halfExtentsZ, p2 - halfExtentsX - halfExtentsY - halfExtentsZ, color, 10);
+
+        Debug.DrawLine(p1 + halfExtentsX - halfExtentsY - halfExtentsZ, p2 + halfExtentsX - halfExtentsY - halfExtentsZ, color, 10);
+
+        Debug.DrawLine(p1 - halfExtentsX + halfExtentsY - halfExtentsZ, p2 - halfExtentsX + halfExtentsY - halfExtentsZ, color, 10);
+
+        Debug.DrawLine(p1 + halfExtentsX + halfExtentsY - halfExtentsZ, p2 + halfExtentsX + halfExtentsY - halfExtentsZ, color, 10);
+
+        // draw connect lines 2
+
+        Debug.DrawLine(p1 - halfExtentsX - halfExtentsY + halfExtentsZ, p2 - halfExtentsX - halfExtentsY + halfExtentsZ,color, 10);
+
+        Debug.DrawLine(p1 + halfExtentsX - halfExtentsY + halfExtentsZ, p2 + halfExtentsX - halfExtentsY + halfExtentsZ, color, 10);
+
+        Debug.DrawLine(p1 - halfExtentsX + halfExtentsY + halfExtentsZ, p2 - halfExtentsX + halfExtentsY + halfExtentsZ, color, 10);
+
+        Debug.DrawLine(p1 + halfExtentsX + halfExtentsY + halfExtentsZ, p2 + halfExtentsX + halfExtentsY + halfExtentsZ, color, 10);
+
+    }
+
 }

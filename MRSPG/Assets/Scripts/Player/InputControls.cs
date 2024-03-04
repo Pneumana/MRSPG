@@ -51,7 +51,12 @@ public class InputControls : MonoBehaviour
     //Controller Support:
     ControllerSupport controls;
     public bool canJump;
+    public bool doMovement = true;
     public bool doGravity = true;
+
+    [SerializeField] ParticleSystem groundedParticles;
+    [SerializeField] ParticleSystem jumpParticles;
+
     #endregion
 
     public static InputControls instance;
@@ -91,11 +96,17 @@ public class InputControls : MonoBehaviour
 
     public void ApplyGravity()
     {
+        var prev = isGrounded;
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (isGrounded && !prev)
+            groundedParticles.Play();
+
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
             canJump = true;
+            
         }
     }
 
@@ -158,7 +169,8 @@ public class InputControls : MonoBehaviour
     }
     public void MovePlayer(Vector3 movePlayer)
     {
-        movePlayer = new Vector3(playerInput.x, 0f, playerInput.y);
+        if(doMovement)
+            movePlayer = new Vector3(playerInput.x, 0f, playerInput.y);
 
         velocity.y += gravity * gravityMultiplier * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
@@ -182,6 +194,7 @@ public class InputControls : MonoBehaviour
         {
             canJump = false;
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
+            jumpParticles.Play();
         }
 
     }
