@@ -18,6 +18,7 @@ public class PlayerAttack : MonoBehaviour
     private InputControls inputControls;
     private LockOnSystem lockOnSystem;
     private GameObject Player;
+    private Vector3 test;
     #endregion
     void Start()
     {
@@ -39,21 +40,22 @@ public class PlayerAttack : MonoBehaviour
         {
             MeleeCombo++;
         }
-        if (lockOnSystem.trackedEnemy != null && ToggleVisualBug) 
-        { 
+        if (lockOnSystem.trackedEnemy != null)
+        {
             Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - Player.transform.position).normalized;
-            Player.transform.forward = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
+            test = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
+            if (ToggleVisualBug) { Player.transform.forward = test; }
         }
         switch (MeleeCombo)
         {
             case 1:
-                if (!EnemyInRange()) { inputControls.AddPush(Player.transform.forward, 30, 0.98f); }
+                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
                 break;
             case 2:
-                if (!EnemyInRange()) { inputControls.AddPush(Player.transform.forward, 30, 0.98f); }
+                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (!EnemyInRange()) { inputControls.AddPush(Player.transform.forward, 30, 0.98f); }
+                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
                 break;
         }
         DealtDamage = false;
