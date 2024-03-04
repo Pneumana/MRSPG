@@ -25,7 +25,7 @@ public class InputControls : MonoBehaviour
     private float targetAngle;
     public LayerMask enemyLayer;
 
-    private Vector3 velocity;
+    public Vector3 velocity;
     public Vector3 moveDirection;
     private Vector3 movePlayer;
     public Vector2 playerInput;
@@ -51,6 +51,7 @@ public class InputControls : MonoBehaviour
     //Controller Support:
     ControllerSupport controls;
     public bool canJump;
+    public bool doGravity = true;
     #endregion
 
     public static InputControls instance;
@@ -76,7 +77,9 @@ public class InputControls : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
-        ApplyGravity();
+
+            ApplyGravity();
+
         ApplyPush();
         MovePlayer(movePlayer);
 
@@ -182,6 +185,16 @@ public class InputControls : MonoBehaviour
         }
 
     }
+
+    public void ForceJump()
+    {
+        if (canJump)
+        {
+            canJump = false;
+            velocity.y = Mathf.Sqrt(jump * -2f * gravity);
+        }
+    }
+
     public void OnDash(InputAction.CallbackContext context)
     {
         if(canDash)
