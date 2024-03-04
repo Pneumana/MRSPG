@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154dd5f6c2f75f747a9922db7d336b28, type: 3}
   m_Name: Standard
   m_EditorClassIdentifier: 
+  EnemyPatterns:
+  - pattern: 000000000200000002000000
   type: 0
-  pattern: 000000000200000002000000
   EnergyGainedOnBeat: 10
   EnergyGainedOffBeat: 5
   EnemyHealth: 6
-  speed: 0
+  speed: 13
   Rigidbody: {fileID: 0}
   Damage: 1
   AttackRange: 2
@@ -27,9 +28,6 @@ MonoBehaviour:
   Hitbox: {fileID: 0}
   ChargeParticle: {fileID: 0}
   Animations: {fileID: 0}
-  Bullet: {fileID: 0}
-  ShootRange: 0
-  BulletDamage: 0
   FollowRange: 5
   Metronome: {fileID: 0}
   PlayerSettings: {fileID: 0}

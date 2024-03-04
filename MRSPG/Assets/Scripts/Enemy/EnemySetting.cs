@@ -29,9 +29,14 @@ public enum Attack
 [CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Standard", order = 1)]
 public class EnemySetting : ScriptableObject
 {
+    [System.Serializable]
+    public class EnemyPattern
+    {
+        public Attack[] pattern;
+    }
+    public EnemyPattern[] EnemyPatterns;
     [Header("Main Variables")]
     public EnemyType type;
-    public Attack[] pattern;
 
     [Header("Beat Variables")]
     public int EnergyGainedOnBeat;
@@ -52,10 +57,6 @@ public class EnemySetting : ScriptableObject
     public ParticleSystem ChargeParticle;
     public Animator Animations;
 
-    [Header("Ranged Variables")]
-    public GameObject Bullet;
-    public float ShootRange;
-    public int BulletDamage;
 
     [Header("Target Variables")]
     public float FollowRange;
@@ -63,3 +64,18 @@ public class EnemySetting : ScriptableObject
     public GameObject PlayerSettings;
     public GameObject PlayerObject;
 }
+
+[CreateAssetMenu(fileName = "Ranged Enemy Settings", menuName = "Enemy/Ranged Enemy", order = 2)]
+public class RangedEnemySettings : EnemySetting
+{
+    [Header("Ranged Variables")]
+    public GameObject Bullet;
+    public float ShootRange;
+    public int BulletDamage;
+}
+/*
+[CreateAssetMenu(fileName = "Boss Settings", menuName = "Enemy/Boss", order = 3)]
+public class BossEnemySettings : EnemySetting
+{
+    public float i;
+}*/

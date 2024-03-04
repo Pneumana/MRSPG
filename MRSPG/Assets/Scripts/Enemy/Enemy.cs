@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering.Universal;
+using static EnemySetting;
 using Color = UnityEngine.Color;
 
 /// <summary>
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
 
     private Transform enemyObj;
     public EnemySetting _enemy;
+    private RangedEnemySettings ranged_enemy;
     List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
@@ -58,9 +60,10 @@ public class Enemy : MonoBehaviour
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Ranged:
+                ranged_enemy = _enemy as RangedEnemySettings;
                 gameObject.name = "RangedEnemy";
                 gameObject.tag = "Enemy";
-                Gun = gameObject.transform.Find("Gun");
+                Gun = gameObject.transform.GetChild(0).Find("Gun");
                 break;
 
         }
@@ -108,8 +111,11 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, _enemy.AttackRange);
-        Gizmos.DrawWireSphere(transform.position, _enemy.ShootRange);
         Gizmos.DrawWireSphere(transform.position, _enemy.FollowRange);
+        if (ranged_enemy != null)
+        {
+            Gizmos.DrawWireSphere(transform.position, ranged_enemy.ShootRange);
+        }
     }
     #endregion
 
@@ -133,6 +139,9 @@ public class Enemy : MonoBehaviour
         if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
+        }
+        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()))
+        {
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
             {
@@ -169,15 +178,15 @@ public class Enemy : MonoBehaviour
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
         if(playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
         {
-            StartCoroutine(StartAttack(_enemy.pattern));
+            StartCoroutine(StartAttack(_enemy.EnemyPatterns[0]));
         }
 
         if(_enemy.type == EnemyType.Ranged)
         {
-            ShootingRange = CheckForPlayer(transform.position, _enemy.ShootRange, _enemy.PlayerObject.GetComponent<Collider>());
+            ShootingRange = CheckForPlayer(transform.position, ranged_enemy.ShootRange, _enemy.PlayerObject.GetComponent<Collider>());
             if (ShootingRange && _enemy.Metronome.IsOnBeat() && CanAttack)
             {
-                StartCoroutine(StartAttack(_enemy.pattern));
+                StartCoroutine(StartAttack(_enemy.EnemyPatterns[0]));
             }
         }
         #region Ground Check + Falling rate
@@ -264,28 +273,29 @@ public class Enemy : MonoBehaviour
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         bool bulletCollided = false;
-        GameObject bullet = Instantiate(_enemy.Bullet, Gun.position, Quaternion.identity);
+        GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
         bullet.transform.forward = distance;
         Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
         while (bullet.transform.position != PositionOnBeat)
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 8f * Time.fixedDeltaTime);
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 10f * Time.fixedDeltaTime);
             if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
             {
                 if(_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
                 {
-                    //_enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+                    _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
                     Debug.Log("The bullet hit the player");
-                }else if(!_enemy.PlayerSettings.GetComponent<InputControls>().canDash && Metronome.inst.IsOnBeat())
+                    Destroy(bullet);
+                    break;
+                }
+                else if(!_enemy.PlayerSettings.GetComponent<InputControls>().canDash && Metronome.inst.IsOnBeat())
                 {
                     PositionOnBeat = transform.position;
                     Debug.Log("The bullet changed direction");
                 }
                 bulletCollided = true;
-                Destroy(bullet);
-                break;
             }
             else if (bullet != null && Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
             {
@@ -300,10 +310,10 @@ public class Enemy : MonoBehaviour
         if (bullet != null && !bulletCollided) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
     }
 
-    public IEnumerator StartAttack(Attack[] pattern)
+    public IEnumerator StartAttack(EnemyPattern EnemyPatterns)
     {
         CanAttack = false;
-        foreach (Attack attack in pattern)
+        foreach (Attack attack in EnemyPatterns.pattern)
         {
             if(playerInRange || ShootingRange)
             {
@@ -324,7 +334,7 @@ public class Enemy : MonoBehaviour
                         StartCoroutine(Load(_enemy.ChargeTime));
                         break;
                     case Attack.Shoot:
-                        if (PlayerIsInSight == true) StartCoroutine(Shoot(_enemy.BulletDamage));
+                        if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                 }
                 yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);

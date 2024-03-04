@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 154dd5f6c2f75f747a9922db7d336b28, type: 3}
-  m_Name: Ranged
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: Ranged Enemy Settings
+  m_EditorClassIdentifier: Assembly-CSharp::RangedEnemySettings
+  EnemyPatterns:
+  - pattern: 040000000400000005000000
   type: 3
-  pattern: 040000000400000005000000
   EnergyGainedOnBeat: 0
   EnergyGainedOffBeat: 0
   EnemyHealth: 3
@@ -27,10 +28,10 @@ MonoBehaviour:
   Hitbox: {fileID: 0}
   ChargeParticle: {fileID: 0}
   Animations: {fileID: 0}
-  Bullet: {fileID: 6623790709723217225, guid: 82fffb1bd9fedbd4293040543be693d3, type: 3}
-  ShootRange: 15
-  BulletDamage: 1
-  FollowRange: 0
+  FollowRange: 15
   Metronome: {fileID: 0}
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
+  Bullet: {fileID: 6623790709723217225, guid: 82fffb1bd9fedbd4293040543be693d3, type: 3}
+  ShootRange: 15
+  BulletDamage: 1

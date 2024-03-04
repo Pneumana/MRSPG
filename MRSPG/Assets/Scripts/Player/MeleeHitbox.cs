@@ -46,7 +46,7 @@ public class MeleeHitbox : MonoBehaviour
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
                 break;
         }
-        if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
+        if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.EnemyPatterns[0])); } //inturrupts enemy attack
 
     }
 }
