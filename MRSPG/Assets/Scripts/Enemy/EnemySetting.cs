@@ -54,9 +54,11 @@ public class EnemySetting : ScriptableObject
 
     [Header("Ranged Variables")]
     public GameObject Bullet;
+    public float ShootRange;
     public int BulletDamage;
 
     [Header("Target Variables")]
+    public float FollowRange;
     public Metronome Metronome;
     public GameObject PlayerSettings;
     public GameObject PlayerObject;

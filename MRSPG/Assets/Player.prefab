@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3310833783859524468}
   - component: {fileID: 3055401504200463054}
   - component: {fileID: 7409059335471501064}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 5014532553138856659}
   - component: {fileID: 2082778405251941334}
   - component: {fileID: 5951768290182587075}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 6635125240731865878}
   - component: {fileID: 4956359755834918926}
   - component: {fileID: 6368707591238388854}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 7905001879701720398}
   - component: {fileID: 40876601079114832}
   - component: {fileID: 1918697753593539479}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: PlayerObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,7 +491,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5478294590396233370}
   - component: {fileID: 1716871537538640105}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: MiddleRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 7173669318789965871}
   - component: {fileID: -6202000842600906584}
   - component: {fileID: 1387221332289506120}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -619,7 +619,11 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  moveDirection: {x: 0, y: 0, z: 0}
   playerInput: {x: 0, y: 0}
+  pushDirection: {x: 0, y: 0, z: 0}
+  pushSpeed: 0
+  pushDecay: 0
   cam: {fileID: 0}
   gravityMultiplier: 4
   groundCheck: {fileID: 4867013960643360351}
@@ -687,7 +691,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3164777090741701887}
   - component: {fileID: 4281148499504691398}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TopRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -702,7 +706,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4633848690488371148}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.02809171, y: 0.000000017333438, z: -4.871182e-10, w: 0.99960536}
+  m_LocalRotation: {x: 0.02809171, y: -0.000000017333438, z: 4.871182e-10, w: 0.99960536}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -768,7 +772,7 @@ GameObject:
   - component: {fileID: 8206622665956143182}
   - component: {fileID: 383684270556386012}
   - component: {fileID: 4889138894291833758}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,7 +899,7 @@ GameObject:
   - component: {fileID: 5247683493700226400}
   - component: {fileID: 8705927212424951913}
   - component: {fileID: 3196194608177424169}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1002,7 +1006,7 @@ GameObject:
   - component: {fileID: 3928312091960071375}
   - component: {fileID: 2715768932729500414}
   - component: {fileID: 588166642287491863}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1110,7 +1114,7 @@ GameObject:
   - component: {fileID: 4848203478146896137}
   - component: {fileID: 1383017075001036997}
   - component: {fileID: 5117317404657165031}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1313,7 +1317,7 @@ GameObject:
   - component: {fileID: 4379648861398019171}
   - component: {fileID: 1357915660596126081}
   - component: {fileID: 5303181170054067145}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1438,7 +1442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 404672735038670452}
   - component: {fileID: 6178105857415553885}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BottomRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1453,7 +1457,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7844397274664835185}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.008237455, y: 5.550362e-17, z: 9.617207e-19, w: 0.9999661}
+  m_LocalRotation: {x: -0.008237452, y: -9.3129104e-10, z: -7.671726e-12, w: 0.9999661}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1520,7 +1524,7 @@ GameObject:
   - component: {fileID: 3397381672796238437}
   - component: {fileID: 6389720836914386893}
   - component: {fileID: 4247233985874746351}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1642,7 +1646,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4867013960643360351}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1673,7 +1677,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2511398842952291566}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: amongus
   m_TagString: Untagged
   m_Icon: {fileID: 0}

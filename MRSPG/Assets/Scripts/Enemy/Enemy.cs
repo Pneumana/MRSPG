@@ -6,6 +6,7 @@ using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
@@ -34,6 +35,7 @@ public class Enemy : MonoBehaviour
     private Transform Gun;
     [Header("Target Parameters")]
     bool playerInRange;
+    bool ShootingRange;
     public bool PlayerIsInSight;
 
     #endregion
@@ -71,6 +73,46 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
+    #region Enemy Radius
+    //A sphere collider to detect when the player is in a specific range and an enemy collider to slow other enemies.
+    private bool CheckForPlayer(Vector3 center, float radius, Collider plr)
+    {
+        Collider[] collider = Physics.OverlapSphere(center, radius);
+        foreach (var obj in collider)
+        {
+            if (obj == plr)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CheckForEnemies(Vector3 center, float radius)
+    {
+        Collider[] collider = Physics.OverlapSphere(center, radius);
+        foreach (var obj in collider)
+        {
+            if (obj.tag == "Enemy")
+            {
+                if (!enemiesInRange.Contains(obj.gameObject))
+                {
+                    enemiesInRange.Add(obj.gameObject);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, _enemy.AttackRange);
+        Gizmos.DrawWireSphere(transform.position, _enemy.ShootRange);
+        Gizmos.DrawWireSphere(transform.position, _enemy.FollowRange);
+    }
+    #endregion
+
     public void Start()
     {
         //Use the SetEnemyData(EnemySetting _enemy) function to use the correct variables.
@@ -88,13 +130,13 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         //Move and change the rotation of the enemy towards the player.
-        if(CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()))
         {
             enemyObj.LookAt(lookatvector);
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
             {
-                float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.AttackRange));
+                float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
                 if (Rigidbody != null)
@@ -112,25 +154,31 @@ public class Enemy : MonoBehaviour
         lookatvector = _enemy.PlayerObject.transform.position;
         lookatvector.y = transform.position.y;
 
-        LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         RaycastHit ray;
         if (Physics.Raycast(enemyObj.position, lookatvector - transform.position, out ray))
         {
-            if (ray.collider.tag == _enemy.PlayerSettings.tag)
+            if (ray.collider.CompareTag("Player"))
             {
                 PlayerIsInSight = true;
             }
+            else PlayerIsInSight = false;
         }
-        else PlayerIsInSight = false;
-        Debug.DrawRay(enemyObj.position, lookatvector - transform.position, Color.green);
-
-
         //Begin the attack cycle:
+
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
         if(playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
         {
             StartCoroutine(StartAttack(_enemy.pattern));
+        }
+
+        if(_enemy.type == EnemyType.Ranged)
+        {
+            ShootingRange = CheckForPlayer(transform.position, _enemy.ShootRange, _enemy.PlayerObject.GetComponent<Collider>());
+            if (ShootingRange && _enemy.Metronome.IsOnBeat() && CanAttack)
+            {
+                StartCoroutine(StartAttack(_enemy.pattern));
+            }
         }
         #region Ground Check + Falling rate
         if (Physics.Raycast(transform.position, Vector3.down, 2))
@@ -167,44 +215,6 @@ public class Enemy : MonoBehaviour
         Death();
     }
 
-    #region Enemy Radius
-    //A sphere collider to detect when the player is in a specific range and an enemy collider to slow other enemies.
-    private bool CheckForPlayer(Vector3 center, float radius, Collider plr)
-    {
-        Collider[] collider = Physics.OverlapSphere(center, radius);
-        foreach (var obj in collider)
-        {
-            if(obj == plr)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private bool CheckForEnemies(Vector3 center, float radius)
-    {
-        Collider[] collider = Physics.OverlapSphere(center, radius);
-        foreach(var obj in collider)
-        {
-            if(obj.tag == "Enemy")
-            {
-                if(!enemiesInRange.Contains(obj.gameObject))
-                {
-                    enemiesInRange.Add(obj.gameObject);
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, 2);
-        Gizmos.DrawWireSphere(transform.position, _enemy.AttackRange);
-    }
-    #endregion
 
     #region Attack Types
     private IEnumerator Waiter(float seconds)
@@ -253,7 +263,7 @@ public class Enemy : MonoBehaviour
     {
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
-
+        bool bulletCollided = false;
         GameObject bullet = Instantiate(_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
@@ -261,24 +271,33 @@ public class Enemy : MonoBehaviour
         Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
         while (bullet.transform.position != PositionOnBeat)
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 4f * Time.fixedDeltaTime);
-            yield return null;
-            if(Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && _enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 8f * Time.fixedDeltaTime);
+            if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
             {
-                _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+                if(_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+                {
+                    //_enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+                    Debug.Log("The bullet hit the player");
+                }else if(!_enemy.PlayerSettings.GetComponent<InputControls>().canDash && Metronome.inst.IsOnBeat())
+                {
+                    PositionOnBeat = transform.position;
+                    Debug.Log("The bullet changed direction");
+                }
+                bulletCollided = true;
                 Destroy(bullet);
                 break;
             }
-            else if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player) && !_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
+            else if (bullet != null && Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
             {
-                PositionOnBeat = transform.position;
+                gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
+                Debug.Log("The bullet hit itself");
+                bulletCollided = true;
+                Destroy(bullet);
+                break;
             }
+            yield return null;
         }
-        if (bullet != null && Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
-        {
-            gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
-            Destroy(bullet);
-        }else if (bullet != null) { Destroy(bullet); Debug.Log("The bullet reached its position but did not collide with anything"); }
+        if (bullet != null && !bulletCollided) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
     }
 
     public IEnumerator StartAttack(Attack[] pattern)
@@ -286,7 +305,7 @@ public class Enemy : MonoBehaviour
         CanAttack = false;
         foreach (Attack attack in pattern)
         {
-            if(playerInRange)
+            if(playerInRange || ShootingRange)
             {
                 switch (attack)
                 {

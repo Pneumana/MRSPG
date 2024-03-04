@@ -17,7 +17,7 @@ public class DecalPainter : MonoBehaviour
         public Vector3 size;
     }
 
-    public IEnumerator PaintDecal(Vector3 point, Vector3 normal, Collision collision)
+    public IEnumerator PaintDecal(Vector3 point, Vector3 normal, Collider collision)
     {
         GameObject decal = Instantiate(decalProjector, point, Quaternion.identity);
         DecalProjector projector = decal.GetComponent<DecalProjector>();

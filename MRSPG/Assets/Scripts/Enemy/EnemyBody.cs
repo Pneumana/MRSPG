@@ -75,12 +75,11 @@ public class EnemyBody : MonoBehaviour
 
                 ModifyHealth(5);
                 rb.velocity = Vector3.zero;
-                //ContactPoint contact = hit.point;
-                //Vector3 point = contact.point;
-                //point.y += 0.1f;
-                //Vector3 normal = contact.normal;
-                //DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
-                //StartCoroutine(painter.PaintDecal(point, normal, collision));
+                Vector3 point = hit.point;
+                point.y += 0.1f;
+                Vector3 normal = hit.normal;
+                DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+                StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
             }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
             {
@@ -93,7 +92,7 @@ public class EnemyBody : MonoBehaviour
                     }
                 }
                 pushedBack = false;
-                Debug.Log("should be recovering");
+                //Debug.Log("should be recovering");
             }
         }
 
@@ -109,9 +108,9 @@ public class EnemyBody : MonoBehaviour
         disablePathfinding = false;
     }
 
-    private void OnCollisionEnter(Collision collision)
+   /* private void OnCollisionEnter(Collision collision)
     {
-        /*if (collision.gameObject.tag == "Wall" && pushedBack)
+        if (collision.gameObject.tag == "Wall" && pushedBack)
         {
             Debug.Log(health);
             ModifyHealth(5);
@@ -121,8 +120,9 @@ public class EnemyBody : MonoBehaviour
             Vector3 normal = contact.normal;
             DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
             StartCoroutine(painter.PaintDecal(point, normal, collision));
-        }*/
-    }
+            Debug.Log("Painted decal");
+        }
+    }*/
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.tag == "DeathPanel")
@@ -133,7 +133,7 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        Debug.Log(gameObject.name + " pushed by player");
+        //Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
@@ -153,7 +153,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        Debug.Log("shoved");
+        //Debug.Log("shoved");
         pushedBack = true;
         rb.AddForce( dir, mode);
     }
@@ -161,6 +161,6 @@ public class EnemyBody : MonoBehaviour
     public void Recover()
     {
         me.enabled = true;
-        Debug.Log(gameObject.name + "recovered");
+        //Debug.Log(gameObject.name + "recovered");
     }
 }
