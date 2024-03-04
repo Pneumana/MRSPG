@@ -32,12 +32,15 @@ public class SybilLedgeGrab : MonoBehaviour
         }
         if (dropping)
             return;
-        if(InputControls.instance.velocity.y < 0)
+        
+        if (InputControls.instance.velocity.y < 0)
         {
             RaycastHit handGrabbed;
             var pos = transform.position + grabPosition + (grabForward * transform.forward);
-            var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
-            var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
+            //var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
+            var handPos = Physics.CheckBox(pos, grabBounds/2, transform.rotation, groundMask);
+            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y, 0), grabBounds / 2, transform.rotation, groundMask);
+            //var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
                 var start = transform.position + grabPosition + (grabForward * transform.forward);
@@ -47,8 +50,8 @@ public class SybilLedgeGrab : MonoBehaviour
 
                 DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.green);
 
-                if (handGrabbed.collider!=null)
-                    Debug.Log("grabbed " + handGrabbed.collider.name);
+                //if (handGrabbed.collider!=null)
+                //Debug.Log("grabbed " + handGrabbed.collider.name);
                 grabbed = true;
                 InputControls.instance.gravityMultiplier = 0;
                 InputControls.instance.velocity.y = 0;
