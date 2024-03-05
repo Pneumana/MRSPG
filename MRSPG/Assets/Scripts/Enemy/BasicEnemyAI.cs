@@ -97,7 +97,7 @@ public class BasicEnemyAI : MonoBehaviour
 
         if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
-            StartCoroutine(StartAttack(body._enemy.EnemyPatterns[0].pattern));
+            StartCoroutine(StartAttack(body._enemy.pattern));
         }
         if (aggrod)
         {

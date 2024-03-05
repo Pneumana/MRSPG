@@ -23,19 +23,16 @@ public enum Attack
     Light,
     Heavy,
     Load,
-    Shoot
+    Shoot,
+    Spin,
+    Lag
 };
 #endregion
 [CreateAssetMenu(fileName = "Enemy Type", menuName = "Enemy/Standard", order = 1)]
 public class EnemySetting : ScriptableObject
 {
-    [System.Serializable]
-    public class EnemyPattern
-    {
-        public Attack[] pattern;
-    }
-    public EnemyPattern[] EnemyPatterns;
     [Header("Main Variables")]
+    public Attack[] pattern;
     public EnemyType type;
 
     [Header("Beat Variables")]
@@ -65,17 +62,3 @@ public class EnemySetting : ScriptableObject
     public GameObject PlayerObject;
 }
 
-[CreateAssetMenu(fileName = "Ranged Enemy Settings", menuName = "Enemy/Ranged Enemy", order = 2)]
-public class RangedEnemySettings : EnemySetting
-{
-    [Header("Ranged Variables")]
-    public GameObject Bullet;
-    public float ShootRange;
-    public int BulletDamage;
-}
-/*
-[CreateAssetMenu(fileName = "Boss Settings", menuName = "Enemy/Boss", order = 3)]
-public class BossEnemySettings : EnemySetting
-{
-    public float i;
-}*/
