@@ -33,7 +33,7 @@ public class InputControls : MonoBehaviour
     [Header("Push")]
     public Vector3 pushDirection;
     public float pushSpeed;
-    public float pushDecay;
+    public float pushTime;
 
     [Header("Camera")]
     public Transform cam;
@@ -83,15 +83,8 @@ public class InputControls : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-            ApplyGravity();
-
-        ApplyPush();
+        ApplyGravity();
         MovePlayer(movePlayer);
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            AddPush(moveDirection, 30, 0.98f);
-        }
     }
 
     public void ApplyGravity()
@@ -110,51 +103,43 @@ public class InputControls : MonoBehaviour
         }
     }
 
-    public void ApplyPush()
+    public IEnumerator ApplyDash(Vector3 direction, float speed, float time, bool liveUpdate, string type)
     {
-        if (pushSpeed != 0)
-        {
-            controller.Move(pushSpeed * Time.deltaTime * pushDirection.normalized);
-            pushDirection.y -= 0.01f;
-            pushDirection.Normalize();
-            pushSpeed *= pushDecay;
-            if (isGrounded) { pushSpeed *= 0.98f; }
-            if(pushSpeed < 0) { pushSpeed = 0; }
-        }
-
-    }
-    public void AddPush(Vector3 newDir, float newSpeed, float newDecay)
-    {
-        pushDirection = newDir.normalized;
-        pushSpeed = newSpeed;
-        pushDecay = newDecay;
-    }   
-
-    public IEnumerator ApplyDash(Vector3 direction)
-    {
-        canDash = false;
+        if (type == "Movement") { canDash = false; }
         float startTime = Time.time;
-        
-        while (Time.time < startTime + dashTime)
+
+        if (!liveUpdate)
         {
             targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
 
-            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-            controller.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
-
-            //Dash into enemy here:
-            Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
-            foreach (Collider enemy in hitEnemies)
+        while (Time.time < startTime + time)
+        {
+            if (liveUpdate)
             {
-                if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
-                Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
-                enemyDirection.y = 0f; 
-                var body = enemy.GetComponent<EnemyBody>();
-                if (body != null)
+                targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            }
+            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
+            controller.Move(targetDirection.normalized * speed * Time.deltaTime);
+
+            if (type == "Movement")
+            {
+                //Dash into enemy here:
+                Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
+                foreach (Collider enemy in hitEnemies)
                 {
-                    body.HitByPlayerDash(transform);
+                    if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
+                    Vector3 enemyDirection = (enemy.transform.position - playerObj.position).normalized;
+                    enemyDirection.y = 0f;
+                    var body = enemy.GetComponent<EnemyBody>();
+                    if (body != null)
+                    {
+                        body.HitByPlayerDash(transform);
+                    }
                 }
             }
 
@@ -212,7 +197,7 @@ public class InputControls : MonoBehaviour
     {
         if(canDash)
         {
-            StartCoroutine(ApplyDash(movePlayer));
+            StartCoroutine(ApplyDash(movePlayer, dashSpeed, dashTime, true, "Movement"));
             StartCoroutine(Waiter(dashCooldown));
         }
     }
