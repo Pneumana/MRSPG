@@ -47,7 +47,7 @@ public class Gun : MonoBehaviour
             Debug.Log("shooting at " + targeting.trackedEnemy.name, targeting.trackedEnemy);
             bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
             bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
-            Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward * 9999, Color.magenta, 10);
+            Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
             energy.LoseEnergy(50);
         }
             /*if(targeting.trackedEnemy != null)
