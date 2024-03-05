@@ -9,6 +9,7 @@ public class HitscanBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("hitscan bullet spawned");
         lr = GetComponent<LineRenderer>();
         RaycastHit groundCast;
         RaycastHit[] enemyCast;
@@ -20,8 +21,9 @@ public class HitscanBullet : MonoBehaviour
         enemyMask = ~enemyMask;
 
         //Physics.Raycast(transform.position, transform.forward, out groundCast, Mathf.Infinity);
-        
-        if (Physics.Raycast(transform.position, transform.forward, out groundCast, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        //GetComponent<LineRenderer>().SetPosition(0, transform.position);
+        //GetComponent<LineRenderer>().SetPosition(1, transform.position + (transform.forward * 9999));
+        if (Physics.Raycast(transform.position, transform.forward, out groundCast, 9999, LayerMask.GetMask("Ground")))
         {
             Debug.DrawLine(transform.position, transform.position + transform.forward * groundCast.distance, Color.blue, 10);
             Debug.Log("ground target = " + groundCast.distance);
@@ -70,6 +72,7 @@ public class HitscanBullet : MonoBehaviour
             lr.material.SetFloat("_Fade", t);
             yield return new WaitForSeconds(0);
         } while (t < 1);
+        Debug.Log("despawning hitscan bullet");
         Destroy(gameObject);
         yield return null;
     }

@@ -38,26 +38,27 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public IEnumerator ShootGun()
+    void ShootGun()
     {
         GameObject bullet = null;
+        Debug.Log(targeting.trackedEnemy);
         if (targeting.trackedEnemy != null && energy.currentEnergy == 50)
         {
+            Debug.Log("shooting at " + targeting.trackedEnemy.name, targeting.trackedEnemy);
             bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
-            energy.LoseEnergy(50);
-        }
-        while(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
-        {
             bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
-            yield return null;
+            Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward * 9999, Color.magenta, 10);
+            //energy.LoseEnergy(0);
         }
+            /*if(targeting.trackedEnemy != null)
+                if(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
+                    bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;*/
     }
 
     public void Shoot(InputAction.CallbackContext context)
     {
         Debug.Log("The gun was shot");
-        StartCoroutine(ShootGun());
+        ShootGun();
     }
 }
 

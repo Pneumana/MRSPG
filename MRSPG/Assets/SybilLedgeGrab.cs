@@ -28,18 +28,21 @@ public class SybilLedgeGrab : MonoBehaviour
     {
         if (InputControls.instance.isGrounded)
         {
+            DropLedge();
             dropping = false;
+            return;
         }
         if (dropping)
             return;
         
         if (InputControls.instance.velocity.y < 0)
         {
-            RaycastHit handGrabbed;
+            Vector3 plusFallspeed = new Vector3(0, InputControls.instance.velocity.y * Time.deltaTime, 0);
             var pos = transform.position + grabPosition + (grabForward * transform.forward);
             //var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
+
             var handPos = Physics.CheckBox(pos, grabBounds/2, transform.rotation, groundMask);
-            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y, 0), grabBounds / 2, transform.rotation, groundMask);
+            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y/2, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
             //var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
@@ -49,7 +52,7 @@ public class SybilLedgeGrab : MonoBehaviour
                 //Debug.DrawLine(start + closeLowerLeft, start + closeLowerRight, Color.green, 10);
 
                 DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.green);
-
+                DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.red);
                 //if (handGrabbed.collider!=null)
                 //Debug.Log("grabbed " + handGrabbed.collider.name);
                 grabbed = true;
@@ -61,15 +64,15 @@ public class SybilLedgeGrab : MonoBehaviour
             }
             if (!handPos)
             {
-                DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.red);
+                //DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.red);
             }
             if (abovePos)
             {
-                DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.green);
+                //DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.green);
             }
             else
             {
-                DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.red);
+                
             }
         }
         
@@ -93,12 +96,7 @@ public class SybilLedgeGrab : MonoBehaviour
             else if(InputControls.instance.playerInput.y < 0 || InputControls.instance.playerInput.x != 0)
             {
                 //drop
-                Debug.Log("dropping ledge");
-                dropping = true;
-                grabbed = false;
-                InputControls.instance.gravityMultiplier = 4;
-                InputControls.instance.doMovement = true;
-                animator.SetBool("LedgeGrabbed", false);
+                DropLedge();
             }
         }
 
@@ -118,7 +116,15 @@ public class SybilLedgeGrab : MonoBehaviour
 
 
     }
-
+    void DropLedge()
+    {
+        //Debug.Log("dropping ledge");
+        dropping = true;
+        grabbed = false;
+        InputControls.instance.gravityMultiplier = 4;
+        InputControls.instance.doMovement = true;
+        animator.SetBool("LedgeGrabbed", false);
+    }
     void JumpLedge()
     {
         Debug.Log("jumping ledge");
