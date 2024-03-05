@@ -26,7 +26,7 @@ public class Health : MonoBehaviour
 
     private void Update ( )
     {
-        
+        UIUpdateHealth ( );
     }
 
     public void LoseHealth(int amount)

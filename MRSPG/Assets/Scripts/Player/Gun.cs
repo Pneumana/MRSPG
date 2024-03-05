@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour
 
     private void Start ( )
     {
-        //energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+        energy = GameObject.Find ( "Player" ).GetComponent<Energy> ( );
 
         if ( energy == null )
         {
@@ -47,7 +47,7 @@ public class Gun : MonoBehaviour
             Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
             energy.LoseEnergy(50);
         }
-        while(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
+        while ( bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position )
         {
             bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;
             yield return null;
