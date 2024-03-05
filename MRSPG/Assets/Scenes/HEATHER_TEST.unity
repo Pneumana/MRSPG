@@ -204,7 +204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &56458479
 RectTransform:
   m_ObjectHideFlags: 0
@@ -407,7 +407,7 @@ MonoBehaviour:
   playerInput: {x: 0, y: 0}
   pushDirection: {x: 0, y: 0, z: 0}
   pushSpeed: 0
-  pushDecay: 0
+  pushTime: 0
   cam: {fileID: 961739753}
   gravityMultiplier: 4
   groundCheck: {fileID: 1364622951}
