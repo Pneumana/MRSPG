@@ -11,7 +11,7 @@ public class Energy : MonoBehaviour
     public int currentEnergy;
 
     [SerializeField]
-    Image _energyImg;
+    Image _energyImg, _gunRdy, _teleportRdy;
 
     [SerializeField]
     Sprite [ ] _energySprite;
@@ -78,47 +78,70 @@ public class Energy : MonoBehaviour
         if ( currentEnergy == 50 )
         {
             _energyImg.sprite = _energySprite [ 0 ];
+            _gunRdy.gameObject.SetActive ( true );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 45 )
         {
             _energyImg.sprite = _energySprite [ 1 ];
+            _gunRdy.gameObject.SetActive(false);
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 40 )
         {
             _energyImg.sprite = _energySprite [ 2 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 35 )
         {
             _energyImg.sprite = _energySprite [ 3 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 30 )
         {
             _energyImg.sprite = _energySprite [ 4 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 25 )
         {
             _energyImg.sprite = _energySprite [ 5 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 20 )
         {
             _energyImg.sprite = _energySprite [ 6 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );
         }
         else if ( currentEnergy == 15 )
         {
             _energyImg.sprite = _energySprite [ 7 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( false );
         }
         else if ( currentEnergy == 10 )
         {
             _energyImg.sprite = _energySprite [ 8 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( false );
         }
         else if ( currentEnergy == 5 )
         {
             _energyImg.sprite = _energySprite [ 9 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( false );
         }
         else if ( currentEnergy == 0 )
         {
             _energyImg.sprite = _energySprite [ 10 ];
+            _gunRdy.gameObject.SetActive ( false );
+            _teleportRdy .gameObject.SetActive ( false );
         }
         else { return; }
     }
+
 }

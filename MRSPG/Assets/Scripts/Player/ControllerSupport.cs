@@ -98,6 +98,33 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""95b15347-7218-42bb-bae6-3f426b7b6e43"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Nav Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""0b327a31-0df4-4b5f-a08b-2e3f7efd99c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MenuSelect"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6f9971f-3077-483b-a37f-0526b32267ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -331,6 +358,94 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d0dd840-8b2a-403d-b55f-039bad402001"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26b90d26-936a-444c-ae8b-ce1fb27992b4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d54577af-3dc7-469c-956a-332e7fd2dfcd"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""379028ad-b7f5-4e09-ac4c-b09c9cdab0fd"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e9173c6-7d51-4274-af1d-940b9df3085f"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c44b3512-db34-4230-a2f5-1e9f654b5dcb"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fa954bd-a4dd-4dad-823f-996d0e4132a2"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MenuSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bec8f77b-e4aa-4ff4-87da-6e866934b495"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MenuSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -347,6 +462,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_LookAtTarget = m_Gameplay.FindAction("LookAtTarget", throwIfNotFound: true);
         m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
+        m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
+        m_Gameplay_NavMenu = m_Gameplay.FindAction("Nav Menu", throwIfNotFound: true);
+        m_Gameplay_MenuSelect = m_Gameplay.FindAction("MenuSelect", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -416,6 +534,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_LookAtTarget;
     private readonly InputAction m_Gameplay_Fire;
     private readonly InputAction m_Gameplay_Attack;
+    private readonly InputAction m_Gameplay_Pause;
+    private readonly InputAction m_Gameplay_NavMenu;
+    private readonly InputAction m_Gameplay_MenuSelect;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -428,6 +549,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @LookAtTarget => m_Wrapper.m_Gameplay_LookAtTarget;
         public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
+        public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
+        public InputAction @NavMenu => m_Wrapper.m_Gameplay_NavMenu;
+        public InputAction @MenuSelect => m_Wrapper.m_Gameplay_MenuSelect;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -461,6 +585,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @NavMenu.started += instance.OnNavMenu;
+            @NavMenu.performed += instance.OnNavMenu;
+            @NavMenu.canceled += instance.OnNavMenu;
+            @MenuSelect.started += instance.OnMenuSelect;
+            @MenuSelect.performed += instance.OnMenuSelect;
+            @MenuSelect.canceled += instance.OnMenuSelect;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -489,6 +622,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @NavMenu.started -= instance.OnNavMenu;
+            @NavMenu.performed -= instance.OnNavMenu;
+            @NavMenu.canceled -= instance.OnNavMenu;
+            @MenuSelect.started -= instance.OnMenuSelect;
+            @MenuSelect.performed -= instance.OnMenuSelect;
+            @MenuSelect.canceled -= instance.OnMenuSelect;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -516,5 +658,8 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnLookAtTarget(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnNavMenu(InputAction.CallbackContext context);
+        void OnMenuSelect(InputAction.CallbackContext context);
     }
 }

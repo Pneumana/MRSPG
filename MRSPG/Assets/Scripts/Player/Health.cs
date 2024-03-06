@@ -18,7 +18,6 @@ public class Health : MonoBehaviour
     Sprite [ ] _healthSprite;
 
     [HideInInspector] public CheckpointObelisk currentCheckpoint;
-    #endregion
 
     //connor vars :D
     [SerializeField] float hurtDisplayTime = 0.27f;
@@ -26,6 +25,8 @@ public class Health : MonoBehaviour
 
     [SerializeField] ScriptableRendererFeature damageHUD;
     [SerializeField] Material mat;
+
+    #endregion
 
     private void Awake()
     {
