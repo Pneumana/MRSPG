@@ -31,6 +31,7 @@ public class PlayerAttack : MonoBehaviour
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
+
         if (RecentAttack == Metronome.BeatsPassed) { return; }
         if (RecentAttack + 2 <= Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
         {
@@ -50,6 +51,7 @@ public class PlayerAttack : MonoBehaviour
         {
             test = Player.transform.forward;
         }
+        Debug.Log("Melee");
         switch (MeleeCombo)
         {
             case 1:

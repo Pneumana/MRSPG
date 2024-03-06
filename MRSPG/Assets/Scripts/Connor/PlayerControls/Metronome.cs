@@ -55,8 +55,11 @@ public class Metronome : MonoBehaviour
     }
     //this makes it so in any scripts we need to check for the player being on beat, we just need to do Metronome.inst.IsOnBeat()
     //which returns a bool of if the metronome is currently on an offbeat or an on beat
+
+
     public bool IsOnBeat()
     {
+        //calculate exactly how on beat the player is
         return onBeat;
     }
     public float GetInterval()

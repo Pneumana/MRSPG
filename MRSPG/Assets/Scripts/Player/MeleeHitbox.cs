@@ -28,9 +28,10 @@ public class MeleeHitbox : MonoBehaviour
     void OnTriggerEnter(UnityEngine.Collider collision) //runs once per enemy in collider
     {
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
-        if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
+        //if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
         PlayerAttack.DealtDamage = true;
-        switch (MeleeCombo) {
+        enemyBody.ModifyHealth(1);
+        /*switch (MeleeCombo) {
             default:
                 break;
             case 1:
@@ -45,8 +46,8 @@ public class MeleeHitbox : MonoBehaviour
                 enemyBody.ModifyHealth(-2);
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
                 break;
-        }
-        if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
+        }*/
+        //if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
 
     }
 }

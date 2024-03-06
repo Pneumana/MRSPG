@@ -9,7 +9,7 @@ public class EnemyBody : MonoBehaviour
 {
     GameObject player;
     public EnemySetting _enemy;
-    private int health;
+    [SerializeField]private int health;
     private float speed;
     private int maxHealth;
     [SerializeField] float dashImpact = 3;
