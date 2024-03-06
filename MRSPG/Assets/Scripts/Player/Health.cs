@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class Health : MonoBehaviour
@@ -19,9 +20,36 @@ public class Health : MonoBehaviour
     [HideInInspector] public CheckpointObelisk currentCheckpoint;
     #endregion
 
+    //connor vars :D
+    [SerializeField] float hurtDisplayTime = 0.27f;
+    [SerializeField] float hurtFadeTime = 1;
+
+    [SerializeField] ScriptableRendererFeature damageHUD;
+    [SerializeField] Material mat;
+
     private void Awake()
     {
         currentHealth = _maxHealth;
+        damageHUD.SetActive(false);
+    }
+
+    IEnumerator HurtHUD()
+    {
+        damageHUD.SetActive(true);
+        mat.SetFloat("_Fade", 0);
+        yield return new WaitForSecondsRealtime(hurtDisplayTime);
+
+        float t = 0;
+        do
+        {
+            t += Time.unscaledDeltaTime;
+            mat.SetFloat("_Fade", t);
+            yield return new WaitForSecondsRealtime(0);
+        } while (t < hurtFadeTime);
+
+        damageHUD.SetActive(false);
+
+        yield return null;
     }
 
     private void Update ( )
@@ -32,6 +60,7 @@ public class Health : MonoBehaviour
     public void LoseHealth(int amount)
     {
         currentHealth -= amount;
+        StartCoroutine(HurtHUD());
         UIUpdateHealth();
     }
 
@@ -66,7 +95,8 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
-        GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
+        if(currentCheckpoint!=null)
+            GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
         currentHealth = 5;
         UIUpdateHealth();
     }

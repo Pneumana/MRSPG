@@ -103,15 +103,14 @@ public class BasicEnemyAI : MonoBehaviour
         {
             if (body.me.enabled)
             {
-                body.me.destination = _player.transform.position;
-            }
+                //if(body.me.isPathStale)
+                
             var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
-            if(distToTarget <= 1.0f)
+            var playerDistFromEnd = Vector3.Distance(transform.position, body.me.pathEndPosition);
+            if (distToTarget <= 1.0f || playerDistFromEnd >= 1|| body.me.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
             {
-                if (body.me.enabled)
-                {
-                    //body.me.destination = _player.transform.position;
-                }
+                    body.me.destination = _player.transform.position;
+            }
             }
         }
         /*Death();*/
