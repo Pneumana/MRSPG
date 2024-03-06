@@ -33,7 +33,7 @@ public class Energy : MonoBehaviour
 
     public void LoseEnergy (int amount )
     {
-        currentEnergy = -amount;
+        currentEnergy -= amount;
     }
       
     //adds energy after every enemy killed

@@ -27,7 +27,8 @@ public class Controller : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            if(inst!=this)
+                Destroy(gameObject);
         }
 
         controls = new ControllerSupport();

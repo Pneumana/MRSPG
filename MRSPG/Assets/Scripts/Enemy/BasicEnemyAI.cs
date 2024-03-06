@@ -97,17 +97,20 @@ public class BasicEnemyAI : MonoBehaviour
 
         if(playerInRange && metronome.IsOnBeat() && CanAttack)
         {
-            StartCoroutine(StartAttack(body._enemy.EnemyPatterns[0].pattern));
+            StartCoroutine(StartAttack(body._enemy.pattern));
         }
         if (aggrod)
         {
-            var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
-            if(distToTarget <= 1.0f)
+            if (body.me.enabled)
             {
-                if (body.me.enabled)
-                {
+                //if(body.me.isPathStale)
+                
+            var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
+            var playerDistFromEnd = Vector3.Distance(transform.position, body.me.pathEndPosition);
+            if (distToTarget <= 1.0f || playerDistFromEnd >= 1|| body.me.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+            {
                     body.me.destination = _player.transform.position;
-                }
+            }
             }
         }
         /*Death();*/

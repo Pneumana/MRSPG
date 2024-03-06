@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     private Transform enemyObj;
     public EnemySetting _enemy;
     private RangedEnemySettings ranged_enemy;
+    private BossEnemySettings boss_enemy;
     List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
@@ -64,6 +65,11 @@ public class Enemy : MonoBehaviour
                 gameObject.name = "RangedEnemy";
                 gameObject.tag = "Enemy";
                 Gun = gameObject.transform.GetChild(0).Find("Gun");
+                break;
+            case EnemyType.Boss:
+                boss_enemy = _enemy as BossEnemySettings;
+                gameObject.name = "Boss";
+                gameObject.tag = "Enemy";
                 break;
 
         }
@@ -178,7 +184,7 @@ public class Enemy : MonoBehaviour
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
         if(playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
         {
-            StartCoroutine(StartAttack(_enemy.EnemyPatterns[0]));
+            StartCoroutine(StartAttack(_enemy.pattern));
         }
 
         if(_enemy.type == EnemyType.Ranged)
@@ -186,8 +192,18 @@ public class Enemy : MonoBehaviour
             ShootingRange = CheckForPlayer(transform.position, ranged_enemy.ShootRange, _enemy.PlayerObject.GetComponent<Collider>());
             if (ShootingRange && _enemy.Metronome.IsOnBeat() && CanAttack)
             {
-                StartCoroutine(StartAttack(_enemy.EnemyPatterns[0]));
+                StartCoroutine(StartAttack(_enemy.pattern));
             }
+        }
+
+        if (_enemy.type == EnemyType.Boss)
+        {
+            bool AttackingRange = CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>());
+            if (playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
+            {
+                StartCoroutine(StartAttack(boss_enemy.BossPattern[1].pattern));
+            }
+            else if(AttackingRange && _enemy.Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
         }
         #region Ground Check + Falling rate
         if (Physics.Raycast(transform.position, Vector3.down, 2))
@@ -309,11 +325,19 @@ public class Enemy : MonoBehaviour
         }
         if (bullet != null && !bulletCollided) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
     }
+    private void SpinAttack()
+    {
+        Debug.Log("boss go spinny");
+    }
+    private void EndLag()
+    {
+        Debug.Log("boss lazy, boss need time to recoop");
+    }
 
-    public IEnumerator StartAttack(EnemyPattern EnemyPatterns)
+    public IEnumerator StartAttack(Attack[] pattern)
     {
         CanAttack = false;
-        foreach (Attack attack in EnemyPatterns.pattern)
+        foreach (Attack attack in pattern)
         {
             if(playerInRange || ShootingRange)
             {
@@ -335,6 +359,12 @@ public class Enemy : MonoBehaviour
                         break;
                     case Attack.Shoot:
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
+                        break;
+                    case Attack.Spin:
+                        SpinAttack();
+                        break;
+                    case Attack.Lag:
+                        EndLag();
                         break;
                 }
                 yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);

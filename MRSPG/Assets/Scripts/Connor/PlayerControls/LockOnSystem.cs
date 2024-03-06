@@ -173,7 +173,7 @@ public class LockOnSystem : MonoBehaviour
             return;
 
 
-        Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
+        //Debug.DrawLine(playerStartPos, targetedPos, Color.cyan, 15);
         //Disable character controller movement override to swap position with enemy.
         characterController.enabled = false;
         player.transform.position = targetedPos;
@@ -230,15 +230,23 @@ public class LockOnSystem : MonoBehaviour
         var cam = Camera.main.gameObject;
         var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
 
-        var dir = trackedEnemy.transform.position - player.transform.position;
+        var dir = trackedEnemy.transform.position - (player.transform.position + new Vector3(0, 5, 0));
         dir = Vector3.Normalize(dir);
         
 
-        Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
-            Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
+        //Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
+           // Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
             var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
-            freeLook.m_XAxis.Value = xangle - 180;
-            freeLook.m_YAxis.Value = -dir.y;
+
+        var xLerp = Mathf.Lerp(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
+
+
+        var yLerp = Mathf.Lerp(freeLook.m_YAxis.Value, -dir.y, 0.5f);
+
+        //freeLook.m_XAxis.Value = xangle - 180;
+        freeLook.m_XAxis.Value = xLerp;
+        //freeLook.m_YAxis.Value = -dir.y;
+        freeLook.m_YAxis.Value = yLerp;
     }
 
     void InputEventStayLockOn()
@@ -346,7 +354,7 @@ public class LockOnSystem : MonoBehaviour
         {
             freeAim = false;
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
-            GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Camera.main.gameObject.transform.right * 2 + Vector3.up * 1.5f - Camera.main.gameObject.transform.forward * 2;
+            //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Camera.main.gameObject.transform.right * 2 + Vector3.up * 1.5f - Camera.main.gameObject.transform.forward * 2;
         }
         foreach (int i in validEnemies)
         {
@@ -408,6 +416,6 @@ public class LockOnSystem : MonoBehaviour
         targetTime = maxTimeScale;
         freeAim = true;
         GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
-        GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
+        //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
     }
 }

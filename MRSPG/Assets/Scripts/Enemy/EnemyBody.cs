@@ -12,7 +12,7 @@ public class EnemyBody : MonoBehaviour
     private int health;
     private float speed;
     private int maxHealth;
-    private float dashImpact = 3;
+    [SerializeField] float dashImpact = 3;
 
     public bool pushedBack;
     public bool disablePathfinding;
@@ -78,8 +78,8 @@ public class EnemyBody : MonoBehaviour
                 Vector3 point = hit.point;
                 point.y += 0.1f;
                 Vector3 normal = hit.normal;
-                DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
-                StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
+                //DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+                //StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
             }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
             {
@@ -88,6 +88,7 @@ public class EnemyBody : MonoBehaviour
                     if (!me.enabled)
                     {
                         me.enabled = true;
+                        rb.isKinematic = true;
                         Debug.Log(gameObject.name + " recovered from pushback");
                     }
                 }
@@ -101,6 +102,7 @@ public class EnemyBody : MonoBehaviour
     public void DisablePathfinding()
     {
         me.enabled = false;
+        rb.isKinematic = false;
         disablePathfinding = true;
     }
     public void EnablePathfinding()
@@ -133,7 +135,7 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        //Debug.Log(gameObject.name + " pushed by player");
+        Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
@@ -153,14 +155,16 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        //Debug.Log("shoved");
+        Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
+        rb.isKinematic = false;
         rb.AddForce( dir, mode);
     }
 
     public void Recover()
     {
         me.enabled = true;
+        //rb.isKinematic = true;
         //Debug.Log(gameObject.name + "recovered");
     }
 }
