@@ -46,16 +46,20 @@ public class PlayerAttack : MonoBehaviour
             test = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
             if (ToggleVisualBug) { Player.transform.forward = test; }
         }
+        else
+        {
+            test = Player.transform.forward;
+        }
         switch (MeleeCombo)
         {
             case 1:
-                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
                 break;
             case 2:
-                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (!EnemyInRange()) { StartCoroutine(inputControls.ApplyDash(test, 50, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
                 break;
         }
         DealtDamage = false;
