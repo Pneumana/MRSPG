@@ -237,8 +237,16 @@ public class LockOnSystem : MonoBehaviour
         //Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
            // Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
             var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
-            freeLook.m_XAxis.Value = xangle - 180;
-            freeLook.m_YAxis.Value = -dir.y;
+
+        var xLerp = Mathf.Lerp(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
+
+
+        var yLerp = Mathf.Lerp(freeLook.m_YAxis.Value, -dir.y, 0.5f);
+
+        //freeLook.m_XAxis.Value = xangle - 180;
+        freeLook.m_XAxis.Value = xLerp;
+        //freeLook.m_YAxis.Value = -dir.y;
+        freeLook.m_YAxis.Value = yLerp;
     }
 
     void InputEventStayLockOn()

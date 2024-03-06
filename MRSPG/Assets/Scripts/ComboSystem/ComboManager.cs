@@ -179,7 +179,7 @@ public class ComboManager : MonoBehaviour
         var n = Instantiate(prefab);
         n.GetComponent<TextMeshProUGUI>().text = name;
         n.transform.SetParent(eventParent);
-
+        n.transform.localScale = Vector3.one;
         /*        if (eventObjs.Count == 0)
                 {
                     //go.transform.SetParent(eventParent);
