@@ -101,12 +101,16 @@ public class BasicEnemyAI : MonoBehaviour
         }
         if (aggrod)
         {
+            if (body.me.enabled)
+            {
+                body.me.destination = _player.transform.position;
+            }
             var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
             if(distToTarget <= 1.0f)
             {
                 if (body.me.enabled)
                 {
-                    body.me.destination = _player.transform.position;
+                    //body.me.destination = _player.transform.position;
                 }
             }
         }
