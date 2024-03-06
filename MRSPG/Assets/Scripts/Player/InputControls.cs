@@ -108,13 +108,6 @@ public class InputControls : MonoBehaviour
         if (type == "Movement") { canDash = false; }
         float startTime = Time.time;
 
-        if (!liveUpdate)
-        {
-            targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-        }
-
         while (Time.time < startTime + time)
         {
             if (liveUpdate)
@@ -122,9 +115,14 @@ public class InputControls : MonoBehaviour
                 targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+                Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
+                controller.Move(targetDirection.normalized * speed * Time.deltaTime);
             }
-            Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-            controller.Move(targetDirection.normalized * speed * Time.deltaTime);
+            else
+            {
+                controller.Move(direction.normalized * speed * Time.deltaTime);
+            }
 
             if (type == "Movement")
             {
