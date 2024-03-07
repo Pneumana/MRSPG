@@ -18,7 +18,7 @@ public class Gun : MonoBehaviour
 
     private void Start ( )
     {
-        //energy = GameObject.Find ( "Player" ).GetComponent<Enegry> ( );
+        energy = GameObject.Find ( "Player" ).GetComponent<Energy> ( );
 
         if ( energy == null )
         {

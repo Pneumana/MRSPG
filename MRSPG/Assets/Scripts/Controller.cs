@@ -14,6 +14,7 @@ public class Controller : MonoBehaviour
     public LockOnSystem lockOnSystem;
     public Gun gun;
     public PlayerAttack playerAttack;
+    public UIManager pauseUI;
     [HideInInspector] public ControllerSupport controls;
 
     public Vector2 lookInput;
