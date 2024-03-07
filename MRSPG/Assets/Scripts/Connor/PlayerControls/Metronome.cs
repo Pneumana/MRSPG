@@ -60,8 +60,8 @@ public class Metronome : MonoBehaviour
         {
             interval = 1 / ((float)BPM / 60);
         }
-            
 
+        GetComponent<AudioSource>().pitch = Time.timeScale;
         
     }
     //this makes it so in any scripts we need to check for the player being on beat, we just need to do Metronome.inst.IsOnBeat()
