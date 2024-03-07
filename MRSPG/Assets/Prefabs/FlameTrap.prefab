@@ -4389,9 +4389,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7150000149789033398}
-  - component: {fileID: 1753789322199140978}
+  - component: {fileID: 9035349481280454339}
   m_Layer: 0
-  m_Name: SpikeTrap
+  m_Name: FlameTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4415,7 +4415,7 @@ Transform:
   - {fileID: 1634965233320012466}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1753789322199140978
+--- !u!114 &9035349481280454339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4424,10 +4424,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 9213624290244551794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 516c19595da39774fa7f4a2a100a3c92, type: 3}
+  m_Script: {fileID: 11500000, guid: 884f660ee6d3d0d4d8b99eb3da0bb850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loopsToTrigger: 3
-  loopsToStop: 1
-  spikes: {fileID: 2586555037914507610}
+  loopsToTrigger: 4
+  loopsToStop: 0
+  fireball: {fileID: 6623790709723217225, guid: 82fffb1bd9fedbd4293040543be693d3, type: 3}
   warn: {fileID: 1732861392426783523}
+  launchPos: {x: 0, y: 0, z: -1}

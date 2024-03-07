@@ -41,7 +41,7 @@ public class Metronome : MonoBehaviour
         if (intervalHalfPoint == 0)
         {
             intervalHalfPoint = (1 / ((float)BPM / 60)) * forgivness;
-            Debug.Log(intervalHalfPoint);
+            //Debug.Log(intervalHalfPoint);
 
             if (onBeat)
             {
