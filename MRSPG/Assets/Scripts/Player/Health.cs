@@ -67,7 +67,10 @@ public class Health : MonoBehaviour
 
     void UIUpdateHealth ( )
     {
-        if ( currentHealth == 5 )
+        _healthImg.sprite = _healthSprite[_healthSprite.Length - (currentHealth + 1)];
+
+
+        /*if ( currentHealth == 5 )
         {
             _healthImg.sprite = _healthSprite [ 0 ];
         }
@@ -86,8 +89,8 @@ public class Health : MonoBehaviour
         else if ( currentHealth == 1 )
         {
             _healthImg.sprite = _healthSprite [ 4 ];
-        }
-        else if ( currentHealth == 0 )
+        }*/
+        if ( currentHealth == 0 )
         {
             _healthImg.sprite = _healthSprite [ 5 ];
             Die();

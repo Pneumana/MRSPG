@@ -47,7 +47,7 @@ public class Metronome : MonoBehaviour
             {
                 BeatsPassed++;
                 onBeat = false;
-                visualizer.color = Color.red;
+                //visualizer.color = Color.red;
             }
             else
             {
