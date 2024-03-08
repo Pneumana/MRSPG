@@ -22,6 +22,7 @@ public class Energy : MonoBehaviour
     {
         //Gets all Values needed for the start of the game
         currentEnergy = _maxEnergy;
+        UIUpdateEnergy();
     }
 
     private void Update ( )
@@ -80,13 +81,13 @@ public class Energy : MonoBehaviour
     void UIUpdateEnergy ( )
     {
         _energyImg.fillAmount = currentEnergy/50f;
-        if(currentEnergy > 50)
+        if(currentEnergy == 50)
             _gunRdy.gameObject.SetActive(false);
         else
         {
             _gunRdy.gameObject.SetActive(true);
         }
-        if (currentEnergy > 20)
+        if (currentEnergy >= 20)
             _teleportRdy.gameObject.SetActive(false);
         else
         {

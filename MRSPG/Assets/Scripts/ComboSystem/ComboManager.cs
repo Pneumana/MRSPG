@@ -210,6 +210,7 @@ public class ComboManager : MonoBehaviour
             n.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 0);
         }
         currentPoints = Mathf.Clamp(currentPoints, 0, pointsPerTier[pointsPerTier.Count - 1]);
+        FindFirstObjectByType<Energy>().GainEnergy(1 + currentTier);
     }
 
 }
