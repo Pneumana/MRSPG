@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using static UnityEngine.EventSystems.EventTrigger;
 //using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class EnemyBody : MonoBehaviour
 {
     GameObject player;
     public EnemySetting _enemy;
-    [SerializeField]private int health;
+    public int health;
     private float speed;
     private int maxHealth;
     [SerializeField] float dashImpact = 3;
@@ -54,7 +55,10 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
-        foreach(EnemyAbsenceTrigger trigger in triggerList)
+        /*Debug.Log("The enemy has died");
+        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
+        else { energy.GainEnergy(5); }*/
+        foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
@@ -78,8 +82,8 @@ public class EnemyBody : MonoBehaviour
                 Vector3 point = hit.point;
                 point.y += 0.1f;
                 Vector3 normal = hit.normal;
-                //DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
-                //StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
+                DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+                StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
             }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
             {
@@ -135,7 +139,7 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        Debug.Log(gameObject.name + " pushed by player");
+        //Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
@@ -155,7 +159,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        Debug.Log(gameObject.name + " shoved");
+        //Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
         rb.AddForce( dir, mode);

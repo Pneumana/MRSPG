@@ -247,7 +247,6 @@ public class Enemy : MonoBehaviour
              enemiesInRange.Clear();
          }*/
         #endregion
-        Death();
     }
 
 
@@ -378,24 +377,6 @@ public class Enemy : MonoBehaviour
             }
         }
         CanAttack = true;
-    }
-    #endregion
-
-    #region Damage Conditions:
-    void Death()
-    {
-        Energy energy = _enemy.PlayerSettings.GetComponent<Energy>();
-        if (_enemy.EnemyHealth <= 0)
-        {
-            Debug.Log("The enemy has died");
-            if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
-            else { energy.GainEnergy(5); }
-            /*if (_enemy.PlayerSettings.GetComponent<Energy>().currentEnergy < 50)
-            {
-                _enemy.PlayerSettings.GetComponent<Energy>().GainEnergy(_enemy.EnergyGainedOnBeat, _enemy.EnergyGainedOffBeat);
-            }*/
-            Destroy(gameObject);
-        }
     }
     #endregion
 }
