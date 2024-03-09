@@ -18,6 +18,8 @@ public class Metronome : MonoBehaviour
 
     public static Metronome inst;
 
+    [SerializeField] int framesToSkip;
+
     private void Awake()
     {
         BeatsPassed = 0;
@@ -31,14 +33,14 @@ public class Metronome : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
 
         interval = Mathf.MoveTowards(interval, 0, Time.deltaTime);
         intervalHalfPoint = Mathf.MoveTowards(intervalHalfPoint, 0, Time.deltaTime);
         visualizer.GetComponent<RectTransform>().sizeDelta = (50 + (interval * 50)) * Vector2.one;
 
-        if (intervalHalfPoint == 0)
+        if ((intervalHalfPoint - (framesToSkip * Time.deltaTime)) <= 0)
         {
             intervalHalfPoint = (1 / ((float)BPM / 60)) * forgivness;
             //Debug.Log(intervalHalfPoint);
@@ -56,7 +58,7 @@ public class Metronome : MonoBehaviour
                 visualizer.color = Color.green;
             }
         }
-        if (interval == 0)
+        if ((interval - (framesToSkip * Time.deltaTime)) <= 0)
         {
             interval = 1 / ((float)BPM / 60);
         }
