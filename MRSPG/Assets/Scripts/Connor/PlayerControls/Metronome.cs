@@ -33,7 +33,7 @@ public class Metronome : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
 
         interval = Mathf.MoveTowards(interval, 0, Time.deltaTime);
