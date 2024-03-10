@@ -43,7 +43,7 @@ public class EnemyBody : MonoBehaviour
     {
         health -= mod;
 
-        if (Metronome.inst.IsOnBeat())
+        if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
         }
