@@ -5,12 +5,13 @@ using UnityEngine;
 public class PulseTextures : MonoBehaviour
 {
     [SerializeField] Material[] materials;
+    [SerializeField] int materialFrameSkips;
     // Start is called before the first frame update
     void Start()
     {
         foreach(Material mat in materials)
         {
-            mat.SetFloat("_BPMInterval", ((float)Metronome.inst.BPM / 60) - (Metronome.inst.framesToSkip * Time.fixedDeltaTime));
+            mat.SetFloat("_BPMInterval", ((float)Metronome.inst.BPM / 60) - (materialFrameSkips * Time.deltaTime));
         }
     }
 
