@@ -20,7 +20,9 @@ public class Metronome : MonoBehaviour
 
     public static Metronome inst;
 
-    [SerializeField] int framesToSkip;
+    [SerializeField] public int framesToSkip;
+    [Header("Not a direct 1:1 for number of beats displayed")]
+    [SerializeField] float beatPopulation;
 
     private void Awake()
     {
@@ -75,6 +77,7 @@ public class Metronome : MonoBehaviour
 
     IEnumerator AnimateBeats(float _interval)
     {
+        _interval *= beatPopulation;
         float t = 0;
 
         var left = new GameObject();

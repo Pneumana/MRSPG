@@ -10,7 +10,7 @@ public class PulseTextures : MonoBehaviour
     {
         foreach(Material mat in materials)
         {
-            mat.SetFloat("_BPMInterval", ((float)Metronome.inst.BPM / 60));
+            mat.SetFloat("_BPMInterval", ((float)Metronome.inst.BPM / 60) - (Metronome.inst.framesToSkip * Time.fixedDeltaTime));
         }
     }
 
