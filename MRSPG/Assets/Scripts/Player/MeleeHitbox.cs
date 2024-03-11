@@ -30,24 +30,23 @@ public class MeleeHitbox : MonoBehaviour
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
         //if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
         PlayerAttack.DealtDamage = true;
-        enemyBody.ModifyHealth(1);
-        /*switch (MeleeCombo) {
+        switch (MeleeCombo) {
             default:
+                Debug.LogError("Invalid value for MeleeCombo: " + MeleeCombo);
                 break;
             case 1:
-                enemyBody.ModifyHealth(-1);
+                enemyBody.ModifyHealth(1);
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(1); }
                 break;
             case 2:
-                enemyBody.ModifyHealth(-1);
+                enemyBody.ModifyHealth(1);
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(2); }
                 break;
             case 3:
-                enemyBody.ModifyHealth(-2);
+                enemyBody.ModifyHealth(2);
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
                 break;
-        }*/
-        //if (Metronome.IsOnBeat()) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
-
+        }
+        //if (Metronome.IsOnBeat() !& enemy._enemy.type == EnemyType.Heavy) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
     }
 }

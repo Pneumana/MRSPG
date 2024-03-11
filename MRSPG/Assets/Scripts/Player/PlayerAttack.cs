@@ -27,13 +27,13 @@ public class PlayerAttack : MonoBehaviour
         inputControls = GameObject.Find("Player").GetComponent<InputControls>();
         lockOnSystem = GameObject.Find("TimeScaler").GetComponent<LockOnSystem>();
         Player = GameObject.Find("PlayerObj");
-        MeleeCombo = 0;
+        MeleeCombo = 1;
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
 
-        if (RecentAttack == Metronome.BeatsPassed) { return; }
-        if (RecentAttack + 2 <= Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
+        //if (RecentAttack == Metronome.BeatsPassed) { MeleeCombo = 1; return; }
+        if (RecentAttack + 2 <= Metronome.BeatsPassed || RecentAttack == Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
         {
             MeleeCombo = 1;
         }
@@ -45,23 +45,22 @@ public class PlayerAttack : MonoBehaviour
         {
             Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - Player.transform.position).normalized;
             test = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
-            if (ToggleVisualBug) { Player.transform.forward = test; }
+            //if (ToggleVisualBug) { Player.transform.forward = test; }
         }
         else
         {
             test = Player.transform.forward;
         }
-        Debug.Log("Melee");
         switch (MeleeCombo)
         {
             case 1:
-                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 2:
-                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 20, 0.1f, false, "MeleeSlide")); }
+                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(test, 30, 0.05f, false, "MeleeSlide")); }
                 break;
         }
         DealtDamage = false;
