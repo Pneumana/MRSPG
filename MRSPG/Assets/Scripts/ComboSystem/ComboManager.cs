@@ -4,7 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
+//using static UnityEditor.PlayerSettings;
 
 public class ComboManager : MonoBehaviour
 {
@@ -210,6 +210,7 @@ public class ComboManager : MonoBehaviour
             n.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 0);
         }
         currentPoints = Mathf.Clamp(currentPoints, 0, pointsPerTier[pointsPerTier.Count - 1]);
+        FindFirstObjectByType<Energy>().GainEnergy(1 + currentTier);
     }
 
 }

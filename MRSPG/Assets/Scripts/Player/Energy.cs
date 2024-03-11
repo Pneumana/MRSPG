@@ -22,18 +22,21 @@ public class Energy : MonoBehaviour
     {
         //Gets all Values needed for the start of the game
         currentEnergy = _maxEnergy;
+        UIUpdateEnergy();
     }
 
     private void Update ( )
     {
         //Makes sure Energy Level does not go over the Max allowed Level
-        currentEnergy = Mathf.Clamp ( currentEnergy , 0 , _maxEnergy );
-        UIUpdateEnergy ( );       
+        
+        
     }
 
     public void LoseEnergy (int amount )
     {
         currentEnergy -= amount;
+        currentEnergy = Mathf.Clamp(currentEnergy, 0, _maxEnergy);
+        UIUpdateEnergy();
     }
       
     //adds energy after every enemy killed
@@ -67,15 +70,30 @@ public class Energy : MonoBehaviour
     public void GainEnergy(int energy) 
     {
         currentEnergy += energy;
-        if (currentEnergy > 50)
+        currentEnergy = Mathf.Clamp(currentEnergy, 0, _maxEnergy);
+/*        if (currentEnergy > 50)
         {
             currentEnergy = 50;
-        }
+        }*/
+        UIUpdateEnergy();
     }
-
+    [ContextMenu("UpdateUI")]
     void UIUpdateEnergy ( )
     {
-        if ( currentEnergy == 50 )
+        _energyImg.fillAmount = currentEnergy/50f;
+        if(currentEnergy == 50)
+            _gunRdy.gameObject.SetActive(false);
+        else
+        {
+            _gunRdy.gameObject.SetActive(true);
+        }
+        if (currentEnergy >= 20)
+            _teleportRdy.gameObject.SetActive(false);
+        else
+        {
+            _teleportRdy.gameObject.SetActive(true);
+        }
+        /*if ( currentEnergy == 50 )
         {
             _energyImg.sprite = _energySprite [ 0 ];
             _gunRdy.gameObject.SetActive ( true );
@@ -141,7 +159,7 @@ public class Energy : MonoBehaviour
             _gunRdy.gameObject.SetActive ( false );
             _teleportRdy .gameObject.SetActive ( false );
         }
-        else { return; }
+        else { return; }*/
     }
 
 }

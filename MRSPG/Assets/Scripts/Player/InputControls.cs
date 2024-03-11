@@ -1,9 +1,9 @@
 using Cinemachine.Utility;
-using Mono.Cecil.Cil;
+//using Mono.Cecil.Cil;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
@@ -24,6 +24,7 @@ public class InputControls : MonoBehaviour
     public float dashCooldown;
     private float targetAngle;
     public LayerMask enemyLayer;
+    [SerializeField] ParticleSystem DashParticle;
 
     public Vector3 velocity;
     public Vector3 moveDirection;
@@ -57,6 +58,8 @@ public class InputControls : MonoBehaviour
     [SerializeField] ParticleSystem groundedParticles;
     [SerializeField] ParticleSystem jumpParticles;
 
+    [SerializeField] Animator animator;
+
     #endregion
 
     public static InputControls instance;
@@ -65,6 +68,7 @@ public class InputControls : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        DashParticle.Stop();
         if (instance == null)
         {
             instance = this;
@@ -107,7 +111,7 @@ public class InputControls : MonoBehaviour
     {
         if (type == "Movement") { canDash = false; }
         float startTime = Time.time;
-
+        DashParticle.Play();
         while (Time.time < startTime + time)
         {
             if (liveUpdate)
@@ -143,6 +147,7 @@ public class InputControls : MonoBehaviour
 
             yield return null;
         }
+        DashParticle.Stop();
     }
 
     IEnumerator Waiter(float seconds)

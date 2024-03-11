@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
+using UnityEngine.InputSystem.XR;
 
 public class Gun : MonoBehaviour
 {
@@ -39,9 +40,17 @@ public class Gun : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        ShootGun();
+    }
+
     void ShootGun()
     {
+        if (!control.controls.Gameplay.Fire.WasReleasedThisFrame())
+            return;
         GameObject bullet = null;
+        targeting.UpdateTargetUI();
         Debug.Log(targeting.trackedEnemy);
         if (targeting.trackedEnemy != null && energy.currentEnergy == 50)
         {
@@ -59,7 +68,7 @@ public class Gun : MonoBehaviour
     public void Shoot(InputAction.CallbackContext context)
     {
         Debug.Log("The gun was shot");
-        ShootGun();
+        //ShootGun();
     }
 }
 

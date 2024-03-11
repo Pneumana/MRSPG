@@ -2,7 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.ShaderGraph;
+//using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -45,6 +45,8 @@ public class LockOnSystem : MonoBehaviour
 
     public Controller controller;
 
+    Energy energy;
+
     bool freeAim = true;
     float swapTargetCD;
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
@@ -53,6 +55,7 @@ public class LockOnSystem : MonoBehaviour
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
+        energy = FindFirstObjectByType<Energy>();
         UpdateEnemyList();
     }
     public void UpdateEnemyList()
@@ -97,14 +100,15 @@ public class LockOnSystem : MonoBehaviour
             }
             else
             {
-                StopLockOn();
+                if(!controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
+                    StopLockOn();
                 /*freeAim = true;
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;*/
             }
         }
 
-        InputEventStartLockOn();
-        InputEventStayLockOn();
+        InputEventStartSlowDown();
+        InputEventStaySlowDown();
         
         if (closestTarget != null)
         {
@@ -112,11 +116,11 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().color = Color.clear;
         }
         
-        InputEventEndLockOn();
+        InputEventEndSlowDown();
         if (!freeAim)
         {
-            GetTargetedEnemy();
-            LookAtTarget();
+            UpdateTargetUI();
+            //LookAtTarget();
         }
         if(remainingTime <= 0)
         {
@@ -188,12 +192,23 @@ public class LockOnSystem : MonoBehaviour
     }
 
 
-    void InputEventStartLockOn()
+    void InputEventStartSlowDown()
     {
 
-            if (controller.controls.Gameplay.Slowdown.WasPerformedThisFrame() && cooldown <= 0)
+            if (controller.controls.Gameplay.Slowdown.WasPressedThisFrame() || controller.controls.Gameplay.Fire.WasPressedThisFrame() && energy.currentEnergy >= 50)
             {
+            Debug.Log("start input");
                 remainingTime = useTime;
+            if(cooldown <= 0)
+            {
+                UpdateTargetUI();
+                LockOn();
+            }
+            else
+            {
+                Debug.Log("input denied because not off cooldown");
+            }
+
             }
         
     }
@@ -236,40 +251,38 @@ public class LockOnSystem : MonoBehaviour
 
         //Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
            // Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
-            var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
-
+        var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
         var xLerp = Mathf.Lerp(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
-
-
         var yLerp = Mathf.Lerp(freeLook.m_YAxis.Value, -dir.y, 0.5f);
+        
+        //freeLook.m_XAxis.Value = xLerp;
+        //freeLook.m_YAxis.Value = yLerp;
 
-        //freeLook.m_XAxis.Value = xangle - 180;
-        freeLook.m_XAxis.Value = xLerp;
-        //freeLook.m_YAxis.Value = -dir.y;
-        freeLook.m_YAxis.Value = yLerp;
+        //freeLook.m_LookAt = trackedEnemy.transform;
     }
 
-    void InputEventStayLockOn()
+    void InputEventStaySlowDown()
     {
         if(cooldown > 0)
         {
             return;
         }
         //ran while the slowdown is held
-            if (controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0)
-            {
+            if (controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0 || controller.controls.Gameplay.Fire.IsPressed() && remainingTime > 0 && energy.currentEnergy >= 50)
+        {
                 if (remainingTime >= 0)
                     remainingTime -= Time.unscaledDeltaTime;
                 targetTime = minTimeScale;
+                UpdateTargetUI();
             }
             else
             {
                 targetTime = maxTimeScale;
             }
-        
+
     }
     //Specifically ran for the time slowdown ending
-    public void InputEventEndLockOn(bool dontSwapPositions = false)
+    public void InputEventEndSlowDown(bool dontSwapPositions = false)
     {
         
             if (controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
@@ -280,10 +293,11 @@ public class LockOnSystem : MonoBehaviour
                 cooldown = cooldownTime;
                 remainingTime = useTime;
                 targetTime = maxTimeScale;
-            }
+            StopLockOn();
+        }
         
     }
-    void GetTargetedEnemy()
+    public void UpdateTargetUI()
     {
         
         float closest = float.MaxValue;
@@ -336,9 +350,11 @@ public class LockOnSystem : MonoBehaviour
                 closestEnemy = enemies[i];
             }
         }
+        if(closestTarget!=null)
+            closestTarget.GetComponent<Image>().sprite = lockedSprite;
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
-            if (freeAim)
+            //if (freeAim)
                 trackedEnemy = closestEnemy;
         }
         float left = float.MinValue;
@@ -353,7 +369,7 @@ public class LockOnSystem : MonoBehaviour
         else
         {
             freeAim = false;
-            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            //GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
             //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Camera.main.gameObject.transform.right * 2 + Vector3.up * 1.5f - Camera.main.gameObject.transform.forward * 2;
         }
         foreach (int i in validEnemies)
@@ -400,7 +416,7 @@ public class LockOnSystem : MonoBehaviour
             //add Line of sight check here
         }
         //get the target closest to the center of the screen
-        GetTargetedEnemy();
+        UpdateTargetUI();
         
     }
 

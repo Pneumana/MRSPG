@@ -56,6 +56,7 @@ public class SybilLedgeGrab : MonoBehaviour
                 //if (handGrabbed.collider!=null)
                 //Debug.Log("grabbed " + handGrabbed.collider.name);
                 grabbed = true;
+                InputControls.instance.canJump = false;
                 InputControls.instance.gravityMultiplier = 0;
                 InputControls.instance.velocity.y = 0;
                 InputControls.instance.doMovement = false;

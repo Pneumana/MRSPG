@@ -5,14 +5,16 @@ using System.Drawing;
 using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering.Universal;
 using static EnemySetting;
 using Color = UnityEngine.Color;
+using UnityEngine.UI;
+using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -36,11 +38,19 @@ public class Enemy : MonoBehaviour
     bool CanAttack = true;
     bool isGrounded;
     private Transform Gun;
+    private ParticleSystem ChargeParticle;
+
+    [Header("Warning Pop Up")]
+    private GameObject Warning;
+    private bool WarningPlayed;
+
     [Header("Target Parameters")]
     bool playerInRange;
     bool ShootingRange;
     public bool PlayerIsInSight;
+    bool aggro = false;
 
+    LayerMask GroundMask;
     #endregion
 
     #region Define Enemy
@@ -70,6 +80,7 @@ public class Enemy : MonoBehaviour
                 boss_enemy = _enemy as BossEnemySettings;
                 gameObject.name = "Boss";
                 gameObject.tag = "Enemy";
+                Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
 
         }
@@ -128,25 +139,32 @@ public class Enemy : MonoBehaviour
     public void Start()
     {
         //Use the SetEnemyData(EnemySetting _enemy) function to use the correct variables.
+        Warning = transform.Find("EnemyCanvas").transform.Find("Warning").gameObject;
+        Warning.SetActive(false);
         SetEnemyData(_enemy);
-        if(_enemy.PlayerSettings != null)
+        GroundMask = LayerMask.GetMask("Ground");
+        if (_enemy.PlayerSettings != null)
         {
         }else if (_enemy.PlayerSettings == null) { Debug.Log("<color=red>Error: </color> Player was not found.");  }
         if(enemyObj.gameObject.GetComponent<ParticleSystem>() != null)
         {
-            _enemy.ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
-            _enemy.ChargeParticle.Stop();
+            ChargeParticle = enemyObj.gameObject.GetComponent<ParticleSystem>();
+            ChargeParticle.Stop();
         }
     }
 
     private void FixedUpdate()
     {
         //Move and change the rotation of the enemy towards the player.
-        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()))
+        if(aggro && !WarningPlayed)
+        {
+            StartCoroutine(WarningPopUp());
+        }
+        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
             enemyObj.LookAt(lookatvector);
         }
-        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()))
+        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
@@ -154,9 +172,14 @@ public class Enemy : MonoBehaviour
                 float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
+                if(!isGrounded)
+                {
+                    move.y = -9.81f * 4f * Time.deltaTime;
+                }
                 if (Rigidbody != null)
                 {
                     Rigidbody.MovePosition(transform.position + move);
+                    aggro = true;
                 }
             }
         }
@@ -171,7 +194,9 @@ public class Enemy : MonoBehaviour
 
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         RaycastHit ray;
-        if (Physics.Raycast(enemyObj.position, lookatvector - transform.position, out ray))
+        Vector3 RayPosition = enemyObj.position;
+        RayPosition.y = _enemy.PlayerObject.transform.position.y;
+        if (Physics.Raycast(RayPosition, lookatvector - transform.position, out ray))
         {
             if (ray.collider.CompareTag("Player"))
             {
@@ -179,6 +204,8 @@ public class Enemy : MonoBehaviour
             }
             else PlayerIsInSight = false;
         }
+
+        Debug.DrawRay(RayPosition, lookatvector - transform.position, Color.green);
         //Begin the attack cycle:
 
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
@@ -190,6 +217,10 @@ public class Enemy : MonoBehaviour
         if(_enemy.type == EnemyType.Ranged)
         {
             ShootingRange = CheckForPlayer(transform.position, ranged_enemy.ShootRange, _enemy.PlayerObject.GetComponent<Collider>());
+            if (ShootingRange)
+            {
+                aggro = true;
+            }
             if (ShootingRange && _enemy.Metronome.IsOnBeat() && CanAttack)
             {
                 StartCoroutine(StartAttack(_enemy.pattern));
@@ -206,11 +237,9 @@ public class Enemy : MonoBehaviour
             else if(AttackingRange && _enemy.Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
         }
         #region Ground Check + Falling rate
-        if (Physics.Raycast(transform.position, Vector3.down, 2))
-        {
-            isGrounded = true;
-        }
-        if(!isGrounded && Rigidbody != null)
+        Vector3 GroundCheck = transform.GetChild(1).position;
+        isGrounded = Physics.CheckSphere(GroundCheck, _enemy.groundRadius, GroundMask);
+        if (!isGrounded && Rigidbody != null)
         {
             Rigidbody.drag = 0;
         }
@@ -237,11 +266,18 @@ public class Enemy : MonoBehaviour
              enemiesInRange.Clear();
          }*/
         #endregion
-        Death();
     }
 
 
     #region Attack Types
+
+    private IEnumerator WarningPopUp()
+    {
+        WarningPlayed = true;
+        Warning.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        Destroy(Warning);
+    }
     private IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -249,12 +285,12 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(float seconds)
     {
-
+        if (_enemy.speed <= 0) _enemy.speed = 13f;
         float begginingspeed = _enemy.speed;
         _enemy.speed = 0f;
-        _enemy.ChargeParticle.Play();
+        ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
-        _enemy.ChargeParticle.Stop();
+        ChargeParticle.Stop();
         Debug.Log("Charged!");
         _enemy.speed = begginingspeed;
     }
@@ -280,15 +316,14 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Load(float seconds)
     {
-        _enemy.ChargeParticle.Play();
+        ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
-        _enemy.ChargeParticle.Stop();
+        ChargeParticle.Stop();
     }
     private IEnumerator Shoot(int Damage)
     {
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
-        bool bulletCollided = false;
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
@@ -311,19 +346,17 @@ public class Enemy : MonoBehaviour
                     PositionOnBeat = transform.position;
                     Debug.Log("The bullet changed direction");
                 }
-                bulletCollided = true;
             }
             else if (bullet != null && Physics.CheckSphere(bullet.transform.position, 0.1f, Enemy))
             {
                 gameObject.GetComponent<EnemyBody>().ModifyHealth(2);
                 Debug.Log("The bullet hit itself");
-                bulletCollided = true;
                 Destroy(bullet);
                 break;
             }
             yield return null;
         }
-        if (bullet != null && !bulletCollided) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
+        if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
     }
     private void SpinAttack()
     {
@@ -339,6 +372,7 @@ public class Enemy : MonoBehaviour
         CanAttack = false;
         foreach (Attack attack in pattern)
         {
+            Debug.Log(attack);
             if(playerInRange || ShootingRange)
             {
                 switch (attack)
@@ -349,10 +383,10 @@ public class Enemy : MonoBehaviour
                         StartCoroutine(Charge(_enemy.ChargeTime));
                         break;
                     case Attack.Light:
-                        LightAttack(_enemy.Damage);
+                        if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
-                        HeavyAttack(_enemy.Damage);
+                        if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
                         StartCoroutine(Load(_enemy.ChargeTime));
@@ -361,34 +395,16 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
-                        SpinAttack();
+                        if (PlayerIsInSight == true) SpinAttack();
                         break;
                     case Attack.Lag:
-                        EndLag();
+                        if (PlayerIsInSight == true) EndLag();
                         break;
                 }
                 yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);
             }
         }
         CanAttack = true;
-    }
-    #endregion
-
-    #region Damage Conditions:
-    void Death()
-    {
-        Energy energy = _enemy.PlayerSettings.GetComponent<Energy>();
-        if (_enemy.EnemyHealth <= 0)
-        {
-            Debug.Log("The enemy has died");
-            if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
-            else { energy.GainEnergy(5); }
-            /*if (_enemy.PlayerSettings.GetComponent<Energy>().currentEnergy < 50)
-            {
-                _enemy.PlayerSettings.GetComponent<Energy>().GainEnergy(_enemy.EnergyGainedOnBeat, _enemy.EnergyGainedOffBeat);
-            }*/
-            Destroy(gameObject);
-        }
     }
     #endregion
 }
