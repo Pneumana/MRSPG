@@ -58,6 +58,8 @@ public class InputControls : MonoBehaviour
     [SerializeField] ParticleSystem groundedParticles;
     [SerializeField] ParticleSystem jumpParticles;
 
+    [SerializeField] Animator animator;
+
     #endregion
 
     public static InputControls instance;
