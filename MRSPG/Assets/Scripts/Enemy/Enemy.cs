@@ -275,26 +275,7 @@ public class Enemy : MonoBehaviour
     {
         WarningPlayed = true;
         Warning.SetActive(true);
-        float time = 0;
-        float maxTime = 0.3f;
-        Vector3 pos = Warning.GetComponent<RectTransform>().localPosition;
-        Vector3 target = pos;
-        target.y += _enemy.WarningUpPos;
-        while ( time < maxTime)
-        {
-            time += Time.deltaTime;
-            Warning.GetComponent<RectTransform>().localPosition = new Vector3(pos.x, Mathf.Lerp(pos.y, target.y, time/maxTime), pos.z);
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.1f);
-        time = 0;
-        target.y -= 1.4f;
-        while (time < maxTime)
-        {
-            time += Time.deltaTime;
-            Warning.GetComponent<RectTransform>().localPosition = new Vector3(pos.x, Mathf.Lerp(pos.y, target.y, time / maxTime), pos.z);
-            yield return null;
-        }
+        yield return new WaitForSeconds(0.5f);
         Destroy(Warning);
     }
     private IEnumerator Waiter(float seconds)
