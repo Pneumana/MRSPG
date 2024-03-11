@@ -68,7 +68,7 @@ public class Metronome : MonoBehaviour
         {
             interval = 1 / ((float)BPM / 60);
             //create animation components
-            //StartCoroutine(AnimateBeats(interval));
+            StartCoroutine(AnimateBeats(interval));
         }
 
         GetComponent<AudioSource>().pitch = Time.timeScale;
