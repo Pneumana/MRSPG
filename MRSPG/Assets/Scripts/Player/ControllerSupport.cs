@@ -109,7 +109,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Nav Menu"",
+                    ""name"": ""Nav Menu up"",
                     ""type"": ""Button"",
                     ""id"": ""0b327a31-0df4-4b5f-a08b-2e3f7efd99c9"",
                     ""expectedControlType"": ""Button"",
@@ -121,6 +121,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""name"": ""MenuSelect"",
                     ""type"": ""Button"",
                     ""id"": ""c6f9971f-3077-483b-a37f-0526b32267ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Nav Menu Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""b74982a6-321d-48f6-825f-d5e2a956fe2e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -388,18 +397,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Nav Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""379028ad-b7f5-4e09-ac4c-b09c9cdab0fd"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Nav Menu"",
+                    ""action"": ""Nav Menu up"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -410,18 +408,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Nav Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c44b3512-db34-4230-a2f5-1e9f654b5dcb"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Nav Menu"",
+                    ""action"": ""Nav Menu up"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -446,6 +433,28 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""MenuSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09764807-22b9-4674-8232-561e04928f55"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92b24472-118b-4e60-92f5-5b748601ca4e"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nav Menu Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -463,8 +472,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
         m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
-        m_Gameplay_NavMenu = m_Gameplay.FindAction("Nav Menu", throwIfNotFound: true);
+        m_Gameplay_NavMenuup = m_Gameplay.FindAction("Nav Menu up", throwIfNotFound: true);
         m_Gameplay_MenuSelect = m_Gameplay.FindAction("MenuSelect", throwIfNotFound: true);
+        m_Gameplay_NavMenuDown = m_Gameplay.FindAction("Nav Menu Down", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -535,8 +545,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Fire;
     private readonly InputAction m_Gameplay_Attack;
     private readonly InputAction m_Gameplay_Pause;
-    private readonly InputAction m_Gameplay_NavMenu;
+    private readonly InputAction m_Gameplay_NavMenuup;
     private readonly InputAction m_Gameplay_MenuSelect;
+    private readonly InputAction m_Gameplay_NavMenuDown;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -550,8 +561,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
         public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
-        public InputAction @NavMenu => m_Wrapper.m_Gameplay_NavMenu;
+        public InputAction @NavMenuup => m_Wrapper.m_Gameplay_NavMenuup;
         public InputAction @MenuSelect => m_Wrapper.m_Gameplay_MenuSelect;
+        public InputAction @NavMenuDown => m_Wrapper.m_Gameplay_NavMenuDown;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -588,12 +600,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
-            @NavMenu.started += instance.OnNavMenu;
-            @NavMenu.performed += instance.OnNavMenu;
-            @NavMenu.canceled += instance.OnNavMenu;
+            @NavMenuup.started += instance.OnNavMenuup;
+            @NavMenuup.performed += instance.OnNavMenuup;
+            @NavMenuup.canceled += instance.OnNavMenuup;
             @MenuSelect.started += instance.OnMenuSelect;
             @MenuSelect.performed += instance.OnMenuSelect;
             @MenuSelect.canceled += instance.OnMenuSelect;
+            @NavMenuDown.started += instance.OnNavMenuDown;
+            @NavMenuDown.performed += instance.OnNavMenuDown;
+            @NavMenuDown.canceled += instance.OnNavMenuDown;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -625,12 +640,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
-            @NavMenu.started -= instance.OnNavMenu;
-            @NavMenu.performed -= instance.OnNavMenu;
-            @NavMenu.canceled -= instance.OnNavMenu;
+            @NavMenuup.started -= instance.OnNavMenuup;
+            @NavMenuup.performed -= instance.OnNavMenuup;
+            @NavMenuup.canceled -= instance.OnNavMenuup;
             @MenuSelect.started -= instance.OnMenuSelect;
             @MenuSelect.performed -= instance.OnMenuSelect;
             @MenuSelect.canceled -= instance.OnMenuSelect;
+            @NavMenuDown.started -= instance.OnNavMenuDown;
+            @NavMenuDown.performed -= instance.OnNavMenuDown;
+            @NavMenuDown.canceled -= instance.OnNavMenuDown;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -659,7 +677,8 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-        void OnNavMenu(InputAction.CallbackContext context);
+        void OnNavMenuup(InputAction.CallbackContext context);
         void OnMenuSelect(InputAction.CallbackContext context);
+        void OnNavMenuDown(InputAction.CallbackContext context);
     }
 }

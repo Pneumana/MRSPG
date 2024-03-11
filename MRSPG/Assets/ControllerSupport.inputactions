@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Nav Menu",
+                    "name": "Nav Menu up",
                     "type": "Button",
                     "id": "0b327a31-0df4-4b5f-a08b-2e3f7efd99c9",
                     "expectedControlType": "Button",
@@ -99,6 +99,15 @@
                     "name": "MenuSelect",
                     "type": "Button",
                     "id": "c6f9971f-3077-483b-a37f-0526b32267ec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Nav Menu Down",
+                    "type": "Button",
+                    "id": "b74982a6-321d-48f6-825f-d5e2a956fe2e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -366,18 +375,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Nav Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "379028ad-b7f5-4e09-ac4c-b09c9cdab0fd",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Nav Menu",
+                    "action": "Nav Menu up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -388,18 +386,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Nav Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c44b3512-db34-4230-a2f5-1e9f654b5dcb",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Nav Menu",
+                    "action": "Nav Menu up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -422,6 +409,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "MenuSelect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09764807-22b9-4674-8232-561e04928f55",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Nav Menu Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "92b24472-118b-4e60-92f5-5b748601ca4e",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Nav Menu Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
