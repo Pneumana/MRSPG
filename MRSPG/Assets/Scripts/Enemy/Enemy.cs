@@ -172,11 +172,10 @@ public class Enemy : MonoBehaviour
                 float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
-                if (!isGrounded)
+                if(!isGrounded)
                 {
                     move.y = -9.81f * 4f * Time.deltaTime;
                 }
-                else move.y = 0f;
                 if (Rigidbody != null)
                 {
                     Rigidbody.MovePosition(transform.position + move);
