@@ -84,15 +84,11 @@ public class Metronome : MonoBehaviour
         left.name = "LeftBeat";
         left.AddComponent<Image>();
 
-        Canvas canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
-        var x = 50;
-        var y = 100;
-
         var ls = left.GetComponent<Image>();
         ls.sprite = beatIcon;
 
-        //left.AddComponent<RectTransform>();
-        left.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
+        left.AddComponent<RectTransform>();
+        left.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 100);
         left.GetComponent<RectTransform>().pivot = new Vector2(1, 0.5f);
         left.transform.SetParent(transform);
         
@@ -104,8 +100,8 @@ public class Metronome : MonoBehaviour
         var rs = right.GetComponent<Image>();
         rs.sprite = beatIcon;
 
-        //right.AddComponent<RectTransform>();
-        right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
+        right.AddComponent<RectTransform>();
+        right.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 100);
         right.GetComponent<RectTransform>().localScale = new Vector2(-1, 1);
         right.GetComponent<RectTransform>().pivot = new Vector2(1, 0.5f);
         right.transform.SetParent(transform);
@@ -120,10 +116,6 @@ public class Metronome : MonoBehaviour
 
             left.GetComponent<RectTransform>().anchoredPosition = Vector3.left * (200 - (Mathf.Clamp01(percent) * 200));
             right.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (200 - (Mathf.Clamp01(percent) * 200));
-
-                //right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
-                //left.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
-
             yield return new WaitForSeconds(0);
         } while (t < _interval);
         t = 0;
@@ -134,8 +126,6 @@ public class Metronome : MonoBehaviour
 
             ls.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
             rs.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
-            //right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
-            //left.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
 
             yield return new WaitForSeconds(0);
         } while (t < _interval * 0.25f);
