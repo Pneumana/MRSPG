@@ -8,7 +8,9 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
 using UnityEngine.UI;
+using static Cinemachine.CinemachineTargetGroup;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class LockOnSystem : MonoBehaviour
 {
@@ -40,12 +42,16 @@ public class LockOnSystem : MonoBehaviour
     public float scaleSpeed;
     public float targetTime = 1;
 
+    public bool paused;
+
     public RectTransform timeJuice;
     Transform ui;
+    Transform lockOnAssist;
 
     public Controller controller;
 
     Energy energy;
+    public Quaternion eul;
 
     bool freeAim = true;
     float swapTargetCD;
@@ -56,6 +62,7 @@ public class LockOnSystem : MonoBehaviour
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
         energy = FindFirstObjectByType<Energy>();
+        lockOnAssist = GameObject.Find("LockOnAssist").transform;
         UpdateEnemyList();
     }
     public void UpdateEnemyList()
@@ -77,7 +84,8 @@ public class LockOnSystem : MonoBehaviour
         {
             lockon.transform.position = new Vector2(-100, -100);
         }
-        Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
+        if(paused)
+            Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
         if (cooldown > 0)
         {
             cooldown -= Time.unscaledDeltaTime;
@@ -95,16 +103,45 @@ public class LockOnSystem : MonoBehaviour
         {
             if (freeAim)
             {
-                LockOn();
-                
+                //StartLockOn
+
+                CreateTargeters();
+                Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+                //eul = Quaternion.LookRotation(dirRot);
+                freeAim = false;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
             }
             else
             {
-                if(!controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
-                    StopLockOn();
-                /*freeAim = true;
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;*/
+                StopLockOn();
+                /*                if(!controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
+                                    StopLockOn();*/
+                freeAim = true;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             }
+        }
+        /*        if (!freeAim)
+                {
+                Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+                Debug.DrawLine(player.transform.position, player.transform.position + dirRot, Color.black);
+                eul = Quaternion.LookRotation(dirRot);
+                }*/
+
+        if (!freeAim)
+        {
+            Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+            //dirRot.y = 0;
+            //dir.y = 0; // keep the direction strictly horizontal
+            Quaternion rot = Quaternion.LookRotation(dirRot, Vector3.up);
+            // slerp to the desired rotation over time
+
+            lockOnAssist.rotation = Quaternion.Slerp(lockOnAssist.rotation, rot, 5 * Time.deltaTime);
+            Debug.DrawLine(lockOnAssist.position, dirRot + lockOnAssist.position, Color.black, 10);
+            Debug.Log(eul.eulerAngles);
+            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+            //lockOnAssist.rotation = eul;
+            freeLook.m_XAxis.Value = lockOnAssist.rotation.eulerAngles.y;
+            freeLook.m_YAxis.Value = 1 -  (lockOnAssist.rotation.eulerAngles.x);
         }
 
         InputEventStartSlowDown();
@@ -120,7 +157,7 @@ public class LockOnSystem : MonoBehaviour
         if (!freeAim)
         {
             UpdateTargetUI();
-            //LookAtTarget();
+            LookAtTarget();
         }
         if(remainingTime <= 0)
         {
@@ -202,7 +239,8 @@ public class LockOnSystem : MonoBehaviour
             if(cooldown <= 0)
             {
                 UpdateTargetUI();
-                LockOn();
+                CreateTargeters();
+                StopLockOn();
             }
             else
             {
@@ -252,11 +290,16 @@ public class LockOnSystem : MonoBehaviour
         //Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
            // Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
         var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
-        var xLerp = Mathf.Lerp(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
-        var yLerp = Mathf.Lerp(freeLook.m_YAxis.Value, -dir.y, 0.5f);
-        
-        //freeLook.m_XAxis.Value = xLerp;
-        //freeLook.m_YAxis.Value = yLerp;
+        var xLerp = Mathf.MoveTowards(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
+        var yLerp = Mathf.MoveTowards(freeLook.m_YAxis.Value, -dir.y, 0.5f);
+
+        //Vector3 dir = target - transform.position;
+        //dir.y = 0; // keep the direction strictly horizontal
+        /*Quaternion rot = Quaternion.LookRotation(dir);
+        // slerp to the desired rotation over time
+        var prev = Quaternion.Euler(new Vector3(freeLook.m_XAxis.Value, freeLook.m_YAxis.Value));
+        var eul = Quaternion.Slerp(prev, rot, 0.5f).eulerAngles;*/
+
 
         //freeLook.m_LookAt = trackedEnemy.transform;
     }
@@ -313,7 +356,7 @@ public class LockOnSystem : MonoBehaviour
             {
                 StopLockOn();
                 UpdateEnemyList();
-                LockOn();
+                CreateTargeters();
                 return;
             }
             var enemyScreenPos = Camera.main.WorldToScreenPoint(enemies[i].transform.position);
@@ -354,7 +397,7 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
-            //if (freeAim)
+            if (freeAim)
                 trackedEnemy = closestEnemy;
         }
         float left = float.MinValue;
@@ -369,7 +412,7 @@ public class LockOnSystem : MonoBehaviour
         else
         {
             freeAim = false;
-            //GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
             //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Camera.main.gameObject.transform.right * 2 + Vector3.up * 1.5f - Camera.main.gameObject.transform.forward * 2;
         }
         foreach (int i in validEnemies)
@@ -397,7 +440,7 @@ public class LockOnSystem : MonoBehaviour
             }
         }
     }
-    public void LockOn()
+    public void CreateTargeters()
     {
         Debug.Log("creating targeters");
         //update enemy list
@@ -431,6 +474,7 @@ public class LockOnSystem : MonoBehaviour
         targeters.Clear();
         targetTime = maxTimeScale;
         freeAim = true;
+        GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().m_LookAt = player.transform;
         GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
         //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
     }
