@@ -55,7 +55,7 @@ public class LockOnSystem : MonoBehaviour
     Energy energy;
     public Quaternion eul;
 
-    [SerializeField]bool freeAim = true;
+    public bool freeAim = true;
     float swapTargetCD;
 
     [SerializeField] Mesh sphere;
