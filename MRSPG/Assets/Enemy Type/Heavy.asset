@@ -9,24 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 154dd5f6c2f75f747a9922db7d336b28, type: 3}
-  m_Name: Standard
+  m_Script: {fileID: 11500000, guid: aa02d2991f36a734d80f14f1d31338a0, type: 3}
+  m_Name: Heavy
   m_EditorClassIdentifier: 
-  pattern: 000000000200000002000000
-  type: 0
-  EnergyGainedOnBeat: 10
-  EnergyGainedOffBeat: 5
-  EnemyHealth: 6
-  Speed: 13
-  groundRadius: 0.4
-  Damage: 1
-  AttackRange: 2
+  pattern: 000000000000000003000000
+  type: 2
+  EnergyGainedOnBeat: 20
+  EnergyGainedOffBeat: 10
+  EnemyHealth: 9
+  Speed: 0
+  groundRadius: 1
+  Damage: 3
+  AttackRange: 4
   TimeBetweenAttacks: 2
-  ChargeTime: 1
-  Hitbox: {x: 3, y: 2, z: 2}
+  ChargeTime: 2
+  Hitbox: {x: 4, y: 3, z: 2}
   HitboxOffset: 1.1
   Animations: {fileID: 0}
   FollowRange: 5
   Metronome: {fileID: 0}
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
+  Unknown: 0

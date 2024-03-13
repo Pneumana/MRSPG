@@ -36,7 +36,7 @@ public class EnemyBody : MonoBehaviour
     void SetEnemyData(EnemySetting _enemy)
     {
         health = _enemy.EnemyHealth;
-        speed = _enemy.speed;
+        speed = _enemy.Speed;
     }
 
     public void ModifyHealth(int mod)

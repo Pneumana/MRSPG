@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     private Transform enemyObj;
     public EnemySetting _enemy;
+    private HeavyEnemySettings heavy_enemy;
     private RangedEnemySettings ranged_enemy;
     private BossEnemySettings boss_enemy;
     List<GameObject> enemiesInRange = new List<GameObject>();
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
     bool ShootingRange;
     public bool PlayerIsInSight;
     bool aggro = false;
+    private LayerMask PlayerMask;
 
     LayerMask GroundMask;
     #endregion
@@ -66,6 +68,7 @@ public class Enemy : MonoBehaviour
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Heavy:
+                heavy_enemy = _enemy as HeavyEnemySettings;
                 gameObject.name = "HeavyEnemy";
                 gameObject.tag = "Enemy";
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
@@ -133,6 +136,35 @@ public class Enemy : MonoBehaviour
         {
             Gizmos.DrawWireSphere(transform.position, ranged_enemy.ShootRange);
         }
+        Gizmos.color = Color.red;
+        Vector3[] vertices = GetRotatedCubeVertices(transform.position + transform.forward * _enemy.HitboxOffset, transform.rotation, _enemy.Hitbox);
+
+        for (int i = 0; i < 4; i++)
+        {
+            int nextIndex = (i + 1) % 4;
+            Gizmos.DrawLine(vertices[i], vertices[nextIndex]);
+            Gizmos.DrawLine(vertices[i + 4], vertices[nextIndex + 4]);
+            Gizmos.DrawLine(vertices[i], vertices[i + 4]);
+        }
+    }
+    private Vector3[] GetRotatedCubeVertices(Vector3 position, Quaternion rotation, Vector3 size)
+    {
+        Vector3[] vertices = new Vector3[8];
+
+        // Calculate vertices relative to the center of the cube
+        Vector3 halfSize = size * 0.5f;
+
+        vertices[0] = rotation * new Vector3(-halfSize.x, -halfSize.y, -halfSize.z) + position;
+        vertices[1] = rotation * new Vector3(halfSize.x, -halfSize.y, -halfSize.z) + position;
+        vertices[2] = rotation * new Vector3(halfSize.x, -halfSize.y, halfSize.z) + position;
+        vertices[3] = rotation * new Vector3(-halfSize.x, -halfSize.y, halfSize.z) + position;
+
+        vertices[4] = rotation * new Vector3(-halfSize.x, halfSize.y, -halfSize.z) + position;
+        vertices[5] = rotation * new Vector3(halfSize.x, halfSize.y, -halfSize.z) + position;
+        vertices[6] = rotation * new Vector3(halfSize.x, halfSize.y, halfSize.z) + position;
+        vertices[7] = rotation * new Vector3(-halfSize.x, halfSize.y, halfSize.z) + position;
+
+        return vertices;
     }
     #endregion
 
@@ -142,6 +174,7 @@ public class Enemy : MonoBehaviour
         Warning = transform.Find("EnemyCanvas").transform.Find("Warning").gameObject;
         Warning.SetActive(false);
         SetEnemyData(_enemy);
+        PlayerMask = LayerMask.GetMask("Player");
         GroundMask = LayerMask.GetMask("Ground");
         if (_enemy.PlayerSettings != null)
         {
@@ -169,13 +202,13 @@ public class Enemy : MonoBehaviour
             float distanceToPlayer = targetPos.magnitude;
             if (distanceToPlayer > 2f)
             {
-                float adjustedSpeed = Mathf.Lerp(0, _enemy.speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
+                float adjustedSpeed = Mathf.Lerp(0, _enemy.Speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
 
                 Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
                 if(!isGrounded)
                 {
                     move.y = -9.81f * 4f * Time.deltaTime;
-                }
+                }else { move.y = 0f; }
                 if (Rigidbody != null)
                 {
                     Rigidbody.MovePosition(transform.position + move);
@@ -285,14 +318,14 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(float seconds)
     {
-        if (_enemy.speed <= 0) _enemy.speed = 13f;
-        float begginingspeed = _enemy.speed;
-        _enemy.speed = 0f;
+        if (_enemy.Speed <= 0) _enemy.Speed = 13f;
+        float begginingspeed = _enemy.Speed;
+        _enemy.Speed = 0f;
         ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
         ChargeParticle.Stop();
         Debug.Log("Charged!");
-        _enemy.speed = begginingspeed;
+        _enemy.Speed = begginingspeed;
     }
     private void Lunge()
     {
@@ -306,13 +339,19 @@ public class Enemy : MonoBehaviour
 
             _enemy.Animations.SetBool("InRange", true);
         }
-        _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+        if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        {
+            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+        }
         StartCoroutine(Waiter(1f));
     }
     private void HeavyAttack(int Damage)
     {
         Debug.Log("Used the heavy attack function");
-        _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        {
+            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+        }
     }
     private IEnumerator Load(float seconds)
     {
@@ -358,9 +397,13 @@ public class Enemy : MonoBehaviour
         }
         if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
     }
-    private void SpinAttack()
+    private void SpinAttack(int Damage)
     {
         Debug.Log("boss go spinny");
+        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity))
+        {
+            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+        }
     }
     private void EndLag()
     {
@@ -395,7 +438,7 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
-                        if (PlayerIsInSight == true) SpinAttack();
+                        if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
                         break;
                     case Attack.Lag:
                         if (PlayerIsInSight == true) EndLag();
