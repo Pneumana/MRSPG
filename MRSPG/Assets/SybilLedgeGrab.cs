@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder;
 
 public class SybilLedgeGrab : MonoBehaviour
 {
@@ -39,18 +40,33 @@ public class SybilLedgeGrab : MonoBehaviour
         {
             Vector3 plusFallspeed = new Vector3(0, InputControls.instance.velocity.y * Time.deltaTime, 0);
             var pos = transform.position + grabPosition + (grabForward * transform.forward);
+            var playerUp = transform.position + grabPosition;
             //var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
-
+            RaycastHit handHit;
+            RaycastHit headCheck;
             var handPos = Physics.CheckBox(pos, grabBounds/2, transform.rotation, groundMask);
-            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y/2, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
+            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.forward, out handHit, grabBounds.x + grabBounds.z,groundMask);
+            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.up, out headCheck, (grabBounds.y) * 2, groundMask);
+
+            //var isAboveValid = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y / 2, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
+            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y - plusFallspeed.y, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
             //var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
+                if(headCheck.distance < grabBounds.y * 2 && headCheck.collider!=null)
+                {
+                    return;
+                }
                 var start = transform.position + grabPosition + (grabForward * transform.forward);
                 var closeLowerLeft = new Vector3(grabBounds.x, -grabBounds.y, -grabBounds.z);
                 var closeLowerRight = new Vector3(-grabBounds.x, -grabBounds.y, -grabBounds.z);
                 //Debug.DrawLine(start + closeLowerLeft, start + closeLowerRight, Color.green, 10);
-
+                var hand = handHit.point;
+                if (hand == Vector3.zero)
+                    hand = (playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2))) + transform.forward * (grabBounds.x + grabBounds.z);
+                Debug.DrawLine(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), hand, Color.blue, 10);
+                if(handHit.collider!=null)
+                    transform.parent.forward = -handHit.normal;
                 DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.green);
                 DrawBoxLines(pos + new Vector3(0, grabBounds.y, 0), pos + new Vector3(0, grabBounds.y, 0) + transform.forward * grabBounds.z, grabBounds, Color.red);
                 //if (handGrabbed.collider!=null)
