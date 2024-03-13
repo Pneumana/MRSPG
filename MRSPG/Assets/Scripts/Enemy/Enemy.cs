@@ -15,6 +15,7 @@ using static EnemySetting;
 using Color = UnityEngine.Color;
 using UnityEngine.UI;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -24,33 +25,37 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 public class Enemy : MonoBehaviour
 {
     #region Variables
-
-    private Transform enemyObj;
+    EnemyBody body;
+    Transform enemyObj;
     public EnemySetting _enemy;
-    private HeavyEnemySettings heavy_enemy;
-    private RangedEnemySettings ranged_enemy;
-    private BossEnemySettings boss_enemy;
+    HeavyEnemySettings heavy_enemy;
+    RangedEnemySettings ranged_enemy;
+    BossEnemySettings boss_enemy;
     List<GameObject> enemiesInRange = new List<GameObject>();
 
     [Header("Enemy Parameters")]
-    private Rigidbody Rigidbody;
+    Rigidbody Rigidbody;
     Vector3 targetPos;
     Vector3 lookatvector;
     bool CanAttack = true;
     bool isGrounded;
-    private Transform Gun;
-    private ParticleSystem ChargeParticle;
+    Transform Gun;
+    ParticleSystem ChargeParticle;
+
+    Animator Animations;
+
+    float maxdistance = 6f;
 
     [Header("Warning Pop Up")]
-    private GameObject Warning;
-    private bool WarningPlayed;
+    GameObject Warning;
+    bool WarningPlayed;
 
     [Header("Target Parameters")]
     bool playerInRange;
     bool ShootingRange;
     public bool PlayerIsInSight;
     bool aggro = false;
-    private LayerMask PlayerMask;
+    LayerMask PlayerMask;
 
     LayerMask GroundMask;
     #endregion
@@ -91,7 +96,7 @@ public class Enemy : MonoBehaviour
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
         _enemy.Metronome = Metronome.inst;
         enemyObj = gameObject.transform.GetChild(0);
-        _enemy.Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
+        Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
     }
 
     #endregion
@@ -173,6 +178,7 @@ public class Enemy : MonoBehaviour
         //Use the SetEnemyData(EnemySetting _enemy) function to use the correct variables.
         Warning = transform.Find("EnemyCanvas").transform.Find("Warning").gameObject;
         Warning.SetActive(false);
+        body = GetComponent<EnemyBody>();
         SetEnemyData(_enemy);
         PlayerMask = LayerMask.GetMask("Player");
         GroundMask = LayerMask.GetMask("Ground");
@@ -197,24 +203,11 @@ public class Enemy : MonoBehaviour
         {
             enemyObj.LookAt(lookatvector);
         }
-        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
+        if (CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
-            float distanceToPlayer = targetPos.magnitude;
-            if (distanceToPlayer > 2f)
-            {
-                float adjustedSpeed = Mathf.Lerp(0, _enemy.Speed, Mathf.Clamp01(distanceToPlayer / _enemy.FollowRange));
-
-                Vector3 move = targetPos.normalized * adjustedSpeed * Time.fixedDeltaTime;
-                if(!isGrounded)
-                {
-                    move.y = -9.81f * 4f * Time.deltaTime;
-                }else { move.y = 0f; }
-                if (Rigidbody != null)
-                {
-                    Rigidbody.MovePosition(transform.position + move);
-                    aggro = true;
-                }
-            }
+            if (body.me.enabled)
+                body.me.destination = _enemy.PlayerObject.transform.position;
+            aggro = true;
         }
     }
 
@@ -238,9 +231,10 @@ public class Enemy : MonoBehaviour
             else PlayerIsInSight = false;
         }
 
+        //Player sight visual:
         Debug.DrawRay(RayPosition, lookatvector - transform.position, Color.green);
+        #region Attacking
         //Begin the attack cycle:
-
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
         if(playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
         {
@@ -269,6 +263,7 @@ public class Enemy : MonoBehaviour
             }
             else if(AttackingRange && _enemy.Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
         }
+        #endregion
         #region Ground Check + Falling rate
         Vector3 GroundCheck = transform.GetChild(1).position;
         isGrounded = Physics.CheckSphere(GroundCheck, _enemy.groundRadius, GroundMask);
@@ -299,6 +294,21 @@ public class Enemy : MonoBehaviour
              enemiesInRange.Clear();
          }*/
         #endregion
+
+        if (aggro)
+        {
+            if (body.me.enabled)
+            {
+                //if(body.me.isPathStale)
+
+                var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
+                var playerDistFromEnd = Vector3.Distance(transform.position, body.me.pathEndPosition);
+                if (distToTarget <= 1.0f || playerDistFromEnd >= 1 || body.me.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+                {
+                    body.me.destination = _enemy.PlayerObject.transform.position;
+                }
+            }
+        }
     }
 
 
@@ -314,18 +324,23 @@ public class Enemy : MonoBehaviour
     private IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        _enemy.Animations.SetBool("InRange", false);
+        Animations.SetBool("InRange", false);
+    }
+    private void Stagger()
+    {
+        //Stagger Animation
+        StopCoroutine(StartAttack(_enemy.pattern));
     }
     private IEnumerator Charge(float seconds)
     {
-        if (_enemy.Speed <= 0) _enemy.Speed = 13f;
+        /*if (_enemy.Speed <= 0) _enemy.Speed = 13f;
         float begginingspeed = _enemy.Speed;
-        _enemy.Speed = 0f;
+        _enemy.Speed = 0f;*/
         ChargeParticle.Play();
         yield return new WaitForSeconds(seconds);
         ChargeParticle.Stop();
         Debug.Log("Charged!");
-        _enemy.Speed = begginingspeed;
+        //_enemy.Speed = begginingspeed;
     }
     private void Lunge()
     {
@@ -334,16 +349,14 @@ public class Enemy : MonoBehaviour
     private void LightAttack(int Damage)
     {
         Debug.Log("Used the light attack function");
-        if(_enemy.Animations != null)
+        if(Animations != null)
         {
-
-            _enemy.Animations.SetBool("InRange", true);
+            Animations.SetBool("InRange", true);
         }
         if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
-        StartCoroutine(Waiter(1f));
     }
     private void HeavyAttack(int Damage)
     {
