@@ -111,7 +111,7 @@ public class InputControls : MonoBehaviour
     {
         if (type == "Movement") { canDash = false; }
         float startTime = Time.time;
-        DashParticle.Play();
+        if (type == "Movement") { DashParticle.Play(); }
         while (Time.time < startTime + time)
         {
             if (liveUpdate)
@@ -147,7 +147,7 @@ public class InputControls : MonoBehaviour
 
             yield return null;
         }
-        DashParticle.Stop();
+        if (type == "Movement") { DashParticle.Stop(); }
     }
 
     IEnumerator Waiter(float seconds)
