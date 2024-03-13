@@ -11,9 +11,8 @@ public class Metronome : MonoBehaviour
     public float beatDuration;
     public int BeatsPassed;
 
-    [SerializeField]float interval;
-
-    [SerializeField] float intervalMax;
+    public float interval;
+    public float intervalMax;
 
     [SerializeField]float intervalHalfPoint;
     [SerializeField] float forgivness;
@@ -66,11 +65,11 @@ public class Metronome : MonoBehaviour
         if ((intervalHalfPoint - (framesToSkip * Time.deltaTime)) <= 0)
         {
             intervalHalfPoint = (1 / ((float)BPM / 60)) * 0.5f;
-            //BeatsPassed++;
         }
         if ((interval - (framesToSkip * Time.deltaTime)) <= 0)
         {
             interval = 1 / ((float)BPM / 60);
+            BeatsPassed++;
             //create animation components
             StartCoroutine(AnimateBeats(interval));
         }

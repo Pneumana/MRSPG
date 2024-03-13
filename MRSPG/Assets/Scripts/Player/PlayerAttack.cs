@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public int MeleeCombo; //Will be out of date if read by other scripts
     public int RecentAttack;
     public bool DealtDamage;
-    public bool ToggleVisualBug; //To prevent possible side effects, will be removed when bug fixed
+    public bool ToggleVisualBug; //To prevent possible side effects. will be removed when bug fixed
     public GameObject AttackHitbox;
     private Metronome Metronome;
     private MeleeHitbox MeleeHitbox;
@@ -32,7 +32,7 @@ public class PlayerAttack : MonoBehaviour
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
 
-        //if (RecentAttack == Metronome.BeatsPassed) { MeleeCombo = 1; return; }
+        if (RecentAttack !< Metronome.BeatsPassed) { MeleeCombo = 1; return; }
         if (RecentAttack + 2 <= Metronome.BeatsPassed || RecentAttack == Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
         {
             MeleeCombo = 1;
