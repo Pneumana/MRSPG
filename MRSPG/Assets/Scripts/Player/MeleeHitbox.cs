@@ -8,7 +8,7 @@ public class MeleeHitbox : MonoBehaviour
     private BoxCollider BoxCollider;
     private PlayerAttack PlayerAttack;
     private Energy Energy;
-    public int MeleeCombo;
+    private int MeleeCombo;
 
     void Start()
     {
@@ -16,6 +16,8 @@ public class MeleeHitbox : MonoBehaviour
         PlayerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
         Energy = GameObject.Find("Player").GetComponent<Energy>();
         BoxCollider = GetComponent<BoxCollider>();
+        BoxCollider.enabled = false;
+        MeleeCombo = 1;
     }
     public IEnumerator MeleeAttack(int meleeCombo) //enables collider and reads MeleeCombo
     {
@@ -27,8 +29,9 @@ public class MeleeHitbox : MonoBehaviour
 
     void OnTriggerEnter(UnityEngine.Collider collision) //runs once per enemy in collider
     {
-        if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
-        //if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
+        if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { Debug.Log("Hit non enemy"); return; }
+        else { Debug.Log("Hit enemy"); }
+        if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { Debug.LogError("No Enemy script found on hit enemy!"); return; }
         PlayerAttack.DealtDamage = true;
         switch (MeleeCombo) {
             default:
@@ -47,6 +50,6 @@ public class MeleeHitbox : MonoBehaviour
                 if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
                 break;
         }
-        //if (Metronome.IsOnBeat() !& enemy._enemy.type == EnemyType.Heavy) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
+        if (Metronome.IsOnBeat() !& enemy._enemy.type == EnemyType.Heavy) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
     }
 }

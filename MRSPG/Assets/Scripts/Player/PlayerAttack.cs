@@ -14,7 +14,7 @@ public class PlayerAttack : MonoBehaviour
     public GameObject AttackHitbox;
     private Metronome Metronome;
     private MeleeHitbox MeleeHitbox;
-    public Controller control;
+    public CharacterController controller;
     private InputControls inputControls;
     private LockOnSystem lockOnSystem;
     private GameObject Player;
@@ -32,7 +32,7 @@ public class PlayerAttack : MonoBehaviour
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
 
-        if (RecentAttack !< Metronome.BeatsPassed) { MeleeCombo = 1; return; }
+        if (RecentAttack == Metronome.BeatsPassed) { MeleeCombo = 1; return; }
         if (RecentAttack + 2 <= Metronome.BeatsPassed || RecentAttack == Metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
         {
             MeleeCombo = 1;
@@ -45,7 +45,7 @@ public class PlayerAttack : MonoBehaviour
         {
             Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - Player.transform.position).normalized;
             test = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
-            //if (ToggleVisualBug) { Player.transform.forward = test; }
+            if (ToggleVisualBug) { controller.Move(test/10);}
         }
         else
         {
