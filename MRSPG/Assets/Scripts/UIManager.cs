@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
             Pause ( );
         }
 
-        if ( controller.controls.Gameplay.NavMenuup.IsPressed ( ) || controller.controls.Gameplay.NavMenuDown.IsPressed ( ) )
+        if ( controller.controls.Gameplay.NavMenuup.IsPressed ( ) || controller.controls.Gameplay.NavMenuDown.IsPressed ( ) && lockOn.paused == true )
         {
             MakeSelection ( );
         }
