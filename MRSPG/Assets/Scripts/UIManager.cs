@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
             MakeSelection ( );
         }
 
-        if ( controller.controls.Gameplay.MenuSelect.IsPressed ( ) )
+        if ( controller.controls.Gameplay.MenuSelect.IsPressed ( ) && lockOn.paused == true )
         {
             ButtonPressed ( );
         }
@@ -69,32 +69,32 @@ public class UIManager : MonoBehaviour
 
     void MakeSelection ( )
     {
-        if ( gameObject.tag == ( "Continue" ) )
+        if ( GameObject.Find ( "Continue" ) )
         {
             continueGame.gameObject.SetActive ( false );
             continueSelect.gameObject.SetActive ( true );
         }
-        else if( gameObject.tag == ( "Settings" ) )
+        else if ( GameObject.Find ( "Settings" ) )
         {
             settings.gameObject.SetActive ( false );
             settingsSelect.gameObject.SetActive ( true );
-        }
-        else if( gameObject.tag == ( "Controls" ) )
+        }        
+        else if( GameObject.Find ( "Controls" ) )
         {
             controls.gameObject.SetActive ( false );
             controlsSelect.gameObject.SetActive ( true );
         }
-        else if( gameObject.tag == ( "MainMenu" ) )
+        else if( GameObject.Find ( "MainMenu" ) )
         {
             mainMenu.gameObject.SetActive ( false );
             mainMenuSelect.gameObject.SetActive ( true );
         }
-        else if( gameObject.tag == ( "Credits" ) )
+        else if( GameObject.Find ( "Credits" ) )
         {
             credits.gameObject.SetActive ( false );
             creditsSelect.gameObject.SetActive ( true );
         }
-        else if ( gameObject.tag == ( "Quit" ) )
+        else if ( GameObject.Find ( "Quit" ) )
         {
             quit.gameObject.SetActive ( false );
             quitSelect.gameObject.SetActive ( true );
@@ -104,27 +104,27 @@ public class UIManager : MonoBehaviour
 
     void ButtonPressed ( )
     {
-       if( gameObject.tag == ( "Continue" ) )
+       if( GameObject.Find ( "Continue" ) )
         {
             ContinueGame ( );
-        }
-       else if( gameObject.tag == ( "Settings" ) )
+        }       
+        else if( GameObject.Find ( "Settings" ) )
         {
             SettingsMenu ( );
-        }
-       else if ( gameObject.tag == ( "Controls" ) )
+        }       
+        else if ( GameObject.Find ( "Controls" ) )
         {
             ControlsMenu ( );
-        }
-        else if (  gameObject.tag == ("MainMenu" ) )
+        }        
+        else if (  GameObject.Find ( "MainMenu" ) )
         {
             MainMenu ( );
-        }
-       else if( gameObject.tag == ( "Credits" ) )
+        }       
+        else if( GameObject.Find ( "Credits" ) )
         {
             CreditsMenu ( );
-        }
-       else if(gameObject.tag == ( "Quit" ) )
+        }       
+        else if(GameObject.Find ( "Quit" ) )
         {
             QuitGame ( );
         }
