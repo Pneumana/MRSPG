@@ -169,7 +169,6 @@ public class BasicEnemyAI : MonoBehaviour
 
         }
         health = _enemy.EnemyHealth;
-        speed = _enemy.speed;
         TimeBetweenAttacks = _enemy.TimeBetweenAttacks;
         ChargeTime = _enemy.ChargeTime;
         enemyObj = gameObject.transform.GetChild(0);

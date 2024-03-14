@@ -20,18 +20,37 @@ public class EnemyBullet : MonoBehaviour
         {
             transform.position += transform.forward * speed * Time.deltaTime;
         }
+        else
+        {
+            var list = GetComponentsInChildren<ParticleSystem>();
+            int remainingParticles = 0;
+            foreach (ParticleSystem ps in list)
+            {
+                remainingParticles += ps.particleCount;
+            }
+            if (remainingParticles == 0)
+                Destroy(gameObject);
+        }
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if(collision.collider.gameObject.name == "PlayerObj")
+        Debug.Log("enemybullet hit " + collision.gameObject.name, gameObject);
+        if (collision.gameObject.name == "PlayerObj")
         {
             //hurt player
             FindFirstObjectByType<Health>().LoseHealth(1);
         }
-        else if(collision.collider.gameObject.GetComponent<EnemyBody>()!=null)
+        else if (collision.gameObject.GetComponent<EnemyBody>() != null)
         {
-            collision.collider.gameObject.GetComponent<EnemyBody>().ModifyHealth(damage);
+            collision.gameObject.GetComponent<EnemyBody>().ModifyHealth(damage);
         }
         destroyed = true;
+        GetComponent<Collider>().enabled = false;
+        var list = GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem ps in list)
+        {
+            var emm = ps.emission;
+            emm.rateOverTimeMultiplier = 0;
+        }
     }
 }

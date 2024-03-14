@@ -55,7 +55,7 @@ public class LockOnSystem : MonoBehaviour
     Energy energy;
     public Quaternion eul;
 
-    [SerializeField]bool freeAim = true;
+    public bool freeAim = true;
     float swapTargetCD;
 
     [SerializeField] Mesh sphere;
@@ -133,7 +133,7 @@ public class LockOnSystem : MonoBehaviour
                 HideTargets();
                 CreateTargeters();
                 UpdateTargetUI();
-                Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+                //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
                 //eul = Quaternion.LookRotation(dirRot);
                 freeAim = false;
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
@@ -165,16 +165,20 @@ public class LockOnSystem : MonoBehaviour
                 UpdateEnemyList();
                 UpdateTargetUI();
             }
-            Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+            //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
             //dirRot.y = 0;
             //dir.y = 0; // keep the direction strictly horizontal
-            Quaternion rot = Quaternion.LookRotation(dirRot, Vector3.up);
+            //Quaternion rot = Quaternion.LookRotation(dirRot, Vector3.up);
             // slerp to the desired rotation over time
-            var midpoint = (trackedEnemy.transform.position + player.transform.position)/2;
-            lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, 5 * Time.deltaTime);
+            if (trackedEnemy != null)
+            {
+                var midpoint = (trackedEnemy.transform.position + player.transform.position) / 2;
+                lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, 5 * Time.deltaTime);
+
+                var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+                freeLook.m_LookAt = lockOnAssist;
+            }
             
-            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-            freeLook.m_LookAt = lockOnAssist;
             //lockOnAssist.rotation = eul;
             /*freeLook.m_XAxis.Value = lockOnAssist.rotation.eulerAngles.y;
             freeLook.m_YAxis.Value = 1 -  (lockOnAssist.rotation.eulerAngles.x);*/

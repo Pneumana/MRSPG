@@ -41,8 +41,6 @@ public class EnemySetting : ScriptableObject
 
     [Header("Enemy Variables")]
     public int EnemyHealth;
-    public float speed;
-    public float WarningUpPos;
     public float groundRadius;
 
     [Header("Attack Variables")]
@@ -50,8 +48,8 @@ public class EnemySetting : ScriptableObject
     public float AttackRange;
     public float TimeBetweenAttacks;
     public float ChargeTime;
-    public GameObject Hitbox;
-    public Animator Animations;
+    public Vector3 Hitbox;
+    public float HitboxOffset;
 
 
     [Header("Target Variables")]

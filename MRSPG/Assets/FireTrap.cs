@@ -56,6 +56,7 @@ public class FireTrap : MonoBehaviour
     void Shoot()
     {
         var n = Instantiate(fireball);
+        n.GetComponent<EnemyBullet>().enabled = true;
         n.transform.forward = transform.up;
         n.transform.position = transform.position + launchPos;
     }

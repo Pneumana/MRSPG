@@ -4,49 +4,51 @@ using UnityEngine;
 
 public class MeleeHitbox : MonoBehaviour
 {
-    private Metronome Metronome;
-    private BoxCollider BoxCollider;
-    private PlayerAttack PlayerAttack;
-    private Energy Energy;
-    public int MeleeCombo;
+    private Metronome metronome;
+    private BoxCollider boxCollider;
+    private PlayerAttack playerAttack;
+    private Energy energy;
+    private int MeleeCombo;
 
     void Start()
     {
-        Metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
-        PlayerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
-        Energy = GameObject.Find("Player").GetComponent<Energy>();
-        BoxCollider = GetComponent<BoxCollider>();
+        metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
+        playerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
+        energy = GameObject.Find("Player").GetComponent<Energy>();
+        boxCollider = GetComponent<BoxCollider>();
+        boxCollider.enabled = false;
+        MeleeCombo = 1;
     }
     public IEnumerator MeleeAttack(int meleeCombo) //enables collider and reads MeleeCombo
     {
         MeleeCombo = meleeCombo;
-        BoxCollider.enabled = true;
+        boxCollider.enabled = true;
         yield return new WaitForSeconds(0.05f);
-        BoxCollider.enabled = false;
+        boxCollider.enabled = false;
     }
 
     void OnTriggerEnter(UnityEngine.Collider collision) //runs once per enemy in collider
     {
         if (!collision.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) { return; }
-        //if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { return; }
-        PlayerAttack.DealtDamage = true;
+        if (!collision.gameObject.TryGetComponent<Enemy>(out var enemy)) { Debug.LogError("No Enemy script found on hit enemy!"); return; }
+        playerAttack.DealtDamage = true;
         switch (MeleeCombo) {
             default:
                 Debug.LogError("Invalid value for MeleeCombo: " + MeleeCombo);
                 break;
             case 1:
                 enemyBody.ModifyHealth(1);
-                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(1); }
+                if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(1); }
                 break;
             case 2:
                 enemyBody.ModifyHealth(1);
-                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(2); }
+                if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(2); }
                 break;
             case 3:
                 enemyBody.ModifyHealth(2);
-                if (Metronome.inst.IsOnBeat()) { Energy.GainEnergy(5); }
+                if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(5); }
                 break;
         }
-        //if (Metronome.IsOnBeat() !& enemy._enemy.type == EnemyType.Heavy) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
+        if (metronome.IsOnBeat() && enemy._enemy.type != EnemyType.Heavy) { StopCoroutine(enemy.StartAttack(enemy._enemy.pattern)); } //inturrupts enemy attack
     }
 }
