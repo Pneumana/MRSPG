@@ -19,17 +19,25 @@ public class UIManager : MonoBehaviour
     public Button continueSelect, settingsSelect, controlsSelect, mainMenuSelect, creditsSelect, quitSelect;
 
     public Controller controller;
+    public LockOnSystem lockOn;
 
     #endregion
 
     private void Start ( )
     {
-        
-        controller=GameObject.Find("Controller Detection").GetComponent<Controller>();
+
+        controller = GameObject.Find ( "Controller Detection" ).GetComponent<Controller> ( );
 
         if ( controller == null )
         {
             Debug.LogError ( "control is NULL" );
+        }
+
+        lockOn = GameObject.Find ( "TimeScaler" ).GetComponent<LockOnSystem> ( );
+
+        if( lockOn == null )
+        {
+            Debug.LogError ( "TimeScaler is NULL" );
         }
     }
 
@@ -53,6 +61,7 @@ public class UIManager : MonoBehaviour
 
     private void Pause ( )
     {
+        lockOn.paused = true;
         pauseMenu.gameObject.SetActive ( true );
         Time.timeScale = 0;
         Cursor.visible = false;
