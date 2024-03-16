@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ public class DeathPlane : MonoBehaviour
     //start a fade to black here
     public float yEnd;
     public GameObject player;
+
+    public Vector2 bounds;
     bool fell = false;
 
     private void Update()
@@ -81,5 +84,33 @@ public class DeathPlane : MonoBehaviour
         } while (t > 0);
         Destroy(b);
         yield return null;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        //4 lines per 
+
+        for (float i = 0; i < bounds.x; i+= 0.25f)
+        {
+            var x = Mathf.Lerp(-bounds.x, bounds.x, (float)(i / bounds.x));
+
+            var posStart = new Vector3(x, yStart, -bounds.y);
+            var posEnd = new Vector3(x, yStart, bounds.y);
+            Debug.DrawLine(transform.position + posStart, transform.position + posEnd, Color.blue, Time.deltaTime);
+            
+        }
+        //Gizmos.DrawCube(new Vector3(transform.position.x, yStart, transform.position.z), new Vector3(bounds.x, 0.01f,bounds.y));
+        for (float i = 0; i < bounds.x; i += 0.25f)
+        {
+            var x = Mathf.Lerp(-bounds.x, bounds.x, (float)(i / bounds.x));
+
+            var posStart = new Vector3(x, yEnd, -bounds.y);
+            var posEnd = new Vector3(x, yEnd, bounds.y);
+            Debug.DrawLine(transform.position + posStart, transform.position + posEnd, Color.black, Time.deltaTime);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(transform.position, Vector3.one);
     }
 }
