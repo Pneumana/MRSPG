@@ -57,11 +57,14 @@ public class FireTrap : MonoBehaviour
     {
         var n = Instantiate(fireball);
         n.GetComponent<EnemyBullet>().enabled = true;
+        n.GetComponent<EnemyBullet>().homingTarget = GameObject.Find("PlayerObj").transform;
         n.transform.forward = transform.up;
-        n.transform.position = transform.position + launchPos;
+        n.transform.position = transform.position + transform.up;
+        Debug.Log("spawned object at " + n.transform.position);
     }
     private void OnDrawGizmosSelected()
     {
+        launchPos = transform.up;
         Debug.DrawLine(transform.position + launchPos, transform.position + launchPos + transform.up, Color.red);
         Debug.DrawLine(transform.position + launchPos - transform.right * 0.5f, transform.position+ launchPos + transform.right * 0.5f, Color.red);
         Debug.DrawLine(transform.position + launchPos + transform.forward * 0.5f, transform.position + launchPos - transform.forward * 0.5f, Color.red);

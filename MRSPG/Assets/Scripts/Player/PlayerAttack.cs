@@ -10,7 +10,6 @@ public class PlayerAttack : MonoBehaviour
     public int MeleeCombo; //Will be out of date if read by other scripts
     public int RecentAttack;
     public bool DealtDamage;
-    public bool ToggleVisualBug; //To prevent possible side effects. will be removed when bug fixed
     public int HealCombo;
     private Vector3 EnemyDir;
     private Metronome metronome;
@@ -49,13 +48,13 @@ public class PlayerAttack : MonoBehaviour
         }
         if (lockOnSystem.trackedEnemy != null && !lockOnSystem.freeAim)
         {
-            Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - player.transform.position).normalized;
+            Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - playerObj.transform.position).normalized;
             EnemyDir = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
-            if (ToggleVisualBug) { playerObj.transform.forward = EnemyDir; } //If this is Player, the direction is correct for only 1 dash and a few things break but the player faces the correct direction. If this is PlayerObj, the dash is always correct but the player rotation gets messed up
+            player.transform.forward = EnemyDir;
         }
         else
         {
-            EnemyDir = playerObj.transform.forward;
+            EnemyDir = player.transform.forward;
         }
         switch (MeleeCombo)
         {
