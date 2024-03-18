@@ -17,6 +17,8 @@ public class Gun : MonoBehaviour
 
     #endregion
 
+    [SerializeField] Animator animator;
+
     private void Start ( )
     {
         energy = GameObject.Find ( "Player" ).GetComponent<Energy> ( );
@@ -49,9 +51,15 @@ public class Gun : MonoBehaviour
     {
         if (!control.controls.Gameplay.Fire.WasReleasedThisFrame())
             return;
+        animator.SetTrigger("Shooting");
+        //NEED THIS LINE!
+        //forces the animator to be on frame 0 of the shooting anim otherwise the sword's tip will shoot the shot just anywhere.
+        animator.Update(Time.deltaTime);
+        //delay by
         GameObject bullet = null;
         targeting.UpdateTargetUI();
         Debug.Log(targeting.trackedEnemy);
+
         if (targeting.trackedEnemy != null && energy.currentEnergy == 50)
         {
             Debug.Log("shooting at " + targeting.trackedEnemy.name, targeting.trackedEnemy);
@@ -60,11 +68,14 @@ public class Gun : MonoBehaviour
             Debug.DrawLine(bullet.transform.position, bullet.transform.position + bullet.transform.forward, Color.magenta, 10);
             energy.LoseEnergy(50);
         }
-            /*if(targeting.trackedEnemy != null)
-                if(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
-                    bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;*/
-    }
+        //Invoke("RestOfShot", 0);
 
+
+
+        /*if(targeting.trackedEnemy != null)
+            if(bullet.transform.forward != targeting.trackedEnemy.transform.position - transform.position)
+                bullet.transform.forward = targeting.trackedEnemy.transform.position - transform.position;*/
+    }
     public void Shoot(InputAction.CallbackContext context)
     {
         Debug.Log("The gun was shot");
