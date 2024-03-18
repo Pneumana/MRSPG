@@ -20,11 +20,16 @@ public class UIManager : MonoBehaviour
 
     public Controller controller;
     public LockOnSystem lockOn;
+    public MainMenu mainMenuUI;
+
+    public enum pausedMenu { paused,continuegame, controls, settings, mainmenu, credits, quitgame}
+    pausedMenu paused;
 
     #endregion
 
     private void Start ( )
     {
+        Cursor.visible = false;
 
         controller = GameObject.Find ( "Controller Detection" ).GetComponent<Controller> ( );
 
@@ -39,6 +44,13 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError ( "TimeScaler is NULL" );
         }
+
+        mainMenuUI=GameObject.Find("Canvas").GetComponent<MainMenu> ( );
+
+        if ( mainMenuUI == null )
+        {
+            Debug.LogError ( "Canvas is NULL" );
+        }
     }
 
     public void Update ()
@@ -48,17 +60,73 @@ public class UIManager : MonoBehaviour
             Pause ( );
         }
 
-        if ( controller.controls.Gameplay.NavMenuup.IsPressed ( ) || controller.controls.Gameplay.NavMenuDown.IsPressed ( ) && lockOn.paused == true )
-        {
-            MakeSelection ( );
-        }
-
-        if ( controller.controls.Gameplay.MenuSelect.IsPressed ( ) )
+        if ( controller.controls.Gameplay.MenuSelect.IsPressed ( ) && lockOn.paused == true )
         {
             ButtonPressed ( );
         }
-    }
 
+        switch ( paused )
+        {
+            case pausedMenu.continuegame:
+                continueGame.gameObject.SetActive ( false );
+                continueSelect.gameObject.SetActive ( true );
+                settings.gameObject.SetActive ( true );
+                controls.gameObject.SetActive ( true );
+                mainMenu.gameObject.SetActive ( true );
+                credits.gameObject.SetActive ( true );
+                quit.gameObject.SetActive ( true );
+                break;
+            case pausedMenu.settings:
+                settings.gameObject.SetActive ( false );
+                settingsSelect.gameObject.SetActive ( true );
+                continueGame.gameObject.SetActive ( true );
+                controls.gameObject.SetActive(true );
+                mainMenu.gameObject.SetActive ( true );
+                credits.gameObject.SetActive ( true );
+                quit.gameObject.SetActive ( true );
+                break;
+            case pausedMenu.controls:
+                controls.gameObject.SetActive ( false );
+                controlsSelect.gameObject.SetActive ( true );
+                continueGame.gameObject.SetActive ( true );
+                settings.gameObject .SetActive ( true );
+                mainMenu.gameObject.SetActive ( true );
+                credits.gameObject.SetActive ( true );
+                quit.gameObject.SetActive ( true );
+                break;
+            case pausedMenu.mainmenu:
+                mainMenu.gameObject.SetActive ( false );
+                mainMenuSelect.gameObject.SetActive ( true );
+                continueGame.gameObject.SetActive ( true );
+                controls.gameObject.SetActive ( true );
+                settings.gameObject.SetActive(true);
+                credits.gameObject.SetActive ( true );
+                quit.gameObject.SetActive ( true );
+                break;
+            case pausedMenu.credits:
+                credits.gameObject.SetActive ( false );
+                creditsSelect.gameObject.SetActive ( true );
+                continueGame.gameObject.SetActive ( true );
+                settings.gameObject.SetActive ( true );
+                controls.gameObject.SetActive ( true );
+                mainMenu.gameObject.SetActive ( true );
+                quit.gameObject.SetActive ( true );
+                break;
+            case pausedMenu.quitgame:
+                quit.gameObject.SetActive ( false );
+                quitSelect.gameObject.SetActive ( true );
+                continueGame.gameObject.SetActive ( true );
+                settings.gameObject.SetActive ( true );
+                controls.gameObject.SetActive ( true );
+                mainMenu.gameObject.SetActive ( true );
+                credits.gameObject.SetActive ( true );
+                break;
+            default:
+                break;
+        }
+
+    }
+    
     private void Pause ( )
     {
         lockOn.paused = true;
@@ -67,68 +135,70 @@ public class UIManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void MakeSelection ( )
+    
+    public void MakeSelection ( InputAction.CallbackContext context )
     {
-        if ( gameObject.tag == ( "Continue" ) )
+
+        if ( GameObject.FindWithTag ( "Continue" ) )
         {
-            continueGame.gameObject.SetActive ( false );
-            continueSelect.gameObject.SetActive ( true );
+            paused = pausedMenu.continuegame;
+            Debug.Log ( "Continue Selected" );
         }
-        else if( gameObject.tag == ( "Settings" ) )
+        else if ( GameObject.FindWithTag ( "Settings" ) )
         {
-            settings.gameObject.SetActive ( false );
-            settingsSelect.gameObject.SetActive ( true );
+            paused = pausedMenu.settings;
+            Debug.Log ( "Settings Selected" );
         }
-        else if( gameObject.tag == ( "Controls" ) )
+        else if ( GameObject.FindWithTag ( "Controls" ) )
         {
-            controls.gameObject.SetActive ( false );
-            controlsSelect.gameObject.SetActive ( true );
+            paused = pausedMenu.controls;
+            Debug.Log ( "Controls Selected" );
+        }        
+        else if( GameObject.FindWithTag ( "MainMenu" ) )
+        {
+            paused = pausedMenu.mainmenu;
+            Debug.Log ( "Main Menu Selected" );
+        }        
+        else if( GameObject.FindWithTag ( "Credits" ) )
+        {
+            paused = pausedMenu.credits;
+            Debug.Log ( "Credits Selected" );
         }
-        else if( gameObject.tag == ( "MainMenu" ) )
+        else if ( GameObject.FindWithTag ( "Quit" ) )
         {
-            mainMenu.gameObject.SetActive ( false );
-            mainMenuSelect.gameObject.SetActive ( true );
-        }
-        else if( gameObject.tag == ( "Credits" ) )
-        {
-            credits.gameObject.SetActive ( false );
-            creditsSelect.gameObject.SetActive ( true );
-        }
-        else if ( gameObject.tag == ( "Quit" ) )
-        {
-            quit.gameObject.SetActive ( false );
-            quitSelect.gameObject.SetActive ( true );
+            paused = pausedMenu.quitgame;
+            Debug.Log ( "Quit Selected" );
         }
 
-    }
+    }   
 
     void ButtonPressed ( )
     {
-       if( gameObject.tag == ( "Continue" ) )
+       if( GameObject.FindWithTag ( "Continue" ) )
         {
             ContinueGame ( );
-        }
-       else if( gameObject.tag == ( "Settings" ) )
+        }       
+        else if( GameObject.FindWithTag ( "Settings" ) )
         {
             SettingsMenu ( );
-        }
-       else if ( gameObject.tag == ( "Controls" ) )
+        }       
+        else if ( GameObject.FindWithTag ( "Controls" ) )
         {
             ControlsMenu ( );
-        }
-        else if (  gameObject.tag == ("MainMenu" ) )
+        }        
+        else if (  GameObject.FindWithTag ( "MainMenu" ) )
         {
             MainMenu ( );
-        }
-       else if( gameObject.tag == ( "Credits" ) )
+        }       
+        else if( GameObject.FindWithTag ( "Credits" ) )
         {
             CreditsMenu ( );
-        }
-       else if(gameObject.tag == ( "Quit" ) )
+        }       
+        else if(GameObject.FindWithTag ( "Quit" ) )
         {
             QuitGame ( );
         }
-    }
+    }    
 
     public void ContinueGame ( )
     {
@@ -138,27 +208,27 @@ public class UIManager : MonoBehaviour
 
     public void SettingsMenu ( )
     {
-        SceneManager.LoadScene ( 2 );
+       mainMenuUI.Settings ( );
     }
 
     public void ControlsMenu ( )
     {
-        SceneManager .LoadScene ( 3 );
+        mainMenuUI.HowTo ( );
     }
 
     public void MainMenu ( )
     {
-        SceneManager.LoadScene ( 0 );
+        mainMenuUI.BackMainMenu ( );
     }
 
     public void CreditsMenu ( )
     {
-        SceneManager.LoadScene( 4 );
+        mainMenuUI.Credits ( );
     }
 
     public void QuitGame ( )
     {
-        Application.Quit ();
+        mainMenuUI.quit ( );
         Debug.Log ( "You have Quit" );
     }
 
