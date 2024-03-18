@@ -32,6 +32,7 @@ public enum Attack
 public class EnemySetting : ScriptableObject
 {
     [Header("Main Variables")]
+    public string EnemyName;
     public Attack[] pattern;
     public EnemyType type;
 
@@ -54,7 +55,6 @@ public class EnemySetting : ScriptableObject
 
     [Header("Target Variables")]
     public float FollowRange;
-    public Metronome Metronome;
     public GameObject PlayerSettings;
     public GameObject PlayerObject;
 }
