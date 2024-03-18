@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
 
     private void Start ( )
     {
+        Cursor.visible = false;
 
         controller = GameObject.Find ( "Controller Detection" ).GetComponent<Controller> ( );
 
@@ -134,35 +135,42 @@ public class UIManager : MonoBehaviour
         Cursor.visible = false;
     }
 
+    
     public void MakeSelection ( InputAction.CallbackContext context )
     {
 
         if ( GameObject.FindWithTag ( "Continue" ) )
         {
             paused = pausedMenu.continuegame;
+            Debug.Log ( "Continue Selected" );
         }
         else if ( GameObject.FindWithTag ( "Settings" ) )
         {
             paused = pausedMenu.settings;
+            Debug.Log ( "Settings Selected" );
         }
-        else if( GameObject.FindWithTag ( "Controls" ) )
+        else if ( GameObject.FindWithTag ( "Controls" ) )
         {
             paused = pausedMenu.controls;
+            Debug.Log ( "Controls Selected" );
         }        
         else if( GameObject.FindWithTag ( "MainMenu" ) )
         {
             paused = pausedMenu.mainmenu;
+            Debug.Log ( "Main Menu Selected" );
         }        
         else if( GameObject.FindWithTag ( "Credits" ) )
         {
             paused = pausedMenu.credits;
-        }        
+            Debug.Log ( "Credits Selected" );
+        }
         else if ( GameObject.FindWithTag ( "Quit" ) )
         {
             paused = pausedMenu.quitgame;
+            Debug.Log ( "Quit Selected" );
         }
 
-    }
+    }   
 
     void ButtonPressed ( )
     {
@@ -190,7 +198,7 @@ public class UIManager : MonoBehaviour
         {
             QuitGame ( );
         }
-    }
+    }    
 
     public void ContinueGame ( )
     {
