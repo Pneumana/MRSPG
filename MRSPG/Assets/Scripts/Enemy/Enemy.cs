@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
     Vector3 targetPos;
     Vector3 lookatvector;
     bool CanAttack = true;
+    bool IsStaggered = false;
     bool isGrounded;
     Transform Gun;
     ParticleSystem ChargeParticle;
@@ -330,10 +331,9 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         Animations.SetBool("InRange", false);
     }
-    private void Stagger()
+    public void Stagger()
     {
-        //Stagger Animation
-        StopCoroutine(StartAttack(_enemy.pattern));
+        IsStaggered = true;
     }
     private IEnumerator Charge(float seconds)
     {
@@ -433,8 +433,9 @@ public class Enemy : MonoBehaviour
         CanAttack = false;
         foreach (Attack attack in pattern)
         {
+            if (IsStaggered) { IsStaggered = false; break; }
             Debug.Log(attack);
-            if(playerInRange || ShootingRange)
+            if (playerInRange || ShootingRange)
             {
                 switch (attack)
                 {
