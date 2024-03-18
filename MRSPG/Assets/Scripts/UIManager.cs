@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public Button continueSelect, settingsSelect, controlsSelect, mainMenuSelect, creditsSelect, quitSelect;
 
+    [SerializeField]
+    GameObject [ ] _menuButtons;
+
     public Controller controller;
     public LockOnSystem lockOn;
     public MainMenu mainMenuUI;
@@ -51,6 +54,7 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError ( "Canvas is NULL" );
         }
+
     }
 
     public void Update ()
@@ -138,7 +142,12 @@ public class UIManager : MonoBehaviour
     
     public void MakeSelection ( InputAction.CallbackContext context )
     {
+        for ( int i = 0 ; i < _menuButtons.Length ; i++ )
+        {
+            
+        }
 
+        /*
         if ( GameObject.FindWithTag ( "Continue" ) )
         {
             paused = pausedMenu.continuegame;
@@ -153,13 +162,13 @@ public class UIManager : MonoBehaviour
         {
             paused = pausedMenu.controls;
             Debug.Log ( "Controls Selected" );
-        }        
-        else if( GameObject.FindWithTag ( "MainMenu" ) )
+        }
+        else if ( GameObject.FindWithTag ( "MainMenu" ) )
         {
             paused = pausedMenu.mainmenu;
             Debug.Log ( "Main Menu Selected" );
-        }        
-        else if( GameObject.FindWithTag ( "Credits" ) )
+        }
+        else if ( GameObject.FindWithTag ( "Credits" ) )
         {
             paused = pausedMenu.credits;
             Debug.Log ( "Credits Selected" );
@@ -169,8 +178,8 @@ public class UIManager : MonoBehaviour
             paused = pausedMenu.quitgame;
             Debug.Log ( "Quit Selected" );
         }
-
-    }   
+        */
+    }
 
     void ButtonPressed ( )
     {
