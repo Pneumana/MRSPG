@@ -46,8 +46,11 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
         controls.Gameplay.Fire.performed += gun.Shoot;
-        if (pauseUI != null) { controls.Gameplay.NavMenuDown.performed += pauseUI.MakeSelection; }
-        controls.Gameplay.NavMenuup.performed += pauseUI.MakeSelection;
+        if (pauseUI != null)
+        {
+            controls.Gameplay.NavMenuDown.performed += pauseUI.MakeSelection;
+            controls.Gameplay.NavMenuup.performed += pauseUI.MakeSelection;
+        }
         controls.Gameplay.Attack.performed += playerAttack.Attack;
     }
 
