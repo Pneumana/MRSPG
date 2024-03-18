@@ -17,6 +17,7 @@ using UnityEngine.UI;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using static UnityEditor.Experimental.GraphView.GraphView;
 using UnityEngine.Rendering;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -40,6 +41,7 @@ public class Enemy : MonoBehaviour
     Vector3 lookatvector;
     bool CanAttack = true;
     bool IsStaggered = false;
+    int PauseBeat;
     bool isGrounded;
     Transform Gun;
     ParticleSystem ChargeParticle;
@@ -335,16 +337,13 @@ public class Enemy : MonoBehaviour
     {
         IsStaggered = true;
     }
-    private IEnumerator Charge(float seconds)
+    private IEnumerator Charge(int beats)
     {
-        /*if (_enemy.Speed <= 0) _enemy.Speed = 13f;
-        float begginingspeed = _enemy.Speed;
-        _enemy.Speed = 0f;*/
         ChargeParticle.Play();
-        yield return new WaitForSeconds(seconds);
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
         ChargeParticle.Stop();
-        Debug.Log("Charged!");
-        //_enemy.Speed = begginingspeed;
     }
     private void Lunge()
     {
@@ -370,11 +369,13 @@ public class Enemy : MonoBehaviour
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
-    private IEnumerator Load(float seconds)
+    private IEnumerator Load(int beats)
     {
         FlarePlayed = true;
         Flare.SetActive(true);
-        yield return new WaitForSeconds(seconds);
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
         FlarePlayed = false;
     }
     private IEnumerator Shoot(int Damage)
@@ -423,8 +424,11 @@ public class Enemy : MonoBehaviour
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
-    private void EndLag()
+    private IEnumerator EndLag(int beats)
     {
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
         Debug.Log("boss lazy, boss need time to recoop");
     }
 
@@ -442,7 +446,7 @@ public class Enemy : MonoBehaviour
                     default:
                         break;
                     case Attack.Charge:
-                        StartCoroutine(Charge(_enemy.ChargeTime));
+                        StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
@@ -451,7 +455,7 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
-                        StartCoroutine(Load(_enemy.ChargeTime));
+                        StartCoroutine(Load(1));
                         break;
                     case Attack.Shoot:
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
@@ -460,10 +464,10 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
                         break;
                     case Attack.Lag:
-                        if (PlayerIsInSight == true) EndLag();
+                        if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
                         break;
                 }
-                yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);
+                yield return new WaitForSeconds(Metronome.GetInterval());
             }
         }
         CanAttack = true;

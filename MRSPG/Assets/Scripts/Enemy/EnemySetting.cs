@@ -47,8 +47,6 @@ public class EnemySetting : ScriptableObject
     [Header("Attack Variables")]
     public int Damage;
     public float AttackRange;
-    public float TimeBetweenAttacks;
-    public float ChargeTime;
     public Vector3 Hitbox;
     public float HitboxOffset;
 
