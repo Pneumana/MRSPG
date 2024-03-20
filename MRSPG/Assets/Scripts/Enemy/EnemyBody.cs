@@ -19,7 +19,7 @@ public class EnemyBody : MonoBehaviour
 
     public bool bounceOffPlayer;
 
-    private bool WallDamage;
+    private bool DoWallDamage;
 
     Rigidbody rb;
     public NavMeshAgent me;
@@ -72,7 +72,7 @@ public class EnemyBody : MonoBehaviour
         if (pushedBack)
         {
             RaycastHit hit;
-            if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && WallDamage)
+            if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && DoWallDamage)
             {
                 Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
                 Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
@@ -146,7 +146,7 @@ public class EnemyBody : MonoBehaviour
         //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
-            Shoved(player.forward * dashImpact, true);
+            Shoved(player.forward * dashImpact, "Dash");
         }
         else
         {
@@ -156,7 +156,7 @@ public class EnemyBody : MonoBehaviour
             }
         }
     }
-    public void Shoved(Vector3 dir, bool wallDamage, ForceMode mode = ForceMode.Impulse)
+    public void Shoved(Vector3 dir, string source, ForceMode mode = ForceMode.Impulse)
     {
         if (!pushedBack)
         {
@@ -165,8 +165,9 @@ public class EnemyBody : MonoBehaviour
         //Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
-        WallDamage = wallDamage;
-        rb.AddForce( dir, mode);
+        DoWallDamage = (source == "Dash");
+        if (source == "Dash") { rb.AddForce(dir, mode); }
+        else { rb.velocity = dir; }
     }
 
     public void Recover()

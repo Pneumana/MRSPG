@@ -341,7 +341,7 @@ public class Enemy : MonoBehaviour
     {
         IsStaggered = true;
         if (gameObject.GetComponent<NavMeshAgent>() != null) { gameObject.GetComponent<NavMeshAgent>().enabled = false; }
-        body.Shoved(playerObj.transform.forward * 1, false);
+        body.Shoved(playerObj.transform.forward * 5, "Stagger");
     }
     private IEnumerator Charge(int beats)
     {
