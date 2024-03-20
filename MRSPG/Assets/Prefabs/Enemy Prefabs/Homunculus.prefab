@@ -5292,6 +5292,7 @@ GameObject:
   - component: {fileID: 6226633251231216141}
   - component: {fileID: 4991575785230339088}
   - component: {fileID: 8170548464291520370}
+  - component: {fileID: 2508666691305691201}
   m_Layer: 6
   m_Name: Homunculus
   m_TagString: Enemy
@@ -5466,6 +5467,28 @@ NavMeshAgent:
   m_BaseOffset: 2.2
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &2508666691305691201
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4531064477588667579}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 548cb561cf0c34f41b2d900bb02d7a21, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4910571216066169023
 GameObject:
   m_ObjectHideFlags: 0
