@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa02d2991f36a734d80f14f1d31338a0, type: 3}
   m_Name: Heavy
   m_EditorClassIdentifier: 
+  EnemyName: HeavyEnemy
   pattern: 000000000000000003000000
   type: 2
   EnergyGainedOnBeat: 20
   EnergyGainedOffBeat: 10
   EnemyHealth: 9
-  Speed: 0
   groundRadius: 1
   Damage: 3
   AttackRange: 4
@@ -25,9 +25,7 @@ MonoBehaviour:
   ChargeTime: 2
   Hitbox: {x: 4, y: 3, z: 2}
   HitboxOffset: 1.1
-  Animations: {fileID: 0}
   FollowRange: 5
-  Metronome: {fileID: 0}
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
   Unknown: 0

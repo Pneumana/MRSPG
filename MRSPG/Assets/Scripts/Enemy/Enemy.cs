@@ -16,6 +16,8 @@ using Color = UnityEngine.Color;
 using UnityEngine.UI;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.Rendering;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -38,6 +40,8 @@ public class Enemy : MonoBehaviour
     Vector3 targetPos;
     Vector3 lookatvector;
     bool CanAttack = true;
+    bool IsStaggered = false;
+    int PauseBeat;
     bool isGrounded;
     Transform Gun;
     ParticleSystem ChargeParticle;
@@ -58,6 +62,9 @@ public class Enemy : MonoBehaviour
     LayerMask PlayerMask;
 
     LayerMask GroundMask;
+    private Metronome Metronome;
+    GameObject Flare;
+    bool FlarePlayed;
     #endregion
 
     #region Define Enemy
@@ -65,36 +72,36 @@ public class Enemy : MonoBehaviour
     private void SetEnemyData(EnemySetting _enemy)
     {
         EnemyType _enemytype = _enemy.type;
+        gameObject.name = _enemy.EnemyName;
+        gameObject.tag = "Enemy";
         switch (_enemytype)
         {
             case EnemyType.Standard:
-                gameObject.name = "StandardEnemy";
-                gameObject.tag = "Enemy";
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Heavy:
                 heavy_enemy = _enemy as HeavyEnemySettings;
-                gameObject.name = "HeavyEnemy";
-                gameObject.tag = "Enemy";
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Ranged:
                 ranged_enemy = _enemy as RangedEnemySettings;
-                gameObject.name = "RangedEnemy";
-                gameObject.tag = "Enemy";
                 Gun = gameObject.transform.GetChild(0).Find("Gun");
+                Flare = transform.Find("EnemyCanvas").transform.Find("LensFlare").gameObject;
+                Flare.SetActive(false);
                 break;
             case EnemyType.Boss:
                 boss_enemy = _enemy as BossEnemySettings;
-                gameObject.name = "Boss";
-                gameObject.tag = "Enemy";
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
+                if(boss_enemy.EnemyName == "Homunculus")
+                {
+                    Gun = gameObject.transform.GetChild(0).Find("Gun");
+                }
                 break;
 
         }
         _enemy.PlayerSettings = GameObject.Find("Player");
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
-        _enemy.Metronome = Metronome.inst;
+        Metronome = Metronome.inst;
         enemyObj = gameObject.transform.GetChild(0);
         Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
     }
@@ -201,7 +208,7 @@ public class Enemy : MonoBehaviour
         }
         if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
-            enemyObj.LookAt(lookatvector);
+            transform.LookAt(lookatvector);
         }
         if (CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
@@ -236,7 +243,7 @@ public class Enemy : MonoBehaviour
         #region Attacking
         //Begin the attack cycle:
         playerInRange = CheckForPlayer(transform.position, _enemy.AttackRange, _enemy.PlayerObject.GetComponent<Collider>());
-        if(playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
+        if(playerInRange && Metronome.IsOnBeat() && CanAttack)
         {
             StartCoroutine(StartAttack(_enemy.pattern));
         }
@@ -248,7 +255,7 @@ public class Enemy : MonoBehaviour
             {
                 aggro = true;
             }
-            if (ShootingRange && _enemy.Metronome.IsOnBeat() && CanAttack)
+            if (ShootingRange && Metronome.IsOnBeat() && CanAttack)
             {
                 StartCoroutine(StartAttack(_enemy.pattern));
             }
@@ -257,11 +264,11 @@ public class Enemy : MonoBehaviour
         if (_enemy.type == EnemyType.Boss)
         {
             bool AttackingRange = CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>());
-            if (playerInRange && _enemy.Metronome.IsOnBeat() && CanAttack)
+            if (playerInRange && Metronome.IsOnBeat() && CanAttack)
             {
                 StartCoroutine(StartAttack(boss_enemy.BossPattern[1].pattern));
             }
-            else if(AttackingRange && _enemy.Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
+            else if(AttackingRange && Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
         }
         #endregion
         #region Ground Check + Falling rate
@@ -326,21 +333,17 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         Animations.SetBool("InRange", false);
     }
-    private void Stagger()
+    public void Stagger()
     {
-        //Stagger Animation
-        StopCoroutine(StartAttack(_enemy.pattern));
+        IsStaggered = true;
     }
-    private IEnumerator Charge(float seconds)
+    private IEnumerator Charge(int beats)
     {
-        /*if (_enemy.Speed <= 0) _enemy.Speed = 13f;
-        float begginingspeed = _enemy.Speed;
-        _enemy.Speed = 0f;*/
         ChargeParticle.Play();
-        yield return new WaitForSeconds(seconds);
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
         ChargeParticle.Stop();
-        Debug.Log("Charged!");
-        //_enemy.Speed = begginingspeed;
     }
     private void Lunge()
     {
@@ -366,11 +369,14 @@ public class Enemy : MonoBehaviour
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
-    private IEnumerator Load(float seconds)
+    private IEnumerator Load(int beats)
     {
-        ChargeParticle.Play();
-        yield return new WaitForSeconds(seconds);
-        ChargeParticle.Stop();
+        FlarePlayed = true;
+        Flare.SetActive(true);
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
+        FlarePlayed = false;
     }
     private IEnumerator Shoot(int Damage)
     {
@@ -418,8 +424,11 @@ public class Enemy : MonoBehaviour
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
-    private void EndLag()
+    private IEnumerator EndLag(int beats)
     {
+        PauseBeat = Metronome.BeatsPassed;
+        //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
+        yield return new WaitForSeconds(Metronome.GetInterval());
         Debug.Log("boss lazy, boss need time to recoop");
     }
 
@@ -428,15 +437,16 @@ public class Enemy : MonoBehaviour
         CanAttack = false;
         foreach (Attack attack in pattern)
         {
+            if (IsStaggered) { IsStaggered = false; break; }
             Debug.Log(attack);
-            if(playerInRange || ShootingRange)
+            if (playerInRange || ShootingRange)
             {
                 switch (attack)
                 {
                     default:
                         break;
                     case Attack.Charge:
-                        StartCoroutine(Charge(_enemy.ChargeTime));
+                        StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
@@ -445,7 +455,7 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
-                        StartCoroutine(Load(_enemy.ChargeTime));
+                        StartCoroutine(Load(1));
                         break;
                     case Attack.Shoot:
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
@@ -454,10 +464,10 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
                         break;
                     case Attack.Lag:
-                        if (PlayerIsInSight == true) EndLag();
+                        if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
                         break;
                 }
-                yield return new WaitForSeconds(_enemy.TimeBetweenAttacks);
+                yield return new WaitForSeconds(Metronome.GetInterval());
             }
         }
         CanAttack = true;

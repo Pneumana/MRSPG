@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab3746ac37dd82e4fa33dfbd9a15397f, type: 3}
+  m_Name: Boss 2
+  m_EditorClassIdentifier: 
+  EnemyName: Homunculus
+  pattern: 
+  type: 4
+  EnergyGainedOnBeat: 50
+  EnergyGainedOffBeat: 50
+  EnemyHealth: 36
+  groundRadius: 2.5
+  Damage: 2
+  AttackRange: 10
+  TimeBetweenAttacks: 3
+  ChargeTime: 2
+  Hitbox: {x: 8, y: 4, z: 5}
+  HitboxOffset: 2.75
+  FollowRange: 20
+  PlayerSettings: {fileID: 0}
+  PlayerObject: {fileID: 0}
+  BossPattern:
+  - pattern: 0000000002000000020000000000000003000000
+  - pattern: 000000000000000005000000

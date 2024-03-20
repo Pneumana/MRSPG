@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3746ac37dd82e4fa33dfbd9a15397f, type: 3}
   m_Name: Boss 1
   m_EditorClassIdentifier: 
+  EnemyName: Goliath
   pattern: 
   type: 4
   EnergyGainedOnBeat: 50
   EnergyGainedOffBeat: 50
   EnemyHealth: 36
-  Speed: 0
   groundRadius: 2.5
   Damage: 2
   AttackRange: 10
@@ -25,9 +25,7 @@ MonoBehaviour:
   ChargeTime: 2
   Hitbox: {x: 8, y: 4, z: 5}
   HitboxOffset: 2.75
-  Animations: {fileID: 0}
   FollowRange: 20
-  Metronome: {fileID: 0}
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
   BossPattern:
