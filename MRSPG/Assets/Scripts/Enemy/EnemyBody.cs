@@ -19,6 +19,8 @@ public class EnemyBody : MonoBehaviour
 
     public bool bounceOffPlayer;
 
+    private bool WallDamage;
+
     Rigidbody rb;
     public NavMeshAgent me;
 
@@ -70,7 +72,7 @@ public class EnemyBody : MonoBehaviour
         if (pushedBack)
         {
             RaycastHit hit;
-            if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime))
+            if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && WallDamage)
             {
                 Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
                 Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
@@ -80,8 +82,11 @@ public class EnemyBody : MonoBehaviour
                 Vector3 point = hit.point;
                 point.y += 0.1f;
                 Vector3 normal = hit.normal;
-                DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
-                StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
+                if (GameObject.Find("DecalPainter") != null)
+                {
+                    DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
+                    StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
+                }
             }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
             {
@@ -141,7 +146,7 @@ public class EnemyBody : MonoBehaviour
         //var dir = player.position - transform.position;
         if (!InputControls.instance.canDash)
         {
-            Shoved((player.forward) * dashImpact);
+            Shoved(player.forward * dashImpact, true);
         }
         else
         {
@@ -151,7 +156,7 @@ public class EnemyBody : MonoBehaviour
             }
         }
     }
-    void Shoved(Vector3 dir, ForceMode mode = ForceMode.Impulse)
+    public void Shoved(Vector3 dir, bool wallDamage, ForceMode mode = ForceMode.Impulse)
     {
         if (!pushedBack)
         {
@@ -160,6 +165,7 @@ public class EnemyBody : MonoBehaviour
         //Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
+        WallDamage = wallDamage;
         rb.AddForce( dir, mode);
     }
 
