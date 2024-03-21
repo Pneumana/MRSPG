@@ -139,12 +139,11 @@ public class UIManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    
     public void MakeSelection ( InputAction.CallbackContext context )
     {
         for ( int i = 0 ; i < _menuButtons.Length ; i++ )
         {
-            
+
         }
 
         /*
