@@ -13,10 +13,12 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     {
         player = GameObject.Find("Player");
         RaycastHit hit;
-        if(Physics.Raycast(transform.position+ transform.forward, Vector3.down, out hit))
+        if(Physics.Raycast(transform.position+ transform.forward * 2, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
             spawnPosition = hit.point;
+            Debug.DrawLine(transform.position + transform.forward * 2, hit.point, Color.white, 10);
         }
+        
         anim = GetComponent<AnimateObelisk>();
         //raycast from  forward down to get spawn position
     }

@@ -99,8 +99,17 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
-        if(currentCheckpoint!=null)
+
+
+        if (currentCheckpoint != null)
+        {
+            GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
             GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
+            GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
+        }
+
+
+
         currentHealth = 5;
         UIUpdateHealth();
     }

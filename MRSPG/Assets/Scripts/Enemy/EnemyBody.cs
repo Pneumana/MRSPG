@@ -176,4 +176,13 @@ public class EnemyBody : MonoBehaviour
         //rb.isKinematic = true;
         //Debug.Log(gameObject.name + "recovered");
     }
+
+
+    private void OnDestroy()
+    {
+        foreach (EnemyAbsenceTrigger trigger in triggerList)
+        {
+            trigger.UpdateEnemyList(this);
+        }
+    }
 }
