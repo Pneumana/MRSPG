@@ -265,6 +265,14 @@ public class Enemy : MonoBehaviour
             }
         }
 
+        /*Boss 3 (You)
+        It has the same movement as the player and attacks using the same dash and light attacks (slightly altered for gameplay reasons).
+        
+        ‘You’ has 3 attack patterns, charge up > light attack > light attack > light attack (on beat). 
+        If facing the pit it will charge up > dash into the player (on beat). If the player is far from ‘You’, it will charge up > charge up > fire gun (on beat). 
+        ‘You’s gun attack will display the same glare effect on charge up as the ranged enemy. 
+        A perfectly timed dash in the bullets direction will send it back in ‘You’s direction. */
+
         if (_enemy.type == EnemyType.Boss)
         {
             bool AttackingRange = CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>());
@@ -273,6 +281,11 @@ public class Enemy : MonoBehaviour
                 StartCoroutine(StartAttack(boss_enemy.BossPattern[1].pattern));
             }
             else if(AttackingRange && Metronome.IsOnBeat() && CanAttack) { StartCoroutine(StartAttack(boss_enemy.BossPattern[0].pattern)); }
+        }
+
+        if(_enemy.type == EnemyType.You)
+        {
+
         }
         #endregion
         #region Ground Check + Falling rate
@@ -287,24 +300,7 @@ public class Enemy : MonoBehaviour
             Rigidbody.drag = 3;
         }
         #endregion
-        #region Slow Other Enemies:
-        /* if (CheckForEnemies(transform.position, 5))
-         {
-             enemiesInRange.Remove(gameObject);
-             foreach(GameObject enemy in enemiesInRange)
-             {
-                 enemy.GetComponent<Enemy>().speed = 1f;
-             }
-         }
-         else
-         {
-             foreach(GameObject enemy in enemiesInRange)
-             {
-                 enemy.GetComponent<Enemy>().speed = 6f;
-             }
-             enemiesInRange.Clear();
-         }*/
-        #endregion
+
 
         if (aggro)
         {
@@ -357,7 +353,6 @@ public class Enemy : MonoBehaviour
     }
     private void LightAttack(int Damage)
     {
-        Debug.Log("Used the light attack function");
         if(Animations != null)
         {
             Animations.SetBool("InRange", true);
@@ -369,7 +364,6 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-        Debug.Log("Used the heavy attack function");
         if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
@@ -444,7 +438,6 @@ public class Enemy : MonoBehaviour
         foreach (Attack attack in pattern)
         {
             if (IsStaggered) { IsStaggered = false; break; }
-            Debug.Log(attack);
             if (playerInRange || ShootingRange)
             {
                 switch (attack)

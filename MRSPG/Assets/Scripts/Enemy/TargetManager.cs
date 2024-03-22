@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 /// <summary>
@@ -9,24 +10,61 @@ using UnityEngine;
 /// </summary>
 public class TargetManager : MonoBehaviour
 {
-    public static Transform player;
-    private Vector3 distance;
-    [SerializeField] private List<Enemy> enemiesInRange = new List<Enemy>();
+    public GameObject closestEnemy;
+    public float gizmosize;
+    public List<GameObject> enemiesInRange;
 
-    // Update is called once per frame
-    /*void Update()
+    void Update()
     {
-        if (CheckForEnemies(transform.position, 5))
+        CheckForEnemies(transform.position, gizmosize);
+        closestEnemy = GetClosestEnemy(enemiesInRange);
+        if (CheckForEnemies(transform.position, gizmosize))
         {
-            enemiesInRange.Remove(gameObject);
-            Debug.Log("There are enemies within the big radius.");
             foreach (GameObject enemy in enemiesInRange)
             {
-                enemy.GetComponent<Enemy>().speed = 1f;
+                if (enemy != closestEnemy)
+                {
+                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
+                    Debug.Log("Slowed: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                }
+                else
+                {
+                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
+                    Debug.Log("Regular: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                }
             }
         }
+        if (!CheckForEnemies(transform.position, gizmosize))
+        {
+            /*foreach (GameObject enemy in enemiesInRange)
+            {
+                enemy.GetComponent<NavMeshAgent>().speed = enemy.GetComponent<EnemySetting>().NavMeshSpeed;
+            }*/
+            enemiesInRange.Clear();
+        }
+
+
     }
-    private bool CheckForEnemies(Vector3 center, float radius)
+
+    GameObject GetClosestEnemy(List<GameObject> enemies)
+    {
+        GameObject bestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+        foreach (GameObject potentialTarget in enemies)
+        {
+            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+            float dSqrToTarget = directionToTarget.sqrMagnitude;
+            if (dSqrToTarget < closestDistanceSqr)
+            {
+                closestDistanceSqr = dSqrToTarget;
+                bestTarget = potentialTarget;
+            }
+        }
+
+        return bestTarget;
+    }
+    public bool CheckForEnemies(Vector3 center, float radius)
     {
         Collider[] collider = Physics.OverlapSphere(center, radius);
         foreach (var obj in collider)
@@ -44,7 +82,6 @@ public class TargetManager : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, 2);
-        Gizmos.DrawWireSphere(transform.position, 5);
-    }*/
+        Gizmos.DrawWireSphere(transform.position, gizmosize);
+    }
 }

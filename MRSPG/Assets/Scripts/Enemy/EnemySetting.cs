@@ -14,7 +14,8 @@ public enum EnemyType
     AnkleBiters, //1
     Heavy, //2
     Ranged, //3
-    Boss // 4
+    Boss, // 4
+    You // 5
 };
 public enum Attack
 {
@@ -43,6 +44,8 @@ public class EnemySetting : ScriptableObject
     [Header("Enemy Variables")]
     public int EnemyHealth;
     public float groundRadius;
+    public float NavMeshSpeed;
+    public float NavMeshSlowedSpeed;
 
     [Header("Attack Variables")]
     public int Damage;
