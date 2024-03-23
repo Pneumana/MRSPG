@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3103597971312152443}
   - component: {fileID: 8598132146237696691}
   - component: {fileID: 7960838742143113931}
+  - component: {fileID: 2124235107021641606}
   m_Layer: 6
   m_Name: CrystalSwap
   m_TagString: Enemy
@@ -128,3 +129,16 @@ MonoBehaviour:
   bounceOffPlayer: 0
   me: {fileID: 0}
   triggerList: []
+--- !u!114 &2124235107021641606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2892008792097310900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cabca1606aadef4ab3dd85982c29f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waitTime: 2.7
