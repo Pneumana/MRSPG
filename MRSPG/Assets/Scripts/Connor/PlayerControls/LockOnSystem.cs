@@ -24,6 +24,8 @@ public class LockOnSystem : MonoBehaviour
     public List<GameObject> enemies = new List<GameObject> ();
     public List<GameObject> targeters = new List<GameObject> ();
 
+    public LayerMask LOSMask;
+
     public GameObject enemyTracker;
     public GameObject trackedEnemy;
     public GameObject leftTrackedEnemy;
@@ -56,6 +58,9 @@ public class LockOnSystem : MonoBehaviour
     public Quaternion eul;
 
     public bool freeAim = true;
+
+    bool wasFreeAiming;
+
     float swapTargetCD;
 
     [SerializeField] Mesh sphere;
@@ -157,14 +162,39 @@ public class LockOnSystem : MonoBehaviour
                 Debug.DrawLine(player.transform.position, player.transform.position + dirRot, Color.black);
                 eul = Quaternion.LookRotation(dirRot);
                 }*/
+        if (trackedEnemy == null)
+        {
+            Debug.Log("tracked enemy is null");
+            HideTargets();
+            CreateTargeters();
+            bool swap = false;
 
+
+            //used to get a new target if the one the player is locked on to dies
+            if (!freeAim)
+            {
+                freeAim=true;
+                swap = true;
+            }
+            
+                UpdateTargetUI();
+            if (swap)
+                freeAim = false;
+            if (!freeAim)
+            {
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+            lockOnAssist.position = player.transform.position + player.transform.forward;
+            freeLook.m_LookAt = lockOnAssist;
+
+            }
+            //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+            //eul = Quaternion.LookRotation(dirRot);
+            //HideTargets();
+        }
         if (!freeAim)
         {
-            if (trackedEnemy == null)
-            {
-                UpdateEnemyList();
-                UpdateTargetUI();
-            }
+
             //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
             //dirRot.y = 0;
             //dir.y = 0; // keep the direction strictly horizontal
@@ -274,10 +304,9 @@ public class LockOnSystem : MonoBehaviour
                 remainingTime = useTime;
             if(cooldown <= 0)
             {
-                StopLockOn();
+                //StopLockOn();
                 UpdateTargetUI();
                 CreateTargeters();
-
                 //show range finder object
                 rangeFinder.SetActive(true);
                 rangeFinder.transform.position = player.transform.position;
@@ -296,8 +325,12 @@ public class LockOnSystem : MonoBehaviour
     {
         if (trackedEnemy == null)
         {
-            StopLockOn();
-            HideTargets();
+            //StopLockOn();
+            //HideTargets();
+
+            UpdateTargetUI();
+            CreateTargeters();
+
             //break lock on
             return;
         }
@@ -378,7 +411,7 @@ public class LockOnSystem : MonoBehaviour
                 cooldown = cooldownTime;
                 remainingTime = useTime;
                 targetTime = maxTimeScale;
-            StopLockOn();
+            //StopLockOn();
             HideTargets();
 
             rangeFinder.SetActive(false);
@@ -421,7 +454,7 @@ public class LockOnSystem : MonoBehaviour
                 //Line of sight check from player to the enemy
                 RaycastHit hit;
                 var vector = enemies[i].transform.position - player.transform.position;
-                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity);
+                Physics.Raycast(player.transform.position, vector, out hit, Mathf.Infinity, LOSMask);
                 if (hit.distance > range)
                 {
                     targeters[i].GetComponent<Image>().color = Color.clear;
@@ -434,6 +467,7 @@ public class LockOnSystem : MonoBehaviour
                 if (enemies[i] != hit.collider.gameObject)
                 {
                     targeters[i].GetComponent<Image>().color = Color.clear;
+                    Debug.Log(hit.collider.gameObject.name + " stopped " + enemies[i] + " from being hit");
                     continue;
                 }
             }
@@ -471,7 +505,7 @@ public class LockOnSystem : MonoBehaviour
         }
         foreach (int i in validEnemies)
         {
-            if (targeters[i] == closestTarget)
+            if (targeters[i] == lockon)
                 continue;
             var check = targeters[i].transform.position.x - closestTarget.transform.position.x;
             if(check > 0)
@@ -526,8 +560,11 @@ public class LockOnSystem : MonoBehaviour
         targeters.Clear();
     }
 
-    public void StopLockOn()
+    public void StopLockOn(bool overridePrev = false)
     {
+
+
+
         //hides all targeters and lets the camera be controlled as normal.
         Debug.Log("stopping lock on");
         HideTargets();
