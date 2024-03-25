@@ -14,7 +14,7 @@ public class Controller : MonoBehaviour
     public LockOnSystem lockOnSystem;
     public Gun gun;
     public PlayerAttack playerAttack;
-    public UIManager pauseUI;
+    public PauseMenu pauseUI;
     [HideInInspector] public ControllerSupport controls;
 
     public Vector2 lookInput;
@@ -48,8 +48,7 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Fire.performed += gun.Shoot;
         if (pauseUI != null)
         {
-            controls.Gameplay.NavMenuDown.performed += pauseUI.MakeSelection;
-            controls.Gameplay.NavMenuup.performed += pauseUI.MakeSelection;
+            lockOnSystem.paused = true;
         }
         controls.Gameplay.Attack.performed += playerAttack.Attack;
     }
