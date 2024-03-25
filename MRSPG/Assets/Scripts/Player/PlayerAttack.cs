@@ -77,11 +77,11 @@ public class PlayerAttack : MonoBehaviour
         }
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
-        StartCoroutine(meleeHitbox.MeleeAttack(MeleeCombo));
+        meleeHitbox.MeleeAttack(MeleeCombo);
     }
 
     public bool EnemyInRange()
     {
-        return Physics.CheckBox(meleeHitbox.transform.position, new Vector3(1.7f, 1.4f, 1), meleeHitbox.transform.rotation, inputControls.enemyLayer);//hitbox size value temporarily hard-coded for testing, if hitbox size changes this will be inaccurate.
+        return Physics.CheckBox(meleeHitbox.transform.position, meleeHitbox.HitboxSize, meleeHitbox.transform.rotation, inputControls.enemyLayer);
     }
 }
