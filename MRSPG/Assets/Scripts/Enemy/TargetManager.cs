@@ -61,12 +61,15 @@ public class TargetManager : MonoBehaviour
         Vector3 currentPosition = transform.position;
         foreach (GameObject potentialTarget in enemies)
         {
-            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
-            float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
+            if (potentialTarget != null)
             {
-                closestDistanceSqr = dSqrToTarget;
-                bestTarget = potentialTarget;
+                Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+                float dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    bestTarget = potentialTarget;
+                }
             }
         }
 
