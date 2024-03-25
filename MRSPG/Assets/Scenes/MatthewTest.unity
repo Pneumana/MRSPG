@@ -3816,6 +3816,9 @@ MonoBehaviour:
   lockon: {fileID: 406356939}
   enemies: []
   targeters: []
+  LOSMask:
+    serializedVersion: 2
+    m_Bits: 193
   enemyTracker: {fileID: 0}
   trackedEnemy: {fileID: 0}
   leftTrackedEnemy: {fileID: 0}
@@ -23409,6 +23412,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 522244520}
+    - target: {fileID: 9041771564103141655, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7908273804578983696, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
