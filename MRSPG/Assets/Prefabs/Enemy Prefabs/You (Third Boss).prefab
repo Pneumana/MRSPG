@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 997119041485100343}
   - component: {fileID: 3443418022253481937}
   - component: {fileID: 4873844244495035434}
-  - component: {fileID: 7443197586293793211}
   - component: {fileID: 364820993260970614}
   - component: {fileID: 1655766259684116030}
   - component: {fileID: 98932711759190875}
@@ -127,50 +126,6 @@ MonoBehaviour:
   bounceOffPlayer: 0
   me: {fileID: 364820993260970614}
   triggerList: []
---- !u!114 &7443197586293793211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6730532170723973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a518e75888a56048a9f5b217af7258d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemy: {fileID: 4873844244495035434}
-  EnemyHealthBar: {fileID: 0}
-  gradient:
-    serializedVersion: 2
-    key0: {r: 0.1991066, g: 0.6415094, b: 0.13616946, a: 1}
-    key1: {r: 0.20392159, g: 0.6509804, b: 0.14117648, a: 1}
-    key2: {r: 0.5696134, g: 0.8980392, b: 0.039215658, a: 0}
-    key3: {r: 0.8666667, g: 0.8301107, b: 0.16862744, a: 0}
-    key4: {r: 1, g: 0.3284663, b: 0, a: 0}
-    key5: {r: 1, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 13107
-    ctime2: 26214
-    ctime3: 39321
-    ctime4: 52428
-    ctime5: 65535
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 6
-    m_NumAlphaKeys: 2
 --- !u!195 &364820993260970614
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5170,6 +5125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd8f528bef8a9ee4b89cb6daeaf4c9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitboxSize: {x: 0, y: 0, z: 0}
 --- !u!1 &5979420441104417771
 GameObject:
   m_ObjectHideFlags: 0

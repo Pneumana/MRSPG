@@ -51,7 +51,6 @@ public class Enemy : MonoBehaviour
 
     Animator Animations;
 
-    float maxdistance = 6f;
 
     [Header("Warning Pop Up")]
     GameObject Warning;
