@@ -12,5 +12,6 @@ public class BossEnemySettings : EnemySetting
     }
 
     [Header("Boss Variables")]
+    public GameObject BossBullet;
     public EnemyPattern[] BossPattern;
 }

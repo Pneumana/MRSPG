@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoostBubble : MonoBehaviour
@@ -19,6 +20,15 @@ public class BoostBubble : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "PlayerObj")
+        {
+            //add the difference in position from the player and the object on collision as extra boost height to compensate if the player doesnt land exactly on top of the object.
+            InputControls.instance.velocity.y = boost;
+            StartCoroutine(Popped());
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "PlayerObj")
         {
             //add the difference in position from the player and the object on collision as extra boost height to compensate if the player doesnt land exactly on top of the object.
             InputControls.instance.velocity.y = boost;

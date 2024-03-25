@@ -18,6 +18,8 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using static UnityEditor.Experimental.GraphView.GraphView;
 using UnityEngine.Rendering;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.AI;
 
 /// <summary>
 /// Utilize the data from the EnemySetting script to get all enemy data.
@@ -29,6 +31,7 @@ public class Enemy : MonoBehaviour
     #region Variables
     EnemyBody body;
     Transform enemyObj;
+    private GameObject playerObj;
     public EnemySetting _enemy;
     HeavyEnemySettings heavy_enemy;
     RangedEnemySettings ranged_enemy;
@@ -183,6 +186,7 @@ public class Enemy : MonoBehaviour
     public void Start()
     {
         //Use the SetEnemyData(EnemySetting _enemy) function to use the correct variables.
+        playerObj = GameObject.Find("PlayerObj");
         Warning = transform.Find("EnemyCanvas").transform.Find("Warning").gameObject;
         Warning.SetActive(false);
         body = GetComponent<EnemyBody>();
@@ -336,14 +340,16 @@ public class Enemy : MonoBehaviour
     public void Stagger()
     {
         IsStaggered = true;
+        if (gameObject.GetComponent<NavMeshAgent>() != null) { gameObject.GetComponent<NavMeshAgent>().enabled = false; }
+        body.Shoved(playerObj.transform.forward * 5, "Stagger");
     }
     private IEnumerator Charge(int beats)
     {
-        ChargeParticle.Play();
+        if(ChargeParticle != null) ChargeParticle.Play();
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
-        ChargeParticle.Stop();
+        if (ChargeParticle != null) ChargeParticle.Stop();
     }
     private void Lunge()
     {

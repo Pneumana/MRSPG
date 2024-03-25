@@ -58,13 +58,13 @@ public class PlayerAttack : MonoBehaviour
         switch (MeleeCombo)
         {
             case 1:
-                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 2:
-                if (!EnemyInRange() && inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (!EnemyInRange() && inputControls.canDash) 
+                if (/*!EnemyInRange() && */inputControls.canDash) 
                 {
                     StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide"));
                     if (HealCombo == 3) 
