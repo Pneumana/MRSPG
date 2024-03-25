@@ -61,7 +61,8 @@ public class FreezeBarrel : MonoBehaviour
 
     void Freeze ( )
     {
-        GameObject.Find ( "Player" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll;
+        GameObject.Find ( "Player" ).GetComponent<CharacterController> ( ).gameObject.SetActive ( false );
+        GameObject.Find ( "Player" ).GetComponent<PlayerAttack> ( ).gameObject.SetActive ( false );
         GameObject.FindWithTag ( "Enemy" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll; 
         Debug.Log ( "Everything is Frozen" );
         StartCoroutine ( Frozen ( ) );
@@ -79,7 +80,7 @@ public class FreezeBarrel : MonoBehaviour
 
     IEnumerator PauseBeforeGone ( )
     {
-        yield return new WaitForSeconds ( .5f );
+        yield return new WaitForSeconds ( 3.5f );
         Destroy ( this.gameObject );
     }
 
