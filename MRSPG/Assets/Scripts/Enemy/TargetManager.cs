@@ -24,12 +24,20 @@ public class TargetManager : MonoBehaviour
             {
                 if (enemy != closestEnemy)
                 {
-                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
+                    try
+                    {
+                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
+                    }
+                    catch { Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component"); }
                     Debug.Log("Slowed: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
                 }
                 else
                 {
-                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
+                    try
+                    {
+                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
+                    }
+                    catch { Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component"); }
                     Debug.Log("Regular: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
                 }
             }
