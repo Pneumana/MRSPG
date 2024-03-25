@@ -7,7 +7,7 @@ public class HealthBar : MonoBehaviour
 {
     public EnemyBody enemy;
     [HideInInspector] public Image EnemyHealthBar;
-    private Image Fill;
+    [HideInInspector] public Image Fill;
     public Gradient gradient;
     private float max;
     private float current;
