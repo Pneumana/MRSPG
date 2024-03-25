@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     public EnemyBody enemy;
-    private Image EnemyHealthBar;
+    [HideInInspector] public Image EnemyHealthBar;
     private Image Fill;
     public Gradient gradient;
     private float max;
