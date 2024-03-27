@@ -47,37 +47,48 @@ public class BoomBarrel : MonoBehaviour
     {
         if ( boom.collider.tag == ( "Enemy" ) )
         {
-            Explode ( );
+            TryExplode( );
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.name == "MeleeHitbox")
+        {
+            TryExplode();
         }
     }
 
-    public void Explode ( )
+    public void TryExplode ( )
     {
         currentHealth = 0;
 
         if ( currentHealth == 0 )
         {
-            ps.Play ( );
-            DetectionAfterExplosion ( );
-            StartCoroutine ( PauseBeforeGone ( ) );
+            StartCoroutine(Explode());
         }
     }
 
     void DetectionAfterExplosion ( )
     {
         Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
-
-        foreach( var collider in colliders )
+        Debug.Log(colliders.Length + " objects were hit by explosion");
+        foreach( Collider collider in colliders )
         {
-            var enemyBody = collider.gameObject.GetComponent<EnemyBody>();
-            var barrel = collider.gameObject.GetComponent<BoomBarrel>();
+            Debug.Log(collider.gameObject.name + " was hit by explosion from " + gameObject.name, collider.gameObject);
+            var enemyBody = collider.GetComponent<EnemyBody>();
+            var barrel = collider.GetComponent<BoomBarrel>();
             if (enemyBody != null)
             {
                 enemyBody.ModifyHealth(5);
             }
-            if (barrel != null && barrel != this)
+            if (barrel != null )
             {
-                barrel.Explode();
+                if(barrel.gameObject != gameObject)
+                {
+
+                Debug.Log(gameObject.name + "'s explosion triggered " + barrel.gameObject.name);
+                barrel.TryExplode();
+                }
             }
             //DealDamage ( );
             return;
@@ -90,15 +101,22 @@ public class BoomBarrel : MonoBehaviour
 
         Debug.Log ( "Enemy Took 5 Damage" );
 
-        if ( GameObject.Find ( "Boom Barrel" ) )
+/*        if ( GameObject.Find ( "Boom Barrel" ) )
         {
             _boomAgain.Explode ( );
-        }
+        }*/
     }
 
-    IEnumerator PauseBeforeGone ( )
+    IEnumerator Explode ( )
     {
-        yield return new WaitForSeconds ( .5f );
+
+        yield return new WaitForSeconds ( 0.5f );
+        ps.Play();
+        DetectionAfterExplosion();
+
+
+
+        yield return new WaitForSeconds(1f);
         Destroy ( this.gameObject );
     }
 

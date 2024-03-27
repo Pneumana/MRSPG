@@ -5117,8 +5117,10 @@ MonoBehaviour:
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
   health: 0
   dashImpact: 3
+  grounded: 0
   pushedBack: 0
   disablePathfinding: 0
+  gravityAffected: 1
   bounceOffPlayer: 0
   me: {fileID: 6259879801344291348}
   triggerList: []
@@ -5135,6 +5137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 3668016280016945854}
+  EnemyHealthBar: {fileID: 0}
+  Fill: {fileID: 0}
   gradient:
     serializedVersion: 2
     key0: {r: 0.1991066, g: 0.6415094, b: 0.13616946, a: 1}
@@ -5422,7 +5426,7 @@ GameObject:
   m_Layer: 3
   m_Name: GroundCheck
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5435,7 +5439,7 @@ Transform:
   m_GameObject: {fileID: 4119864819420002214}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
