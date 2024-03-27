@@ -20,7 +20,7 @@ public class EnemyBody : MonoBehaviour
 
     public bool gravityAffected = true;
 
-    float airTime = 0;
+    public float airTime = 0;
 
     public bool bounceOffPlayer;
 
@@ -78,9 +78,9 @@ public class EnemyBody : MonoBehaviour
         //add some sort of airborne check?
         if (gravityAffected)
         {
-
-        grounded = Physics.Raycast(groundCheck.position, Vector3.down, (rb.velocity.y*Time.deltaTime) + Time.deltaTime, LayerMask.GetMask("Ground", "Default"));
-
+            if(!grounded)
+                grounded = Physics.Raycast(groundCheck.position, Vector3.down, (-rb.velocity.y*Time.deltaTime) + Time.deltaTime * 2, LayerMask.GetMask("Ground", "Default"));
+            Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
         if (!grounded)
         {
             airTime += Time.deltaTime;
@@ -91,12 +91,15 @@ public class EnemyBody : MonoBehaviour
             if(airTime > 1)
             {
                     Debug.Log("floor splat");
-                airTime = 0;
+
                 //take fall damage
                 ModifyHealth(5);
-                    
-                }
+            }
+                airTime = 0;
                 EnablePathfinding();
+                me.enabled = true;
+                rb.isKinematic = true;
+                Debug.Log(gameObject.name + " recovered from fall");
             }
         }
             
