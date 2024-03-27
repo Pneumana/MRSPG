@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BoomBarrel : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class BoomBarrel : MonoBehaviour
     BoomBarrel _boomAgain;
     [SerializeField]
     ParticleSystem ps;
+
+    [SerializeField]
+    Material material;
 
     #endregion
 
@@ -43,16 +47,30 @@ public class BoomBarrel : MonoBehaviour
         currentHealth = _maxHealth;
     }
 
-    private void OnCollisionEnter ( Collision boom )
-    {
-        if ( boom.collider.tag == ( "Enemy" ) )
+    /*    private void OnCollisionEnter ( Collision boom )
         {
-            TryExplode( );
+            if ( boom.collider.tag == ( "Enemy" ) )
+            {
+                TryExplode( );
+            }
+            if (boom.gameObject.name == "MeleeHitbox")
+            {
+                TryExplode();
+            }
+        }*/
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == ("Enemy"))
+        {
+            TryExplode();
         }
+
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name == "MeleeHitbox")
+        if (other.gameObject.name == "MeleeHitbox")
         {
             TryExplode();
         }
@@ -70,7 +88,7 @@ public class BoomBarrel : MonoBehaviour
 
     void DetectionAfterExplosion ( )
     {
-        Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
+        var colliders = Physics.OverlapSphere ( transform.position , _boomRadius , LayerMask.GetMask("Enemy", "EnemyProjectiles", "Player"));
         Debug.Log(colliders.Length + " objects were hit by explosion");
         foreach( Collider collider in colliders )
         {
@@ -86,12 +104,10 @@ public class BoomBarrel : MonoBehaviour
                 if(barrel.gameObject != gameObject)
                 {
 
-                Debug.Log(gameObject.name + "'s explosion triggered " + barrel.gameObject.name);
-                barrel.TryExplode();
+                    Debug.Log(gameObject.name + "'s explosion triggered " + barrel.gameObject.name);
+                    barrel.TryExplode();
                 }
             }
-            //DealDamage ( );
-            return;
         }
     }
     //the player would be taking damage every time this went off, so im chaning it to damage the player if they are close enough to be hurt by it.
@@ -109,8 +125,11 @@ public class BoomBarrel : MonoBehaviour
 
     IEnumerator Explode ( )
     {
-
+        Debug.Log(gameObject.name + " is starting explosion coroutine");
+        ps.Stop();
+        ps.Clear();
         yield return new WaitForSeconds ( 0.5f );
+
         ps.Play();
         DetectionAfterExplosion();
 

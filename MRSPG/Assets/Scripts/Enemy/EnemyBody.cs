@@ -94,8 +94,10 @@ public class EnemyBody : MonoBehaviour
                 airTime = 0;
                 //take fall damage
                 ModifyHealth(5);
+                    
+                }
+                EnablePathfinding();
             }
-        }
         }
             
 
