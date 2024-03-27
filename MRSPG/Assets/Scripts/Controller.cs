@@ -48,14 +48,14 @@ public class Controller : MonoBehaviour
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
         controls.Gameplay.Fire.performed += gun.Shoot;
-        if (pauseUI != null)
-        {
-            lockOnSystem.paused = true;
-        }
         controls.Gameplay.Attack.performed += playerAttack.Attack;
-        controls.FreezeActions.TutorialConfirm.started += Tutorial.BeginHoldAnim;
-        controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
-        controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
+        if (pauseUI != null) { lockOnSystem.paused = true; }
+        if (Tutorial != null)
+        {
+            controls.FreezeActions.TutorialConfirm.started += Tutorial.BeginHoldAnim;
+            controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
+            controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
+        }
     }
 
     private void OnDisable()

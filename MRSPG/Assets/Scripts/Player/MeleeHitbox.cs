@@ -5,7 +5,6 @@ using UnityEngine;
 public class MeleeHitbox : MonoBehaviour
 {
     private Metronome metronome;
-    private BoxCollider boxCollider;
     private PlayerAttack playerAttack;
     private Energy energy;
     private int MeleeCombo;

@@ -156,19 +156,22 @@ public class InputControls : MonoBehaviour
             yield return null;
         }
         if (type == "Movement") 
-        { 
+        {
+            DashParticle.Stop();
+            targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+            float extensionAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             while (dashBoost > 0)
             {
                 targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-                controller.Move(targetDirection.normalized * speed * dashBoost * Time.deltaTime / 2);
+                Vector3 targetDirection = (Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward).normalized;
+                controller.Move(targetDirection * speed * dashBoost * Time.deltaTime / 4f);
                 dashBoost -= Time.deltaTime * 1.5f;
+                if (Mathf.Abs(extensionAngle - angle) > 15) { break; }
                 yield return null;
             }
             dashing = false;
-            DashParticle.Stop();
         }
     }
 

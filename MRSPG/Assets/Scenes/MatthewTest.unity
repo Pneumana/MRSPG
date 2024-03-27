@@ -19029,6 +19029,7 @@ MonoBehaviour:
   gun: {fileID: 2118025195}
   playerAttack: {fileID: 2140213195}
   pauseUI: {fileID: 0}
+  Tutorial: {fileID: 0}
   lookInput: {x: 0, y: 0}
 --- !u!43 &1800008685
 Mesh:
@@ -23292,6 +23293,10 @@ PrefabInstance:
       propertyPath: _energyImg
       value: 
       objectReference: {fileID: 1729534382}
+    - target: {fileID: 1919045023972727852, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: BPM
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -23302,15 +23307,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.1311271
+      value: 0.13112712
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000017057818
+      value: -0.000000017057811
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000022562232
+      value: 0.0000000022562225
       objectReference: {fileID: 0}
     - target: {fileID: 3542079830494544691, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_Enabled
@@ -23412,11 +23417,20 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 522244520}
+    - target: {fileID: 7736252332254542363, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 7736252332254542363, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.999
+      objectReference: {fileID: 0}
     - target: {fileID: 9041771564103141655, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7181026367274230907, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
     m_RemovedGameObjects:
     - {fileID: 7908273804578983696, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
     m_AddedGameObjects: []
