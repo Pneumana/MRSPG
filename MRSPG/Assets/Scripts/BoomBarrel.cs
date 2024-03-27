@@ -15,6 +15,8 @@ public class BoomBarrel : MonoBehaviour
     Health _playerHealth;
     [SerializeField]
     BoomBarrel _boomAgain;
+    [SerializeField]
+    ParticleSystem ps;
 
     #endregion
 
@@ -27,7 +29,10 @@ public class BoomBarrel : MonoBehaviour
             Debug.LogError ( "Player is NULL" );
         }
 
-        _boomAgain= GameObject.Find("Boom Barrel").GetComponent<BoomBarrel>();
+        //Formerly
+        //_boomAgain= GameObject.Find("Boom Barrel").GetComponent<BoomBarrel>();
+        //not sure if that line is needed but there's a null ref error happening because of "Boom Barrel" not existing
+        _boomAgain = GetComponent<BoomBarrel>();
 
         if ( _boomAgain == null )
         {
@@ -47,10 +52,11 @@ public class BoomBarrel : MonoBehaviour
 
     public void Explode ( )
     {
-        currentHealth -= 1;
+        currentHealth = 0;
 
         if ( currentHealth == 0 )
         {
+            ps.Play ( );
             DetectionAfterExplosion ( );
             StartCoroutine ( PauseBeforeGone ( ) );
         }
@@ -62,11 +68,21 @@ public class BoomBarrel : MonoBehaviour
 
         foreach( var collider in colliders )
         {
-            DealDamage ( );
+            var enemyBody = collider.gameObject.GetComponent<EnemyBody>();
+            var barrel = collider.gameObject.GetComponent<BoomBarrel>();
+            if (enemyBody != null)
+            {
+                enemyBody.ModifyHealth(5);
+            }
+            if (barrel != null && barrel != this)
+            {
+                barrel.Explode();
+            }
+            //DealDamage ( );
             return;
         }
     }
-
+    //the player would be taking damage every time this went off, so im chaning it to damage the player if they are close enough to be hurt by it.
     void DealDamage ( )
     {
         _playerHealth.LoseHealth ( 5 );

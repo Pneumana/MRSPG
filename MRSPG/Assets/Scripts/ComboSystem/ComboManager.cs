@@ -57,8 +57,8 @@ public class ComboManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
-            if(Metronome.inst.IsOnBeat())
-                AddEvent("Onbeat", 10);
+            //if(Metronome.inst.IsOnBeat())
+                AddEvent("Test", 75);
             //else
                 //AddEvent("Offbeat", 10);
         }
