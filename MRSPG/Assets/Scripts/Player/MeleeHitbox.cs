@@ -22,7 +22,6 @@ public class MeleeHitbox : MonoBehaviour
         Collider[] Hit = Physics.OverlapBox(transform.position, HitboxSize, transform.rotation);
         foreach (Collider collider in Hit)
         {
-            Debug.Log(Hit.Length);
             if (collider.gameObject.TryGetComponent<EnemyBody>(out var enemyBody) && collider.gameObject.TryGetComponent<Enemy>(out var enemy))
             {
                 playerAttack.DealtDamage = true;
