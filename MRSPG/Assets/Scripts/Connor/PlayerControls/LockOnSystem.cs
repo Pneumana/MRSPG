@@ -164,7 +164,7 @@ public class LockOnSystem : MonoBehaviour
                 }*/
         if (trackedEnemy == null)
         {
-            Debug.Log("tracked enemy is null");
+            //Debug.Log("tracked enemy is null");
             HideTargets();
             CreateTargeters();
             bool swap = false;
@@ -467,7 +467,7 @@ public class LockOnSystem : MonoBehaviour
                 if (enemies[i] != hit.collider.gameObject)
                 {
                     targeters[i].GetComponent<Image>().color = Color.clear;
-                    Debug.Log(hit.collider.gameObject.name + " stopped " + enemies[i] + " from being hit");
+                    //Debug.Log(hit.collider.gameObject.name + " stopped " + enemies[i] + " from being hit");
                     continue;
                 }
             }
@@ -492,7 +492,7 @@ public class LockOnSystem : MonoBehaviour
         float right = float.MaxValue;
         if(validEnemies.Count == 0)
         {
-            Debug.Log("stopping lock on, no targets");
+            //Debug.Log("stopping lock on, no targets");
             StopLockOn();
             
             return;
@@ -530,7 +530,7 @@ public class LockOnSystem : MonoBehaviour
     }
     public void CreateTargeters()
     {
-        Debug.Log("creating targeters");
+        //Debug.Log("creating targeters");
         //update enemy list
         UpdateEnemyList();
         //create targets for each enemy
@@ -566,7 +566,7 @@ public class LockOnSystem : MonoBehaviour
 
 
         //hides all targeters and lets the camera be controlled as normal.
-        Debug.Log("stopping lock on");
+        //Debug.Log("stopping lock on");
         HideTargets();
         targetTime = maxTimeScale;
         freeAim = true;

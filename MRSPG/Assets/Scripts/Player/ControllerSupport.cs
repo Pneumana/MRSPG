@@ -107,6 +107,15 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TutorialConfirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""ba1aa6b3-adeb-46d1-a2dc-1100bfa3e2fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=1)"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -373,6 +382,45 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dedf207e-fd92-48de-8a49-38ea84e70ee5"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TutorialConfirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""FreezeActions"",
+            ""id"": ""ddbcfcd1-65ac-47cd-ab53-af4004eb0373"",
+            ""actions"": [
+                {
+                    ""name"": ""TutorialConfirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""356c6454-1ed7-45fc-9077-dd2ea6dc0f9d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=1)"",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""7edbfa4e-0af7-4779-960d-57ff2bdebbab"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TutorialConfirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -424,6 +472,10 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         m_Gameplay_Fire = m_Gameplay.FindAction("Fire", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
         m_Gameplay_PauseGame = m_Gameplay.FindAction("PauseGame", throwIfNotFound: true);
+        m_Gameplay_TutorialConfirm = m_Gameplay.FindAction("TutorialConfirm", throwIfNotFound: true);
+        // FreezeActions
+        m_FreezeActions = asset.FindActionMap("FreezeActions", throwIfNotFound: true);
+        m_FreezeActions_TutorialConfirm = m_FreezeActions.FindAction("TutorialConfirm", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -494,6 +546,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Fire;
     private readonly InputAction m_Gameplay_Attack;
     private readonly InputAction m_Gameplay_PauseGame;
+    private readonly InputAction m_Gameplay_TutorialConfirm;
     public struct GameplayActions
     {
         private @ControllerSupport m_Wrapper;
@@ -507,6 +560,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Gameplay_Fire;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
         public InputAction @PauseGame => m_Wrapper.m_Gameplay_PauseGame;
+        public InputAction @TutorialConfirm => m_Wrapper.m_Gameplay_TutorialConfirm;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -543,6 +597,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @PauseGame.started += instance.OnPauseGame;
             @PauseGame.performed += instance.OnPauseGame;
             @PauseGame.canceled += instance.OnPauseGame;
+            @TutorialConfirm.started += instance.OnTutorialConfirm;
+            @TutorialConfirm.performed += instance.OnTutorialConfirm;
+            @TutorialConfirm.canceled += instance.OnTutorialConfirm;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -574,6 +631,9 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
             @PauseGame.started -= instance.OnPauseGame;
             @PauseGame.performed -= instance.OnPauseGame;
             @PauseGame.canceled -= instance.OnPauseGame;
+            @TutorialConfirm.started -= instance.OnTutorialConfirm;
+            @TutorialConfirm.performed -= instance.OnTutorialConfirm;
+            @TutorialConfirm.canceled -= instance.OnTutorialConfirm;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -591,6 +651,52 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // FreezeActions
+    private readonly InputActionMap m_FreezeActions;
+    private List<IFreezeActionsActions> m_FreezeActionsActionsCallbackInterfaces = new List<IFreezeActionsActions>();
+    private readonly InputAction m_FreezeActions_TutorialConfirm;
+    public struct FreezeActionsActions
+    {
+        private @ControllerSupport m_Wrapper;
+        public FreezeActionsActions(@ControllerSupport wrapper) { m_Wrapper = wrapper; }
+        public InputAction @TutorialConfirm => m_Wrapper.m_FreezeActions_TutorialConfirm;
+        public InputActionMap Get() { return m_Wrapper.m_FreezeActions; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(FreezeActionsActions set) { return set.Get(); }
+        public void AddCallbacks(IFreezeActionsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_FreezeActionsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_FreezeActionsActionsCallbackInterfaces.Add(instance);
+            @TutorialConfirm.started += instance.OnTutorialConfirm;
+            @TutorialConfirm.performed += instance.OnTutorialConfirm;
+            @TutorialConfirm.canceled += instance.OnTutorialConfirm;
+        }
+
+        private void UnregisterCallbacks(IFreezeActionsActions instance)
+        {
+            @TutorialConfirm.started -= instance.OnTutorialConfirm;
+            @TutorialConfirm.performed -= instance.OnTutorialConfirm;
+            @TutorialConfirm.canceled -= instance.OnTutorialConfirm;
+        }
+
+        public void RemoveCallbacks(IFreezeActionsActions instance)
+        {
+            if (m_Wrapper.m_FreezeActionsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IFreezeActionsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_FreezeActionsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_FreezeActionsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public FreezeActionsActions @FreezeActions => new FreezeActionsActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -629,5 +735,10 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnPauseGame(InputAction.CallbackContext context);
+        void OnTutorialConfirm(InputAction.CallbackContext context);
+    }
+    public interface IFreezeActionsActions
+    {
+        void OnTutorialConfirm(InputAction.CallbackContext context);
     }
 }

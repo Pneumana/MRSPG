@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Windows;
 using static UnityEngine.InputSystem.InputAction;
 
 public class Controller : MonoBehaviour
@@ -15,6 +16,7 @@ public class Controller : MonoBehaviour
     public Gun gun;
     public PlayerAttack playerAttack;
     public PauseMenu pauseUI;
+    public Tutorial Tutorial;
     [HideInInspector] public ControllerSupport controls;
 
     public Vector2 lookInput;
@@ -51,6 +53,9 @@ public class Controller : MonoBehaviour
             lockOnSystem.paused = true;
         }
         controls.Gameplay.Attack.performed += playerAttack.Attack;
+        controls.FreezeActions.TutorialConfirm.started += Tutorial.BeginHoldAnim;
+        controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
+        controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
     }
 
     private void OnDisable()

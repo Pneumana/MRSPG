@@ -15,7 +15,7 @@ public class BossRoom : MonoBehaviour
     private float max;
     private float current;
     private float target;
-    private bool running;
+    public bool running;
 
     private void Start()
     {
@@ -26,8 +26,9 @@ public class BossRoom : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         FledFight = false;
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
+            Fill.fillAmount = target;
             if(!StartFight)
             {
                 Fill.fillAmount = 1f;
@@ -38,6 +39,18 @@ public class BossRoom : MonoBehaviour
             //change music to boss music
         }
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (StartFight && !FledFight)
+        {
+            current = enemy.health;
+            target = current / max;
+            if (!running) StartCoroutine(LoseHealthAnim());
+            Fill.color = gradient.Evaluate(1f - Fill.fillAmount);
+            if (enemy == null) { BossHealthBar.SetActive(false); }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -51,17 +64,6 @@ public class BossRoom : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if(StartFight && !FledFight)
-        {
-            current = enemy.health;
-            target = current / max;
-            if (!running) StartCoroutine(LoseHealthAnim());
-            Fill.color = gradient.Evaluate(1f - Fill.fillAmount);
-            if(enemy == null) { BossHealthBar.SetActive(false); }
-        }
-    }
     IEnumerator LoseHealthAnim()
     {
         running = true;
