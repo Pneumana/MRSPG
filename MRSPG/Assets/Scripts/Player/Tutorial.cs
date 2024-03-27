@@ -48,9 +48,9 @@ public class Tutorial : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Paused();
         if(collision.CompareTag("TutorialTrigger"))
         {
+            Paused();
             tutorialText.text = strings[index];
             TutorialScreen.SetActive(true);
             index++;
@@ -61,6 +61,7 @@ public class Tutorial : MonoBehaviour
 
     public void Paused()
     {
+        Debug.Log("paused");
         cam.enabled = false;
         Controller.inst.controls.Gameplay.Disable();
         Controller.inst.controls.FreezeActions.Enable();
