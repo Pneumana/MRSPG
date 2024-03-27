@@ -1,34 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MeleeHitbox : MonoBehaviour
 {
+    #region Variables
     private Metronome metronome;
     private PlayerAttack playerAttack;
+    private InputControls inputControls;
     private Energy energy;
-    private int MeleeCombo;
     public Vector3 HitboxSize;
+    #endregion
 
     void Start()
     {
         metronome = GameObject.Find("Metronome").GetComponent<Metronome>();
         playerAttack = GameObject.Find("Player").GetComponent<PlayerAttack>();
+        inputControls = GameObject.Find("Player").GetComponent<InputControls>();
         energy = GameObject.Find("Player").GetComponent<Energy>();
-        MeleeCombo = 1;
     }
     public void MeleeAttack(int meleeCombo)
     {
         Collider[] Hit = Physics.OverlapBox(transform.position, HitboxSize, transform.rotation);
         foreach (Collider collider in Hit)
         {
-            if (collider.gameObject.TryGetComponent<EnemyBody>(out var enemyBody) && collider.gameObject.TryGetComponent<Enemy>(out var enemy))
+            if (collider.gameObject.TryGetComponent<EnemyBody>(out var enemyBody) && collider.gameObject.TryGetComponent<Enemy>(out var enemy)) //checks if target collider is from an enemy, also gets target's scripts
             {
                 playerAttack.DealtDamage = true;
-                switch (MeleeCombo)
+                switch (meleeCombo)
                 {
                     default:
-                        Debug.LogError("Invalid value for MeleeCombo: " + MeleeCombo);
+                        Debug.LogError("Invalid value for MeleeCombo: " + meleeCombo);
                         break;
                     case 1:
                         enemyBody.ModifyHealth(1);
@@ -49,7 +52,8 @@ public class MeleeHitbox : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        if (EnemyInRange()) { Gizmos.color = Color.blue; }
+        else { Gizmos.color = Color.gray; }
         Vector3[] vertices = GetRotatedCubeVertices(transform.position, transform.rotation, HitboxSize);
 
         for (int i = 0; i < 4; i++)
@@ -77,5 +81,10 @@ public class MeleeHitbox : MonoBehaviour
         vertices[7] = rotation * new Vector3(-halfSize.x, halfSize.y, halfSize.z) + position;
 
         return vertices;
+    }
+    public bool EnemyInRange()
+    {
+        if (inputControls == null) return false;
+        return Physics.CheckBox(transform.position, HitboxSize, transform.rotation, inputControls.enemyLayer);
     }
 }

@@ -33,8 +33,8 @@ public class PlayerAttack : MonoBehaviour
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
-        if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; }
-        if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
+        if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; } //anti button spam
+        if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
             MeleeCombo = 1;
             HealCombo = true;
@@ -46,6 +46,7 @@ public class PlayerAttack : MonoBehaviour
         }
         if (lockOnSystem.trackedEnemy != null && !lockOnSystem.freeAim)
         {
+            //points towards locked on enemy for melee
             Vector3 enemyDirection = (lockOnSystem.trackedEnemy.transform.position - playerObj.transform.position).normalized;
             EnemyDir = new Vector3(enemyDirection.x, 0, enemyDirection.z);
             player.transform.forward = EnemyDir;
@@ -63,24 +64,16 @@ public class PlayerAttack : MonoBehaviour
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (/*!EnemyInRange() && */inputControls.canDash) 
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (HealCombo)
                 {
-                    StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide"));
-                    if (HealCombo) 
-                    {
-                        Health health = player.GetComponent<Health>();
-                        if(health.currentHealth < 4) { health.LoseHealth(-1); }
-                    }
+                    Health health = player.GetComponent<Health>();
+                    if (health.currentHealth < 4) { health.LoseHealth(-1); }
                 }
                 break;
         }
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
         meleeHitbox.MeleeAttack(MeleeCombo);
-    }
-
-    public bool EnemyInRange()
-    {
-        return Physics.CheckBox(meleeHitbox.transform.position, meleeHitbox.HitboxSize, meleeHitbox.transform.rotation, inputControls.enemyLayer);
     }
 }
