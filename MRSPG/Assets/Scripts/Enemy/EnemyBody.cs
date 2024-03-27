@@ -90,16 +90,25 @@ public class EnemyBody : MonoBehaviour
         {
             if(airTime > 1)
             {
+                    airTime = 0;
                     Debug.Log("floor splat");
 
                 //take fall damage
-                ModifyHealth(5);
-            }
-                airTime = 0;
-                EnablePathfinding();
-                me.enabled = true;
-                rb.isKinematic = true;
-                Debug.Log(gameObject.name + " recovered from fall");
+                ModifyHealth(1);
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                else if(airTime > 0)
+                {
+                    airTime = 0;
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                
             }
         }
             
@@ -177,9 +186,9 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        //Debug.Log(gameObject.name + " pushed by player");
+        Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
-        if (!InputControls.instance.canDash)
+        if (InputControls.instance.dashTime > 0)
         {
             Shoved(player.forward * dashImpact, "Dash");
         }
@@ -197,7 +206,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        //Debug.Log(gameObject.name + " shoved");
+        Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
         DoWallDamage = (source == "Dash");
