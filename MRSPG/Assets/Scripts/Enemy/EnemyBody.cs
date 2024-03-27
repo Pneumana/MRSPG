@@ -14,8 +14,13 @@ public class EnemyBody : MonoBehaviour
     private int maxHealth;
     [SerializeField] float dashImpact = 3;
 
+    public bool grounded;
     public bool pushedBack;
     public bool disablePathfinding;
+
+    public bool gravityAffected = true;
+
+    float airTime = 0;
 
     public bool bounceOffPlayer;
 
@@ -23,7 +28,7 @@ public class EnemyBody : MonoBehaviour
 
     Rigidbody rb;
     public NavMeshAgent me;
-
+    Transform groundCheck;
     [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
 
     // Start is called before the first frame update
@@ -31,6 +36,9 @@ public class EnemyBody : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         me = GetComponent<NavMeshAgent>();
+        groundCheck = transform.Find("GroundCheck");
+        if(groundCheck!=null)
+            groundCheck.transform.position += Vector3.up * Time.deltaTime;
         player = GameObject.Find("PlayerObj");
         SetEnemyData(_enemy);
     }
@@ -68,6 +76,28 @@ public class EnemyBody : MonoBehaviour
     private void Update()
     {
         //add some sort of airborne check?
+        if (gravityAffected)
+        {
+
+        grounded = Physics.Raycast(groundCheck.position, Vector3.down, (rb.velocity.y*Time.deltaTime) + Time.deltaTime, LayerMask.GetMask("Ground", "Default"));
+
+        if (!grounded)
+        {
+            airTime += Time.deltaTime;
+            DisablePathfinding();
+        }
+        else
+        {
+            if(airTime > 1)
+            {
+                    Debug.Log("floor splat");
+                airTime = 0;
+                //take fall damage
+                ModifyHealth(5);
+            }
+        }
+        }
+            
 
         if (pushedBack)
         {
@@ -92,7 +122,7 @@ public class EnemyBody : MonoBehaviour
             {
                 if (me != null)
                 {
-                    if (!me.enabled)
+                    if (!me.enabled && grounded && gravityAffected || !me.enabled && !gravityAffected)
                     {
                         me.enabled = true;
                         rb.isKinematic = true;
