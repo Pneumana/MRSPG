@@ -421,6 +421,17 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""action"": ""TutorialConfirm"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4180be7f-ee05-426e-99b6-2bfa015f2b7f"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TutorialConfirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }

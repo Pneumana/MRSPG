@@ -60,13 +60,14 @@ public class Enemy : MonoBehaviour
     bool playerInRange;
     bool ShootingRange;
     public bool PlayerIsInSight;
+    public bool LookAt = true;
     bool aggro = false;
     LayerMask PlayerMask;
 
     LayerMask GroundMask;
     private Metronome Metronome;
     GameObject Flare;
-    bool FlarePlayed;
+    private bool FlarePlayed;
     #endregion
 
     #region Define Enemy
@@ -209,7 +210,7 @@ public class Enemy : MonoBehaviour
         {
             StartCoroutine(WarningPopUp());
         }
-        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
+        if(LookAt && CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
             transform.LookAt(lookatvector);
         }

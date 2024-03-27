@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using Unity.VisualScripting;
 using Cinemachine;
+using System;
 
 public class Tutorial : MonoBehaviour
 {
@@ -51,9 +52,17 @@ public class Tutorial : MonoBehaviour
         if(collision.CompareTag("TutorialTrigger"))
         {
             Paused();
-            tutorialText.text = strings[index];
+            tutorialText.text = collision.GetComponent<SetTutorialPoint>().text;
             TutorialScreen.SetActive(true);
             index++;
+            if(collision.GetComponent<SetTutorialPoint>().disableAction)
+            {
+                string action = collision.GetComponent<SetTutorialPoint>().thisAction.name;
+                //collision.GetComponent<SetTutorialPoint>().thisAction.action.Disable();
+                collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).Disable();
+                //collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).Disable();
+                Debug.LogWarning(action + " enabled: " + collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).enabled);
+            }
         }
         Destroy(collision.gameObject, 0.1f);
     }
