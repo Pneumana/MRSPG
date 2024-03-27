@@ -22,6 +22,7 @@ public class BoomBarrel : MonoBehaviour
 
     private void Awake ( )
     {
+        ps.Stop();
         _playerHealth = GameObject.Find ( "Player" ).GetComponent<Health> ( );
 
         if ( _playerHealth == null )

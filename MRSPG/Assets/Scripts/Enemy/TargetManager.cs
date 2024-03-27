@@ -93,8 +93,4 @@ public class TargetManager : MonoBehaviour
         }
         return false;
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, gizmosize);
-    }
 }
