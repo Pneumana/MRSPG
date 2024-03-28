@@ -190,12 +190,19 @@ public class InputControls : MonoBehaviour
 
         if (movePlayer.magnitude >= 0.1f)
         {
+            animator.SetBool("Walking", true);
+
+
             float targetAngle = Mathf.Atan2(movePlayer.x, movePlayer.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward * playerInput.magnitude;
             controller.Move(moveDirection * Time.deltaTime * speed);
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
         }
     }
 

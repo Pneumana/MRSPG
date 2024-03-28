@@ -20,7 +20,7 @@ public class Metronome : MonoBehaviour
     [SerializeField] Sprite beatIcon;
 
     public Image visualizer;
-    bool onBeat;
+    public bool onBeat;
 
     public static Metronome inst;
 
@@ -139,8 +139,8 @@ public class Metronome : MonoBehaviour
             {
                 flip = false;
                 onBeat = true;
-                /*ls.color = new Color(1, 0, 1, Mathf.Clamp01(percent + 0.25f));
-                rs.color = new Color(1, 0, 1, Mathf.Clamp01(percent + 0.25f));*/
+                ls.color = new Color(1, 0, 1, 1);
+                rs.color = new Color(1, 0, 1, 1);
             }
             yield return new WaitForSeconds(0);
         } while (t < _interval);
@@ -150,13 +150,15 @@ public class Metronome : MonoBehaviour
             t += Time.deltaTime;
             var percent = t / (_interval * forgivness);
             onBeat = true;
-            ls.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
-            rs.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
+            ls.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
+            rs.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
             //right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
             //left.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
 
             yield return new WaitForSeconds(0);
-        } while (t < _interval * 0.25f);
+        } while (t < _interval * forgivness);
+        //this forgiveness used to be 0.25f
+
         onBeat = false;
         Destroy(left);
         Destroy(right);
