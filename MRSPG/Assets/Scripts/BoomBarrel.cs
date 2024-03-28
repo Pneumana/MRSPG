@@ -13,16 +13,17 @@ public class BoomBarrel : MonoBehaviour
 
     [SerializeField]
     Health _playerHealth;
+
     [SerializeField]
     BoomBarrel _boomAgain;
+
     [SerializeField]
-    ParticleSystem ps;
+    GameObject _explosion;
 
     #endregion
 
     private void Awake ( )
     {
-        ps.Stop();
         _playerHealth = GameObject.Find ( "Player" ).GetComponent<Health> ( );
 
         if ( _playerHealth == null )
@@ -111,12 +112,10 @@ public class BoomBarrel : MonoBehaviour
     {
 
         yield return new WaitForSeconds ( 0.5f );
-        ps.Play();
+        _explosion = Instantiate ( _explosion , transform.position , Quaternion.identity );
         DetectionAfterExplosion();
 
-
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds ( 0.6f );
         Destroy ( this.gameObject );
     }
 
