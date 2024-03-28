@@ -20,7 +20,7 @@ public class EnemyBody : MonoBehaviour
 
     public bool gravityAffected = true;
 
-    float airTime = 0;
+    public float airTime = 0;
 
     public bool bounceOffPlayer;
 
@@ -78,9 +78,9 @@ public class EnemyBody : MonoBehaviour
         //add some sort of airborne check?
         if (gravityAffected)
         {
-
-        grounded = Physics.Raycast(groundCheck.position, Vector3.down, (rb.velocity.y*Time.deltaTime) + Time.deltaTime, LayerMask.GetMask("Ground", "Default"));
-
+            if(!grounded)
+                grounded = Physics.Raycast(groundCheck.position, Vector3.down, (-rb.velocity.y*Time.deltaTime) + Time.deltaTime * 2, LayerMask.GetMask("Ground", "Default"));
+            Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
         if (!grounded)
         {
             airTime += Time.deltaTime;
@@ -90,12 +90,26 @@ public class EnemyBody : MonoBehaviour
         {
             if(airTime > 1)
             {
+                    airTime = 0;
                     Debug.Log("floor splat");
-                airTime = 0;
+
                 //take fall damage
-                ModifyHealth(5);
+                ModifyHealth(1);
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                else if(airTime > 0)
+                {
+                    airTime = 0;
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                
             }
-        }
         }
             
 
@@ -172,9 +186,9 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        //Debug.Log(gameObject.name + " pushed by player");
+        Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
-        if (!InputControls.instance.canDash)
+        if (InputControls.instance.dashTime > 0)
         {
             Shoved(player.forward * dashImpact, "Dash");
         }
@@ -192,7 +206,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        //Debug.Log(gameObject.name + " shoved");
+        Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
         DoWallDamage = (source == "Dash");
