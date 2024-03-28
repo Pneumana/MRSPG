@@ -61,5 +61,6 @@ public class Controller : MonoBehaviour
     private void OnDisable()
     {
         controls.Gameplay.Disable();
+        Debug.LogWarning("The controls have been disabled");
     }
 }

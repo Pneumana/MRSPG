@@ -16,6 +16,7 @@ public class Tutorial : MonoBehaviour
     public GameObject TutorialScreen;
     public TextMeshProUGUI tutorialText;
     public List<string> strings = new List<string>();
+    public LockOnSystem lockon;
 
 
     [Header("Animations")]
@@ -34,37 +35,20 @@ public class Tutorial : MonoBehaviour
     private void Start()
     {
         firstSpeed = player.speed;
-        Controller.inst.controls.Gameplay.TutorialConfirm.Disable();
         TutorialScreen.SetActive(false);
-        strings.Add("Shorter walls allow you to jump up onto them. Walk near the wall and jump to grab the ledge.");
-        strings.Add("Checkpoints are marked as the glowing obelisks.");
-        strings.Add("Try doing a delayed jump, walk off the ledge and jump before you hit the ground to gain distance.");
-        strings.Add("You can dash using " + "O" + ", dash after jumping to maintain height.");
-        strings.Add("Objects with an orange reticle will allow you to swap places with them and slow down time, swapping uses 20 energy. You can swap using " + "Left Trigger");
-        strings.Add("more tutorial this way yeaaaaaaaaaaaaaaaah");
-        strings.Add("Swapping with some objects can damage or kill an enemy.");
-        strings.Add("Dashing into an enemy will shove them, shoving them into a wall damages them.");
-        strings.Add("Enemies take fall damage. You don't.");
     }
 
     private void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("Tutorial was entered");
         if(collision.CompareTag("TutorialTrigger"))
         {
             Paused();
             tutorialText.text = collision.GetComponent<SetTutorialPoint>().text;
             TutorialScreen.SetActive(true);
             index++;
-            if(collision.GetComponent<SetTutorialPoint>().disableAction)
-            {
-                string action = collision.GetComponent<SetTutorialPoint>().thisAction.name;
-                //collision.GetComponent<SetTutorialPoint>().thisAction.action.Disable();
-                collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).Disable();
-                //collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).Disable();
-                Debug.LogWarning(action + " enabled: " + collision.GetComponent<SetTutorialPoint>().asset.FindAction(action).enabled);
-            }
+            Destroy(collision.gameObject, 0.1f);
         }
-        Destroy(collision.gameObject, 0.1f);
     }
 
 

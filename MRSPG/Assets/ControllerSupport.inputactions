@@ -85,15 +85,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "TutorialConfirm",
-                    "type": "Button",
-                    "id": "ba1aa6b3-adeb-46d1-a2dc-1100bfa3e2fa",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Hold(duration=1)",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -358,17 +349,6 @@
                     "processors": "",
                     "groups": "GamePad",
                     "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dedf207e-fd92-48de-8a49-38ea84e70ee5",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TutorialConfirm",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
