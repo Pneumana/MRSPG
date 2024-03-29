@@ -5052,6 +5052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
   PlayerIsInSight: 0
+  LookAt: 1
 --- !u!54 &5718658570044122340
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5121,8 +5122,10 @@ MonoBehaviour:
   pushedBack: 0
   disablePathfinding: 0
   gravityAffected: 1
+  airTime: 0
   bounceOffPlayer: 0
   me: {fileID: 6259879801344291348}
+  bounds: {fileID: 0}
   triggerList: []
 --- !u!114 &346610859913066772
 MonoBehaviour:
@@ -6128,6 +6131,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ec06f5a5fabeaec46b973b9fb88aa081, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4275493729689150764}
+    - targetCorrespondingSourceObject: {fileID: -8994599889093262911, guid: ec06f5a5fabeaec46b973b9fb88aa081, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1515548965065809198}
   m_SourcePrefab: {fileID: 100100000, guid: ec06f5a5fabeaec46b973b9fb88aa081, type: 3}
 --- !u!4 &2300055880324062 stripped
 Transform:
@@ -6201,6 +6207,24 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
     m_Visible: 1
+--- !u!1 &5301887846767126412 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8994599889093262911, guid: ec06f5a5fabeaec46b973b9fb88aa081, type: 3}
+  m_PrefabInstance: {fileID: 5384288553781421645}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1515548965065809198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301887846767126412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b16562dd6212a488e5714c8333c6c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mat: {fileID: 2100000, guid: 21325494f4ed15349b364e9047ab0c56, type: 2}
 --- !u!4 &5562627876541071782 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ec06f5a5fabeaec46b973b9fb88aa081, type: 3}
