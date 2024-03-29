@@ -31,6 +31,7 @@ public class Tutorial : MonoBehaviour
 
     private int index;
     public bool brokeHold;
+    private SetTutorialPoint point;
 
     private void Start()
     {
@@ -43,10 +44,18 @@ public class Tutorial : MonoBehaviour
         Debug.Log("Tutorial was entered");
         if(collision.CompareTag("TutorialTrigger"))
         {
-            Paused();
-            tutorialText.text = collision.GetComponent<SetTutorialPoint>().text;
-            TutorialScreen.SetActive(true);
-            index++;
+            point = collision.GetComponent<SetTutorialPoint>();
+            if (point.enableAction)
+            {
+                point.EnableActionInput();
+            }
+            if(point.pauseForTutorial)
+            {
+                Paused();
+                tutorialText.text = point.text;
+                TutorialScreen.SetActive(true);
+                index++;
+            }
             Destroy(collision.gameObject, 0.1f);
         }
     }
@@ -72,6 +81,11 @@ public class Tutorial : MonoBehaviour
         TutorialScreen.SetActive(false);
         Cursor.visible = true;
         player.speed = firstSpeed;
+
+        if (point.disableAction)
+        {
+            point.DisableActionInput();
+        }
     }
 
     IEnumerator HoldAnimation()

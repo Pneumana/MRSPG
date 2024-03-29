@@ -29,6 +29,7 @@ public class EnemyBody : MonoBehaviour
     Rigidbody rb;
     public NavMeshAgent me;
     Transform groundCheck;
+    [HideInInspector]public BattleBounds bounds;
     [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
 
     // Start is called before the first frame update
@@ -63,6 +64,7 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
+        bounds.enemies.Remove(this);
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/

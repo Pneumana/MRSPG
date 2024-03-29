@@ -9,37 +9,26 @@ using UnityEngine.InputSystem;
 public class SetTutorialPoint : MonoBehaviour
 {
     public string text;
-    public bool disableAction;
-    public bool enableAction;
-    public InputActionReference[] thisAction;
-    public InputActionReference DisplayThisAction;
+    public bool pauseForTutorial;
 
-    private void Start()
-    {
-    }
-    private void OnTriggerEnter(Collider collision)
-    {
-        Debug.Log("SetTutorialPoint was entered");
-        if (collision.CompareTag("Player"))
-        {
-            if(disableAction)
-            {
-                DisableActionInput();
-            }else if(enableAction)
-            {
-                EnableActionInput();
-            }
-        }
-    }
+    [Space(10)]
+    [Header("Enable or Disable an action")]
+    public bool enableAction;
+    public bool disableAction;
+
+    [Space(10)]
+    [Header("Actions")]
+    public InputActionReference[] actionsToDisable;
+    public InputActionReference actionToEnable;
 
     public void EnableActionInput()
     {
-        Controller.inst.controls.FindAction(DisplayThisAction.name).Enable();
+        Controller.inst.controls.FindAction(actionToEnable.name).Enable();
     }
 
     public void DisableActionInput()
     {
-        foreach(InputActionReference iar in thisAction)
+        foreach(InputActionReference iar in actionsToDisable)
         {
             Controller.inst.controls.FindAction(iar.name).Disable();
         }
