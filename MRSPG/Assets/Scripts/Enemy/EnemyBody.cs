@@ -51,7 +51,8 @@ public class EnemyBody : MonoBehaviour
     public void ModifyHealth(int mod)
     {
         health -= mod;
-
+        StartCoroutine(Wait(1f));
+        this.GetComponent<Animator>().SetBool("TakeDamage", true);
         if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
@@ -61,6 +62,13 @@ public class EnemyBody : MonoBehaviour
         {
             Die();
         }
+
+    }
+
+    private IEnumerator Wait(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        this.GetComponent<Animator>().SetBool("TakeDamage", false);
     }
     void Die()
     {
