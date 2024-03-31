@@ -182,12 +182,17 @@ public class LockOnSystem : MonoBehaviour
                 freeAim = false;
             if (!freeAim)
             {
-            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
-            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-            lockOnAssist.position = player.transform.position + player.transform.forward;
-            freeLook.m_LookAt = lockOnAssist;
+                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+                var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+                lockOnAssist.position = player.transform.position + player.transform.forward;
+                freeLook.m_LookAt = lockOnAssist;
 
             }
+            else
+            {
+                HideTargets();
+            }
+
             //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
             //eul = Quaternion.LookRotation(dirRot);
             //HideTargets();
@@ -432,7 +437,7 @@ public class LockOnSystem : MonoBehaviour
         {
             if (enemies[i]==null)
             {
-                
+                Debug.Log("current checked enemy is null, refreshing list");
                 StopLockOn();
                 HideTargets();
                 UpdateEnemyList();

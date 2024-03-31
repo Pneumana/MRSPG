@@ -226,7 +226,8 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
+        if(Animations!=null)
+            Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
         //Find the player position to move and look at
         targetPos = _enemy.PlayerObject.transform.position - transform.position;
         lookatvector = _enemy.PlayerObject.transform.position;
@@ -344,10 +345,12 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-        Animations.SetBool("Charge", true);
+        if(Animations!=null)
+            Animations.SetBool("Charge", true);
         if(!playerInRange)
         {
-            Animations.SetBool("Charge", false);
+            if (Animations != null)
+                Animations.SetBool("Charge", false);
         }
         //if (ChargeParticle != null) ChargeParticle.Play();
         PauseBeat = Metronome.BeatsPassed;
@@ -373,10 +376,12 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-        Animations.SetBool("Charge", false);
+        if (Animations != null)
+            Animations.SetBool("Charge", false);
         if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
-            Animations.SetBool("Attack", true);
+            if (Animations != null)
+                Animations.SetBool("Attack", true);
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
@@ -478,7 +483,8 @@ public class Enemy : MonoBehaviour
                         break;
                 }
                 yield return new WaitForSeconds(Metronome.GetInterval());
-                Animations.SetBool("Attack", false);
+                if(Animations!=null)
+                    Animations.SetBool("Attack", false);
             }
         }
         CanAttack = true;

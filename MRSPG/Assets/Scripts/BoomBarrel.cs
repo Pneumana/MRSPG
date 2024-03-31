@@ -7,7 +7,7 @@ public class BoomBarrel : MonoBehaviour
 {
     #region Variables
 
-    int _boomRadius = 3;
+    public int _boomRadius = 3;
     int _maxHealth = 1;
     public int currentHealth;
 
@@ -71,7 +71,7 @@ public class BoomBarrel : MonoBehaviour
 
     void DetectionAfterExplosion ( )
     {
-        Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius );
+        Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius, LayerMask.GetMask("Enemy", "Player", "Ground") );
         Debug.Log(colliders.Length + " objects were hit by explosion");
         foreach( Collider collider in colliders )
         {
@@ -92,7 +92,7 @@ public class BoomBarrel : MonoBehaviour
                 }
             }
             //DealDamage ( );
-            return;
+            //return;
         }
     }
     //the player would be taking damage every time this went off, so im chaning it to damage the player if they are close enough to be hurt by it.
