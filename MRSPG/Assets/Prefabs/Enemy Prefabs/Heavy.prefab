@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 1806071533087472895}
   - component: {fileID: 7889296279875113415}
   - component: {fileID: 4594952551856491519}
+  - component: {fileID: 7183952885416697967}
   m_Layer: 6
   m_Name: Heavy
   m_TagString: Enemy
@@ -450,6 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 6cf533dc63ff7e7429855d88c940c59e, type: 2}
   PlayerIsInSight: 0
+  LookAt: 1
 --- !u!54 &8922873744741203317
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -515,10 +517,14 @@ MonoBehaviour:
   _enemy: {fileID: 11400000, guid: 6cf533dc63ff7e7429855d88c940c59e, type: 2}
   health: 0
   dashImpact: 2
+  grounded: 0
   pushedBack: 0
   disablePathfinding: 0
+  gravityAffected: 1
+  airTime: 0
   bounceOffPlayer: 0
   me: {fileID: 4594952551856491519}
+  bounds: {fileID: 0}
   triggerList: []
 --- !u!114 &7889296279875113415
 MonoBehaviour:
@@ -533,6 +539,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 1806071533087472895}
+  EnemyHealthBar: {fileID: 0}
+  Fill: {fileID: 0}
   gradient:
     serializedVersion: 2
     key0: {r: 0.1991066, g: 0.6415094, b: 0.13616946, a: 1}
@@ -585,6 +593,28 @@ NavMeshAgent:
   m_BaseOffset: 1.62
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &7183952885416697967
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775273159864315173}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a9637520488f4034c863ceb97967bd83, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3741162483804110517
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -68,6 +68,8 @@ public class Enemy : MonoBehaviour
     private Metronome Metronome;
     GameObject Flare;
     private bool FlarePlayed;
+
+    bool charged;
     #endregion
 
     #region Define Enemy
@@ -106,7 +108,7 @@ public class Enemy : MonoBehaviour
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
         Metronome = Metronome.inst;
         enemyObj = gameObject.transform.GetChild(0);
-        Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
+        Animations = this.GetComponent<Animator>();
     }
 
     #endregion
@@ -224,6 +226,7 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
+        Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
         //Find the player position to move and look at
         targetPos = _enemy.PlayerObject.transform.position - transform.position;
         lookatvector = _enemy.PlayerObject.transform.position;
@@ -331,7 +334,7 @@ public class Enemy : MonoBehaviour
     private IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        Animations.SetBool("InRange", false);
+        //Animations.SetBool("InRange", false);
     }
     public void Stagger()
     {
@@ -341,11 +344,17 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-        if(ChargeParticle != null) ChargeParticle.Play();
+        Animations.SetBool("Charge", true);
+        if(!playerInRange)
+        {
+            Animations.SetBool("Charge", false);
+        }
+        //if (ChargeParticle != null) ChargeParticle.Play();
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
-        if (ChargeParticle != null) ChargeParticle.Stop();
+        //if (ChargeParticle != null) ChargeParticle.Stop();
+        charged = true;
     }
     private void Lunge()
     {
@@ -353,10 +362,10 @@ public class Enemy : MonoBehaviour
     }
     private void LightAttack(int Damage)
     {
-        if(Animations != null)
+        /*if(Animations != null)
         {
             Animations.SetBool("InRange", true);
-        }
+        }*/
         if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
@@ -364,8 +373,10 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        Animations.SetBool("Charge", false);
+        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
+            Animations.SetBool("Attack", true);
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
@@ -467,6 +478,7 @@ public class Enemy : MonoBehaviour
                         break;
                 }
                 yield return new WaitForSeconds(Metronome.GetInterval());
+                Animations.SetBool("Attack", false);
             }
         }
         CanAttack = true;
