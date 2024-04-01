@@ -345,11 +345,10 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-<<<<<<< Updated upstream
+
         if(Animations!=null)
             Animations.SetBool("Charge", true);
-=======
->>>>>>> Stashed changes
+
         if(!playerInRange)
         {
             if (Animations != null)
@@ -379,18 +378,20 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-<<<<<<< Updated upstream
+
         if (Animations != null)
             Animations.SetBool("Charge", false);
         if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
-            if (Animations != null)
-                Animations.SetBool("Attack", true);
-=======
-        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
-        {
->>>>>>> Stashed changes
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            /*if (Animations != null)
+                Animations.SetBool("Attack", true);*/
+
+            /*if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+            {
+
+                _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            }*/
         }
     }
     private IEnumerator Load(int beats)
@@ -497,13 +498,11 @@ public class Enemy : MonoBehaviour
                         break;
                 }
                 yield return new WaitForSeconds(Metronome.GetInterval());
-<<<<<<< Updated upstream
-                if(Animations!=null)
+                if (Animations != null)
+                {
+                    Animations.SetBool("Charge", false);
                     Animations.SetBool("Attack", false);
-=======
-                Animations.SetBool("Charge", false);
-                Animations.SetBool("Attack", false);
->>>>>>> Stashed changes
+                }
             }
         }
         CanAttack = true;
