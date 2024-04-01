@@ -61,8 +61,7 @@ public class FreezeBarrel : MonoBehaviour
 
     void Freeze ( )
     {
-        GameObject.Find ( "Player" ).GetComponent<CharacterController> ( ).gameObject.SetActive ( false );
-        GameObject.Find ( "Player" ).GetComponent<PlayerAttack> ( ).gameObject.SetActive ( false );
+        GameObject.Find ( "Player" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll;
         GameObject.FindWithTag ( "Enemy" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll; 
         Debug.Log ( "Everything is Frozen" );
         StartCoroutine ( Frozen ( ) );
