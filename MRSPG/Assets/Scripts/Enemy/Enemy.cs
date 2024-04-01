@@ -78,9 +78,13 @@ public class Enemy : MonoBehaviour
         EnemyType _enemytype = _enemy.type;
         gameObject.name = _enemy.EnemyName;
         gameObject.tag = "Enemy";
+        enemyObj = gameObject.transform.GetChild(0);
+        Animations = this.GetComponent<Animator>();
         switch (_enemytype)
         {
             case EnemyType.Standard:
+
+                Animations = enemyObj.GetComponent<Animator>();
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Heavy:
@@ -106,8 +110,6 @@ public class Enemy : MonoBehaviour
         _enemy.PlayerSettings = GameObject.Find("Player");
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
         Metronome = Metronome.inst;
-        enemyObj = gameObject.transform.GetChild(0);
-        Animations = this.GetComponent<Animator>();
     }
 
     #endregion
@@ -344,7 +346,8 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-        if(!playerInRange)
+        this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
+        if (!playerInRange)
         {
             if (Animations != null)
                 Animations.SetBool("Charge", false);
@@ -355,6 +358,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(Metronome.GetInterval());
         //if (ChargeParticle != null) ChargeParticle.Stop();
         charged = true;
+        this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
     }
     private void Lunge()
     {
@@ -464,6 +468,8 @@ public class Enemy : MonoBehaviour
                         StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
