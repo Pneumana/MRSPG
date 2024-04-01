@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 
 public class SetTutorialPoint : MonoBehaviour
 {
+    [TextArea(20, 20)]
     public string text;
     public bool pauseForTutorial;
 
