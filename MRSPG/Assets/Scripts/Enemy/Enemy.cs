@@ -67,7 +67,6 @@ public class Enemy : MonoBehaviour
     LayerMask GroundMask;
     private Metronome Metronome;
     GameObject Flare;
-    private bool FlarePlayed;
 
     bool charged;
     #endregion
@@ -345,10 +344,6 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-
-        if(Animations!=null)
-            Animations.SetBool("Charge", true);
-
         if(!playerInRange)
         {
             if (Animations != null)
@@ -367,10 +362,6 @@ public class Enemy : MonoBehaviour
     }
     private void LightAttack(int Damage)
     {
-        /*if(Animations != null)
-        {
-            Animations.SetBool("InRange", true);
-        }*/
         if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
@@ -384,24 +375,19 @@ public class Enemy : MonoBehaviour
         if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            /*if (Animations != null)
-                Animations.SetBool("Attack", true);*/
-
-            /*if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
-            {
-
-                _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            }*/
         }
     }
     private IEnumerator Load(int beats)
     {
-        FlarePlayed = true;
+        if (!ShootingRange)
+        {
+            if (Animations != null)
+                Animations.SetBool("Charge", false);
+        }
         Flare.SetActive(true);
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
-        FlarePlayed = false;
     }
     private IEnumerator Shoot(int Damage)
     {
@@ -472,22 +458,27 @@ public class Enemy : MonoBehaviour
                     default:
                         break;
                     case Attack.Charge:
-                        Animations.SetBool("Charge", true);
+
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
                         StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
-                        Animations.SetBool("Attack", true);
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
-                        Animations.SetBool("Charge", true);
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
                         StartCoroutine(Load(1));
                         break;
                     case Attack.Shoot:
-                        Animations.SetBool("Attack", true);
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
