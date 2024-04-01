@@ -345,8 +345,11 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
+<<<<<<< Updated upstream
         if(Animations!=null)
             Animations.SetBool("Charge", true);
+=======
+>>>>>>> Stashed changes
         if(!playerInRange)
         {
             if (Animations != null)
@@ -376,12 +379,17 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
+<<<<<<< Updated upstream
         if (Animations != null)
             Animations.SetBool("Charge", false);
         if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             if (Animations != null)
                 Animations.SetBool("Attack", true);
+=======
+        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        {
+>>>>>>> Stashed changes
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
@@ -396,6 +404,7 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Shoot(int Damage)
     {
+
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
@@ -431,6 +440,7 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
+        Animations.SetBool("Attack", false);
     }
     private void SpinAttack(int Damage)
     {
@@ -461,18 +471,22 @@ public class Enemy : MonoBehaviour
                     default:
                         break;
                     case Attack.Charge:
+                        Animations.SetBool("Charge", true);
                         StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
+                        Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
+                        Animations.SetBool("Charge", true);
                         StartCoroutine(Load(1));
                         break;
                     case Attack.Shoot:
+                        Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
@@ -483,8 +497,13 @@ public class Enemy : MonoBehaviour
                         break;
                 }
                 yield return new WaitForSeconds(Metronome.GetInterval());
+<<<<<<< Updated upstream
                 if(Animations!=null)
                     Animations.SetBool("Attack", false);
+=======
+                Animations.SetBool("Charge", false);
+                Animations.SetBool("Attack", false);
+>>>>>>> Stashed changes
             }
         }
         CanAttack = true;
