@@ -80,7 +80,7 @@ public class BoomBarrel : MonoBehaviour
             var barrel = collider.GetComponent<BoomBarrel>();
             if (enemyBody != null)
             {
-                enemyBody.ModifyHealth(5);
+                enemyBody.ModifyHealth(5, EnemyBody.DamageTypes.Explosive);
             }
             if (barrel != null )
             {
