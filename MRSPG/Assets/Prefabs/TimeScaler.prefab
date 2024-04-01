@@ -69,6 +69,9 @@ MonoBehaviour:
   lockon: {fileID: 0}
   enemies: []
   targeters: []
+  LOSMask:
+    serializedVersion: 2
+    m_Bits: 193
   enemyTracker: {fileID: 0}
   trackedEnemy: {fileID: 0}
   leftTrackedEnemy: {fileID: 0}
@@ -83,5 +86,13 @@ MonoBehaviour:
   maxTimeScale: 1
   scaleSpeed: 5
   targetTime: 1
+  paused: 0
   timeJuice: {fileID: 0}
+  lockOnAssist: {fileID: 0}
+  rangeFinder: {fileID: 0}
+  range: 25
   controller: {fileID: 0}
+  eul: {x: 0, y: 0, z: 0, w: 0}
+  freeAim: 1
+  sphere: {fileID: 0}
+  rangeMaterial: {fileID: 0}
