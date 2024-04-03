@@ -139,7 +139,7 @@ public class SybilLedgeGrab : MonoBehaviour
 
             if (!Controller.inst.controls.Gameplay.Move.WasPressedThisFrame())
                 return;
-            if (InputControls.instance.playerInput.y > 0)
+            if (InputControls.instance.playerInput.y > 0 && !Controller.inst.controls.Gameplay.Jump.WasPressedThisFrame())
             {
                 JumpLedge();
             }
