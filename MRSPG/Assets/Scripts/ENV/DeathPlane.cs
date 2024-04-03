@@ -56,10 +56,14 @@ public class DeathPlane : MonoBehaviour
 
         bimg.color = Color.clear;
         float t = 0;
+
+        var musicSource = Metronome.inst.gameObject.GetComponent<AudioSource>();
+        float volume = musicSource.volume;
         do
         {
             t+=Time.deltaTime;
             bimg.color = new Color(0, 0, 0, t);
+            musicSource.volume = Mathf.Lerp(volume, 0, t);
             yield return new WaitForSeconds(0);
         } while (t < 1);
 
@@ -80,6 +84,7 @@ public class DeathPlane : MonoBehaviour
         {
             t -= Time.deltaTime;
             bimg.color = new Color(0, 0, 0, t);
+            musicSource.volume = Mathf.Lerp(volume, 0, t);
             yield return new WaitForSeconds(0);
         } while (t > 0);
         Destroy(b);

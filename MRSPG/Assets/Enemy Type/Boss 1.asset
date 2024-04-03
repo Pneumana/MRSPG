@@ -17,17 +17,18 @@ MonoBehaviour:
   type: 4
   EnergyGainedOnBeat: 50
   EnergyGainedOffBeat: 50
-  EnemyHealth: 36
+  EnemyHealth: 10
   groundRadius: 2.5
-  Damage: 2
+  NavMeshSpeed: 7.5
+  NavMeshSlowedSpeed: 2
+  Damage: 0
   AttackRange: 10
-  TimeBetweenAttacks: 3
-  ChargeTime: 2
   Hitbox: {x: 8, y: 4, z: 5}
   HitboxOffset: 2.75
   FollowRange: 20
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
+  BossBullet: {fileID: 0}
   BossPattern:
   - pattern: 0000000000000000030000000100000003000000
   - pattern: 00000000060000000300000007000000

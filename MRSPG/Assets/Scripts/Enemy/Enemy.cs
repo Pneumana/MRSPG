@@ -51,7 +51,6 @@ public class Enemy : MonoBehaviour
 
     Animator Animations;
 
-    float maxdistance = 6f;
 
     [Header("Warning Pop Up")]
     GameObject Warning;
@@ -61,13 +60,15 @@ public class Enemy : MonoBehaviour
     bool playerInRange;
     bool ShootingRange;
     public bool PlayerIsInSight;
+    public bool LookAt = true;
     bool aggro = false;
     LayerMask PlayerMask;
 
     LayerMask GroundMask;
     private Metronome Metronome;
     GameObject Flare;
-    bool FlarePlayed;
+
+    bool charged;
     #endregion
 
     #region Define Enemy
@@ -77,9 +78,13 @@ public class Enemy : MonoBehaviour
         EnemyType _enemytype = _enemy.type;
         gameObject.name = _enemy.EnemyName;
         gameObject.tag = "Enemy";
+        enemyObj = gameObject.transform.GetChild(0);
+        Animations = this.GetComponent<Animator>();
         switch (_enemytype)
         {
             case EnemyType.Standard:
+
+                Animations = enemyObj.GetComponent<Animator>();
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 break;
             case EnemyType.Heavy:
@@ -105,8 +110,6 @@ public class Enemy : MonoBehaviour
         _enemy.PlayerSettings = GameObject.Find("Player");
         _enemy.PlayerObject = GameObject.Find("Player/PlayerObj");
         Metronome = Metronome.inst;
-        enemyObj = gameObject.transform.GetChild(0);
-        Animations = enemyObj.transform.GetChild(0).GetComponent<Animator>();
     }
 
     #endregion
@@ -210,7 +213,7 @@ public class Enemy : MonoBehaviour
         {
             StartCoroutine(WarningPopUp());
         }
-        if(CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
+        if(LookAt && CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
             transform.LookAt(lookatvector);
         }
@@ -224,6 +227,8 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
+        if(Animations!=null)
+            Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
         //Find the player position to move and look at
         targetPos = _enemy.PlayerObject.transform.position - transform.position;
         lookatvector = _enemy.PlayerObject.transform.position;
@@ -331,7 +336,7 @@ public class Enemy : MonoBehaviour
     private IEnumerator Waiter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        Animations.SetBool("InRange", false);
+        //Animations.SetBool("InRange", false);
     }
     public void Stagger()
     {
@@ -341,11 +346,19 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
-        if(ChargeParticle != null) ChargeParticle.Play();
+        this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
+        if (!playerInRange)
+        {
+            if (Animations != null)
+                Animations.SetBool("Charge", false);
+        }
+        //if (ChargeParticle != null) ChargeParticle.Play();
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
-        if (ChargeParticle != null) ChargeParticle.Stop();
+        //if (ChargeParticle != null) ChargeParticle.Stop();
+        charged = true;
+        this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
     }
     private void Lunge()
     {
@@ -353,10 +366,6 @@ public class Enemy : MonoBehaviour
     }
     private void LightAttack(int Damage)
     {
-        if(Animations != null)
-        {
-            Animations.SetBool("InRange", true);
-        }
         if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
@@ -364,22 +373,29 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+
+        if (Animations != null)
+            Animations.SetBool("Charge", false);
+        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
     }
     private IEnumerator Load(int beats)
     {
-        FlarePlayed = true;
+        if (!ShootingRange)
+        {
+            if (Animations != null)
+                Animations.SetBool("Charge", false);
+        }
         Flare.SetActive(true);
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
-        FlarePlayed = false;
     }
     private IEnumerator Shoot(int Damage)
     {
+
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
@@ -415,6 +431,7 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
+        Animations.SetBool("Attack", false);
     }
     private void SpinAttack(int Damage)
     {
@@ -445,18 +462,29 @@ public class Enemy : MonoBehaviour
                     default:
                         break;
                     case Attack.Charge:
+
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
                         StartCoroutine(Charge(1));
                         break;
                     case Attack.Light:
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                         break;
                     case Attack.Heavy:
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                         break;
                     case Attack.Load:
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
                         StartCoroutine(Load(1));
                         break;
                     case Attack.Shoot:
+                        if (Animations != null)
+                            Animations.SetBool("Attack", true);
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
@@ -467,6 +495,11 @@ public class Enemy : MonoBehaviour
                         break;
                 }
                 yield return new WaitForSeconds(Metronome.GetInterval());
+                if (Animations != null)
+                {
+                    Animations.SetBool("Charge", false);
+                    Animations.SetBool("Attack", false);
+                }
             }
         }
         CanAttack = true;

@@ -3816,6 +3816,9 @@ MonoBehaviour:
   lockon: {fileID: 406356939}
   enemies: []
   targeters: []
+  LOSMask:
+    serializedVersion: 2
+    m_Bits: 193
   enemyTracker: {fileID: 0}
   trackedEnemy: {fileID: 0}
   leftTrackedEnemy: {fileID: 0}
@@ -5746,7 +5749,7 @@ Transform:
   m_GameObject: {fileID: 635405174}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.753685, y: -0.02, z: -3.411}
+  m_LocalPosition: {x: 1.753685, y: 1.31, z: -3.411}
   m_LocalScale: {x: 9.345463, y: 12.525274, z: 11.692742}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19026,6 +19029,7 @@ MonoBehaviour:
   gun: {fileID: 2118025195}
   playerAttack: {fileID: 2140213195}
   pauseUI: {fileID: 0}
+  Tutorial: {fileID: 0}
   lookInput: {x: 0, y: 0}
 --- !u!43 &1800008685
 Mesh:
@@ -23289,6 +23293,10 @@ PrefabInstance:
       propertyPath: _energyImg
       value: 
       objectReference: {fileID: 1729534382}
+    - target: {fileID: 1919045023972727852, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: BPM
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -23309,6 +23317,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.0000000022562232
       objectReference: {fileID: 0}
+    - target: {fileID: 3542079830494544691, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4247233985874746351, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: control
       value: 
@@ -23323,6 +23335,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4454584165870712108, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: ToggleVisualBug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489598728952231665, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: HitboxSize.x
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489598728952231665, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: HitboxSize.y
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489598728952231665, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: HitboxSize.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5478294590396233370, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
@@ -23393,8 +23417,22 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 522244520}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    - target: {fileID: 7736252332254542363, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 7736252332254542363, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.999
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041771564103141655, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7181026367274230907, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 7908273804578983696, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}

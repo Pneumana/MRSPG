@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     public EnemyBody enemy;
-    private Image EnemyHealthBar;
-    private Image Fill;
+    [HideInInspector] public Image EnemyHealthBar;
+    [HideInInspector] public Image Fill;
     public Gradient gradient;
     private float max;
     private float current;

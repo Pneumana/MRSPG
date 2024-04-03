@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public int MeleeCombo; //Will be out of date if read by other scripts
     public int RecentAttack;
     public bool DealtDamage;
-    public int HealCombo;
+    public bool HealCombo;
     private Vector3 EnemyDir;
     private Metronome metronome;
     private MeleeHitbox meleeHitbox;
@@ -29,26 +29,26 @@ public class PlayerAttack : MonoBehaviour
         player = GameObject.Find("Player");
         playerObj = GameObject.Find("PlayerObj");
         MeleeCombo = 1;
-        HealCombo = 0;
+        HealCombo = true;
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
-        if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = 0; return; }
-        if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3)
+        if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; } //anti button spam
+        if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
             MeleeCombo = 1;
-            HealCombo = 0;
+            HealCombo = true;
         }
         else
         {
             MeleeCombo++;
-            if (Metronome.inst.IsOnBeat()) { HealCombo++; }
-            else { HealCombo = 0; }
+            if (!Metronome.inst.IsOnBeat()) { HealCombo = false; }
         }
         if (lockOnSystem.trackedEnemy != null && !lockOnSystem.freeAim)
         {
-            Vector3 EnemyDirection = (lockOnSystem.trackedEnemy.transform.position - playerObj.transform.position).normalized;
-            EnemyDir = new Vector3(EnemyDirection.x, 0, EnemyDirection.z);
+            //points towards locked on enemy for melee
+            Vector3 enemyDirection = (lockOnSystem.trackedEnemy.transform.position - playerObj.transform.position).normalized;
+            EnemyDir = new Vector3(enemyDirection.x, 0, enemyDirection.z);
             player.transform.forward = EnemyDir;
         }
         else
@@ -64,24 +64,16 @@ public class PlayerAttack : MonoBehaviour
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (/*!EnemyInRange() && */inputControls.canDash) 
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (HealCombo)
                 {
-                    StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide"));
-                    if (HealCombo == 3) 
-                    {
-                        Health health = player.GetComponent<Health>();
-                        if(health.currentHealth < 4) { health.LoseHealth(-1); }
-                    }
+                    Health health = player.GetComponent<Health>();
+                    if (health.currentHealth < 4) { health.LoseHealth(-1); }
                 }
                 break;
         }
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
-        StartCoroutine(meleeHitbox.MeleeAttack(MeleeCombo));
-    }
-
-    public bool EnemyInRange()
-    {
-        return Physics.CheckBox(meleeHitbox.transform.position, new Vector3(1.7f, 1.4f, 1), meleeHitbox.transform.rotation, inputControls.enemyLayer);//hitbox size value temporarily hard-coded for testing, if hitbox size changes this will be inaccurate.
+        meleeHitbox.MeleeAttack(MeleeCombo);
     }
 }

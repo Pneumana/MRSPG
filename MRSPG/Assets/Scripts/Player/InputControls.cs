@@ -13,6 +13,7 @@ public class InputControls : MonoBehaviour
     #region Variables
     [Header("Player Variables")]
     public CharacterController controller;
+    public GameObject player;
     public Transform playerObj;
     public float speed;
     public float jump;
@@ -21,7 +22,9 @@ public class InputControls : MonoBehaviour
     public float dashSpeed;
     public float dashTime;
     public bool canDash = true;
+    public bool dashing = false;
     public float dashCooldown;
+    public float dashBoost;
     private float targetAngle;
     public LayerMask enemyLayer;
     [SerializeField] ParticleSystem DashParticle;
@@ -67,6 +70,7 @@ public class InputControls : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.Find("Player");
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();
         if (instance == null)
@@ -103,15 +107,19 @@ public class InputControls : MonoBehaviour
         {
             velocity.y = -2f;
             canJump = true;
-            
+            dashBoost = 0;
         }
     }
 
     public IEnumerator ApplyDash(Vector3 direction, float speed, float time, bool liveUpdate, string type)
     {
-        if (type == "Movement") { canDash = false; }
         float startTime = Time.time;
-        if (type == "Movement") { DashParticle.Play(); }
+        if (type == "Movement") 
+        { 
+            canDash = false;
+            dashing = true;
+            DashParticle.Play();
+        }
         while (Time.time < startTime + time)
         {
             if (liveUpdate)
@@ -147,7 +155,24 @@ public class InputControls : MonoBehaviour
 
             yield return null;
         }
-        if (type == "Movement") { DashParticle.Stop(); }
+        if (type == "Movement") 
+        {
+            DashParticle.Stop();
+            targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+            float extensionAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
+            while (dashBoost > 0)
+            {
+                targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                Vector3 targetDirection = (Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward).normalized;
+                controller.Move(targetDirection * speed * dashBoost * Time.deltaTime / 4f);
+                dashBoost -= Time.deltaTime * 1.5f;
+                if (Mathf.Abs(extensionAngle - angle) > 15) { break; }
+                yield return null;
+            }
+            dashing = false;
+        }
     }
 
     IEnumerator Waiter(float seconds)
@@ -165,12 +190,19 @@ public class InputControls : MonoBehaviour
 
         if (movePlayer.magnitude >= 0.1f)
         {
+            animator.SetBool("Walking", true);
+
+
             float targetAngle = Mathf.Atan2(movePlayer.x, movePlayer.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward * playerInput.magnitude;
             controller.Move(moveDirection * Time.deltaTime * speed);
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
         }
     }
 
@@ -182,6 +214,7 @@ public class InputControls : MonoBehaviour
         {
             canJump = false;
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
+            if (dashing) { dashBoost = 1; }
             jumpParticles.Play();
         }
 
@@ -198,7 +231,7 @@ public class InputControls : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if(canDash)
+        if(canDash && !dashing)
         {
             StartCoroutine(ApplyDash(movePlayer, dashSpeed, dashTime, true, "Movement"));
             StartCoroutine(Waiter(dashCooldown));

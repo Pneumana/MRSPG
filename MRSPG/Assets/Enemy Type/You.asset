@@ -14,17 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyName: 
   pattern: 
-  type: 0
-  EnergyGainedOnBeat: 0
-  EnergyGainedOffBeat: 0
-  EnemyHealth: 0
-  groundRadius: 0
-  Damage: 0
-  AttackRange: 0
-  Hitbox: {x: 0, y: 0, z: 0}
-  HitboxOffset: 0
-  FollowRange: 0
+  type: 5
+  EnergyGainedOnBeat: 50
+  EnergyGainedOffBeat: 50
+  EnemyHealth: 50
+  groundRadius: 0.4
+  NavMeshSpeed: 0
+  NavMeshSlowedSpeed: 0
+  Damage: 1
+  AttackRange: 1
+  Hitbox: {x: 1.7, y: 1.3, z: 1}
+  HitboxOffset: 0.65
+  FollowRange: 30
   PlayerSettings: {fileID: 0}
   PlayerObject: {fileID: 0}
-  BossBullet: {fileID: 0}
-  BossPattern: []
+  BossBullet: {fileID: 4907508732921033233, guid: 3e2437561789daf42ba4fe826eadd81b, type: 3}
+  BossPattern:
+  - pattern: 00000000020000000200000002000000
+  - pattern: 0000000000000000
+  - pattern: 040000000400000005000000

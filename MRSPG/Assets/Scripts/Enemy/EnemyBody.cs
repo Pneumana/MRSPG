@@ -14,8 +14,13 @@ public class EnemyBody : MonoBehaviour
     private int maxHealth;
     [SerializeField] float dashImpact = 3;
 
+    public bool grounded;
     public bool pushedBack;
     public bool disablePathfinding;
+
+    public bool gravityAffected = true;
+
+    public float airTime = 0;
 
     public bool bounceOffPlayer;
 
@@ -23,14 +28,26 @@ public class EnemyBody : MonoBehaviour
 
     Rigidbody rb;
     public NavMeshAgent me;
-
+    Transform groundCheck;
+    [HideInInspector]public BattleBounds bounds;
     [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
+
+    public List<DamageTypes> Immunities = new List<DamageTypes>();
+
+    public enum DamageTypes
+    {
+        Basic,
+        Explosive
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         me = GetComponent<NavMeshAgent>();
+        groundCheck = transform.Find("GroundCheck");
+        if(groundCheck!=null)
+            groundCheck.transform.position += Vector3.up * Time.deltaTime;
         player = GameObject.Find("PlayerObj");
         SetEnemyData(_enemy);
     }
@@ -39,10 +56,14 @@ public class EnemyBody : MonoBehaviour
         health = _enemy.EnemyHealth;
     }
 
-    public void ModifyHealth(int mod)
+    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Explosive)
     {
+        if(Immunities.Contains(type))
+            return;
         health -= mod;
-
+        StartCoroutine(Wait(1f));
+        if(this.GetComponent<Animator>()!=null)
+            this.GetComponent<Animator>().SetBool("TakeDamage", true);
         if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
@@ -52,9 +73,19 @@ public class EnemyBody : MonoBehaviour
         {
             Die();
         }
+
+    }
+
+    private IEnumerator Wait(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        if (this.GetComponent<Animator>() != null)
+            this.GetComponent<Animator>().SetBool("TakeDamage", false);
     }
     void Die()
     {
+        if(bounds!=null)
+            bounds.enemies.Remove(this);
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/
@@ -68,6 +99,42 @@ public class EnemyBody : MonoBehaviour
     private void Update()
     {
         //add some sort of airborne check?
+        if (gravityAffected)
+        {
+            if(!grounded)
+                grounded = Physics.Raycast(groundCheck.position, Vector3.down, (-rb.velocity.y*Time.deltaTime) + Time.deltaTime * 2, LayerMask.GetMask("Ground", "Default"));
+        Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
+        if (!grounded)
+        {
+            airTime += Time.deltaTime;
+            DisablePathfinding();
+        }
+        else
+        {
+            if(airTime > 1)
+            {
+                    airTime = 0;
+                    Debug.Log("floor splat");
+
+                //take fall damage
+                ModifyHealth(1);
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                else if(airTime > 0)
+                {
+                    airTime = 0;
+                    EnablePathfinding();
+                    me.enabled = true;
+                    rb.isKinematic = true;
+                    Debug.Log(gameObject.name + " recovered from fall");
+                }
+                
+            }
+        }
+            
 
         if (pushedBack)
         {
@@ -92,7 +159,7 @@ public class EnemyBody : MonoBehaviour
             {
                 if (me != null)
                 {
-                    if (!me.enabled)
+                    if (!me.enabled && grounded && gravityAffected || !me.enabled && !gravityAffected)
                     {
                         me.enabled = true;
                         rb.isKinematic = true;
@@ -142,9 +209,9 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        //Debug.Log(gameObject.name + " pushed by player");
+        Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
-        if (!InputControls.instance.canDash)
+        if (InputControls.instance.dashTime > 0)
         {
             Shoved(player.forward * dashImpact, "Dash");
         }
@@ -162,7 +229,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        //Debug.Log(gameObject.name + " shoved");
+        Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         rb.isKinematic = false;
         DoWallDamage = (source == "Dash");

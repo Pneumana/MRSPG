@@ -24,13 +24,23 @@ public class TargetManager : MonoBehaviour
             {
                 if (enemy != closestEnemy)
                 {
-                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
-                    Debug.Log("Slowed: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                    try
+                    {
+                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
+                        //Debug.Log("Slowed: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                    }
+                    catch { /*Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component");*/ }
+                    
                 }
                 else
                 {
-                    closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
-                    Debug.Log("Regular: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                    try
+                    {
+                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
+                        //Debug.Log("Regular: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
+                    }
+                    catch { /*Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component");*/ }
+                   
                 }
             }
         }
@@ -53,12 +63,15 @@ public class TargetManager : MonoBehaviour
         Vector3 currentPosition = transform.position;
         foreach (GameObject potentialTarget in enemies)
         {
-            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
-            float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
+            if (potentialTarget != null)
             {
-                closestDistanceSqr = dSqrToTarget;
-                bestTarget = potentialTarget;
+                Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+                float dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    bestTarget = potentialTarget;
+                }
             }
         }
 
@@ -79,9 +92,5 @@ public class TargetManager : MonoBehaviour
             }
         }
         return false;
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, gizmosize);
     }
 }
