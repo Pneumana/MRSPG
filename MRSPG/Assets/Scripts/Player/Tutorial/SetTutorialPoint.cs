@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 public class SetTutorialPoint : MonoBehaviour
 {
-    [TextArea(20, 20)]
+    [TextArea(10, 10)]
     public string text;
     public bool pauseForTutorial;
 
@@ -31,6 +31,7 @@ public class SetTutorialPoint : MonoBehaviour
     {
         foreach(InputActionReference iar in actionsToDisable)
         {
+            Debug.Log("Disabled" + iar.name);
             Controller.inst.controls.FindAction(iar.name).Disable();
         }
     }

@@ -23,16 +23,6 @@ public class Controller : MonoBehaviour
 
     private void Awake()
     {
-        /*if (controls == null)
-        {
-            controls = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            if(controls != this)
-                Destroy(gameObject);
-        }*/
         if (inst == null)
             inst = this;
         else
