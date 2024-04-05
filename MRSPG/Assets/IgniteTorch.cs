@@ -16,7 +16,6 @@ public class IgniteTorch : MonoBehaviour, IEnvTriggered
     }
     public void Activated(float delay)
     {
-        Debug.Log("triggered");
         
         StartCoroutine(Ignite());
     }

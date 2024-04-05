@@ -20,11 +20,16 @@ public class SetTutorialPoint : MonoBehaviour
     [Space(10)]
     [Header("Actions")]
     public InputActionReference[] actionsToDisable;
-    public InputActionReference actionToEnable;
+    public InputActionReference[] actionsToEnable;
+
 
     public void EnableActionInput()
     {
-        Controller.inst.controls.FindAction(actionToEnable.name).Enable();
+        foreach (InputActionReference iar in actionsToEnable)
+        {
+            Debug.Log("Enabled" + iar.name);
+            Controller.inst.controls.FindAction(iar.name).Enable();
+        }
     }
 
     public void DisableActionInput()

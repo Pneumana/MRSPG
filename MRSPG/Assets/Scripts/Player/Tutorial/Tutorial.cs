@@ -29,7 +29,6 @@ public class Tutorial : MonoBehaviour
     float firstSpeed;
     float stopped = 0f;
 
-    private int index;
     public bool brokeHold;
     private SetTutorialPoint point;
 
@@ -54,7 +53,6 @@ public class Tutorial : MonoBehaviour
                 Paused();
                 tutorialText.text = point.text;
                 TutorialScreen.SetActive(true);
-                index++;
             }
             Destroy(collision.gameObject, 0.1f);
         }
