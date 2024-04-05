@@ -23,12 +23,12 @@ public class MainMenu : MonoBehaviour
 
     public void HowTo ( )
     {
-        SceneManager.LoadScene ( 4 );
+        SceneManager.LoadScene ( 3 );
     }
 
     public void Credits ( )
     {
-        SceneManager.LoadScene ( 6 );
+        SceneManager.LoadScene ( 4 );
     }
 
     public void quit ( )

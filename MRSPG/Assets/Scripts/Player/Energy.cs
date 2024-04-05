@@ -25,13 +25,6 @@ public class Energy : MonoBehaviour
         UIUpdateEnergy();
     }
 
-    private void Update ( )
-    {
-        //Makes sure Energy Level does not go over the Max allowed Level
-        
-        
-    }
-
     public void LoseEnergy (int amount )
     {
         currentEnergy -= amount;
@@ -77,6 +70,7 @@ public class Energy : MonoBehaviour
         }*/
         UIUpdateEnergy();
     }
+
     [ContextMenu("UpdateUI")]
     void UIUpdateEnergy ( )
     {
