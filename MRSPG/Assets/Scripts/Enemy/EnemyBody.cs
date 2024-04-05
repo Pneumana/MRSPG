@@ -32,6 +32,14 @@ public class EnemyBody : MonoBehaviour
     [HideInInspector]public BattleBounds bounds;
     [HideInInspector]public List<EnemyAbsenceTrigger> triggerList = new List<EnemyAbsenceTrigger>();
 
+    public List<DamageTypes> Immunities = new List<DamageTypes>();
+
+    public enum DamageTypes
+    {
+        Basic,
+        Explosive
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,8 +56,10 @@ public class EnemyBody : MonoBehaviour
         health = _enemy.EnemyHealth;
     }
 
-    public void ModifyHealth(int mod)
+    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Explosive)
     {
+        if(Immunities.Contains(type))
+            return;
         health -= mod;
         StartCoroutine(Wait(1f));
         if(this.GetComponent<Animator>()!=null)
@@ -74,7 +84,8 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
-        bounds.enemies.Remove(this);
+        if(bounds!=null)
+            bounds.enemies.Remove(this);
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/
@@ -92,7 +103,7 @@ public class EnemyBody : MonoBehaviour
         {
             if(!grounded)
                 grounded = Physics.Raycast(groundCheck.position, Vector3.down, (-rb.velocity.y*Time.deltaTime) + Time.deltaTime * 2, LayerMask.GetMask("Ground", "Default"));
-            Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
+        Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
         if (!grounded)
         {
             airTime += Time.deltaTime;

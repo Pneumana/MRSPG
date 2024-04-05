@@ -23,16 +23,16 @@ public class Controller : MonoBehaviour
 
     private void Awake()
     {
-        if (inst == null)
+        /*if (controls == null)
         {
-            inst = this;
+            controls = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            if(inst!=this)
+            if(controls != this)
                 Destroy(gameObject);
-        }
+        }*/
 
         controls = new ControllerSupport();
         controls.Gameplay.Move.performed += ctx => movement.playerInput = ctx.ReadValue<Vector2>();
