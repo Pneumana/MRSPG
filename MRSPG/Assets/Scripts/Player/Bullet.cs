@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
     public LockOnSystem targeting;
     public Energy energy;
     public Temp_Boss_health tbh;
+    public BoomBarrel boom;
     public Transform target;
 
 
@@ -39,6 +40,13 @@ public class Bullet : MonoBehaviour
             Debug.LogError ( "Boss is NULL" );
         }
 
+        boom = GameObject.Find ( "Explosive Barrel" ).GetComponent<BoomBarrel> ( );
+
+        if ( boom == null )
+        {
+            Debug.LogError ( "Explosive Barrel is NULL" );
+        }
+
         target = targeting.trackedEnemy.transform;
     }
 
@@ -59,6 +67,10 @@ public class Bullet : MonoBehaviour
         {
             Destroy ( shot.gameObject );
             Destroy ( this.gameObject );
+        }
+        else if (shot.collider.name=="Explosive Barrel" )
+        {
+            boom.TryExplode ( );
         }
     }
 }

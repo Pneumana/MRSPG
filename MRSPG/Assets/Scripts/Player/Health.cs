@@ -69,7 +69,6 @@ public class Health : MonoBehaviour
     {
         _healthImg.sprite = _healthSprite[_healthSprite.Length - (currentHealth + 1)];
 
-
         /*if ( currentHealth == 5 )
         {
             _healthImg.sprite = _healthSprite [ 0 ];
@@ -100,15 +99,12 @@ public class Health : MonoBehaviour
     public void Die()
     {
 
-
         if (currentCheckpoint != null)
         {
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
             GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
         }
-
-
 
         currentHealth = 5;
         UIUpdateHealth();
