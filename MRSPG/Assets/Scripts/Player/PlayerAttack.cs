@@ -19,6 +19,7 @@ public class PlayerAttack : MonoBehaviour
     private LockOnSystem lockOnSystem;
     private GameObject player;
     private GameObject playerObj;
+    float timeout;
     #endregion
     void Start()
     {
@@ -55,15 +56,22 @@ public class PlayerAttack : MonoBehaviour
         {
             EnemyDir = player.transform.forward;
         }
+
+        timeout = 0.75f;
+        StartCoroutine(TimeOutAnimation());
+        playerObj.GetComponent<Animator>().SetInteger("AttackChain", MeleeCombo);
         switch (MeleeCombo)
         {
             case 1:
+                
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 2:
+                
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
+                
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 if (HealCombo)
                 {
@@ -76,4 +84,18 @@ public class PlayerAttack : MonoBehaviour
         RecentAttack = metronome.BeatsPassed;
         meleeHitbox.MeleeAttack(MeleeCombo);
     }
+
+    IEnumerator TimeOutAnimation()
+    {
+        while(timeout > 0)
+        {
+            timeout -= Time.deltaTime;
+            yield return new WaitForSeconds(0);
+        }
+        Debug.Log("player attack animation timed out");
+        playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
+        playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
+        yield return null;
+    }
+
 }
