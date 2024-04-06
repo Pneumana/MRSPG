@@ -33,20 +33,6 @@ public class Bullet : MonoBehaviour
             Debug.LogError ( "TimeScaler is NULL" );
         }
 
-        //tbh=GameObject.Find("Boss").GetComponent<Temp_Boss_health> ( );
-
-        if ( tbh == null )
-        {
-            Debug.LogError ( "Boss is NULL" );
-        }
-
-        boom = GameObject.Find ( "Explosive Barrel" ).GetComponent<BoomBarrel> ( );
-
-        if ( boom == null )
-        {
-            Debug.LogError ( "Explosive Barrel is NULL" );
-        }
-
         target = targeting.trackedEnemy.transform;
     }
 
@@ -70,7 +56,13 @@ public class Bullet : MonoBehaviour
         }
         else if (shot.collider.name=="Explosive Barrel" )
         {
-            boom.TryExplode ( );
+            shot.gameObject.TryGetComponent<BoomBarrel> ( out BoomBarrel component);
+
+            if ( component != null )
+            {
+                boom.TryExplode ( );
+                Destroy ( this.gameObject );
+            }
         }
     }
 }
