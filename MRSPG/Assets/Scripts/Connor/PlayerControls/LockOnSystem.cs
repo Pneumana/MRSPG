@@ -213,7 +213,7 @@ public class LockOnSystem : MonoBehaviour
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
                 freeLook.m_LookAt = lockOnAssist;
                 var start = freeLook.m_XAxis;
-                Vector3 dir = trackedEnemy.transform.position - player.transform.position;
+                Vector3 dir = lockOnAssist.position - player.transform.position;
                 dir.y = 0; // keep the direction strictly horizontal
                 var look = Quaternion.LookRotation(dir, Vector3.up);
                 freeLook.m_XAxis.Value = Mathf.Lerp(start.Value, look.eulerAngles.y, 5 * Time.deltaTime); ;
