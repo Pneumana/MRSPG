@@ -1044,6 +1044,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heavy
       objectReference: {fileID: 0}
+    - target: {fileID: 9156648432093854654, guid: 8e0cf1fa3e80b244ba5169302f684209, type: 3}
+      propertyPath: DisableAttack
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9172842233427215616, guid: 8e0cf1fa3e80b244ba5169302f684209, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9844432
@@ -6426,7 +6430,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4140712739932493758, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
       propertyPath: LookAt
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4140712739932493758, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
+      propertyPath: DisableAttack
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4275493729689150764, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
       propertyPath: m_Enabled
@@ -15469,6 +15477,10 @@ PrefabInstance:
     - target: {fileID: 4986009800001572584, guid: a4011666c19cca549a344d55e9f4a5ef, type: 3}
       propertyPath: m_Name
       value: Ranged
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245677993936362033, guid: a4011666c19cca549a344d55e9f4a5ef, type: 3}
+      propertyPath: DisableAttack
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7529833555374288990, guid: a4011666c19cca549a344d55e9f4a5ef, type: 3}
       propertyPath: m_LocalPosition.x
