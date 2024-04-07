@@ -84,8 +84,8 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
-        if(bounds!=null)
-            bounds.enemies.Remove(this);
+        if (bounds != null)
+        { bounds.enemies.Remove(this); }
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/

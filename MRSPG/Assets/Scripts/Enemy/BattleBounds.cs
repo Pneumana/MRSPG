@@ -17,7 +17,8 @@ public class BattleBounds : MonoBehaviour
 
     public float distance;
     public bool running;
-    public bool inBattle;
+    public static bool inBattle;
+    private TargetManager targetManager;
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class BattleBounds : MonoBehaviour
         {
             enemy.bounds = this;
         }
-
+        targetManager = GameObject.FindAnyObjectByType<TargetManager>();
         effectiveRange.localScale = new Vector3(boundSize * 2, boundSize * 2, boundSize * 2);
 
     }
@@ -40,6 +41,7 @@ public class BattleBounds : MonoBehaviour
             if(distance < boundSize)
             {
                 inBattle = true;
+                targetManager.battlebounds = this;
                 damageBuildup.Stop();
             }
             if(inBattle && distance > boundSize)
@@ -48,9 +50,19 @@ public class BattleBounds : MonoBehaviour
             }
             if(inBattle && !running && distance > boundSize)
             {
-                Debug.Log("The player is leaving the battle, " + distance);
-                StartCoroutine(DrainHP());
-                
+                if(targetManager.battlebounds == this)
+                {
+                    Debug.Log("The player is leaving the battle, " + distance);
+                    StartCoroutine(DrainHP());
+                }
+            }
+        }
+        else { Destroy(this.gameObject);  }
+        foreach(EnemyBody body in enemies)
+        {
+            if(body == null)
+            {
+                enemies.Remove(body);
             }
         }
     }
