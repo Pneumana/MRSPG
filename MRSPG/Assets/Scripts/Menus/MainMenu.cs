@@ -6,9 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+
+    private void Awake ( )
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+
     public void BackMainMenu ( )
     {
-        SceneManager.LoadScene ( 0 );
+        SceneManager.LoadScene ( "Main Menu" );
     }
 
     public void NewGame ( )
@@ -18,17 +26,17 @@ public class MainMenu : MonoBehaviour
 
     public void Settings ( )
     {
-        SceneManager.LoadScene ( 2 );
+        SceneManager.LoadScene ( "Settings" );
     }
 
     public void HowTo ( )
     {
-        SceneManager.LoadScene ( 3 );
+        SceneManager.LoadScene ( "HowToPlay" );
     }
 
     public void Credits ( )
     {
-        SceneManager.LoadScene ( 4 );
+        SceneManager.LoadScene ( "Credits" );
     }
 
     public void quit ( )

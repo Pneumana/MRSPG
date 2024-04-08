@@ -12,7 +12,9 @@ public class PauseMenu : MonoBehaviour
     Image _pauseMenu, _settingsMenu, _howToMenu, _creditsMenu;
 
     [SerializeField]
-    GameObject _continueFirst, _continueSecond, _continueThird, _continueFourth;
+    GameObject _pauseContinue, _settingsContinue, _howToContinue, _creditsContinue;
+
+    bool _settingsOpen, _howToOpen, _creditsOpen;
 
     public LockOnSystem lockOn;
     public Controller control;
@@ -30,11 +32,31 @@ public class PauseMenu : MonoBehaviour
 
     public void Paused ( )
     {
-        lockOn.paused = true;
-        Cursor.visible = false;
-        _pauseMenu.gameObject.SetActive ( true );
-        EventSystem.current.SetSelectedGameObject ( _continueFirst );
-        Time.timeScale = 0f;
+        if ( _settingsOpen == false && _howToOpen == false && _creditsOpen == false )
+        {
+            lockOn.paused = true;
+            Cursor.visible = false;
+            _pauseMenu.gameObject.SetActive ( true );
+            EventSystem.current.SetSelectedGameObject ( _pauseContinue );
+            _settingsMenu.gameObject.SetActive ( false );
+            _howToMenu.gameObject.SetActive ( false );
+            _creditsMenu.gameObject.SetActive ( false );
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            lockOn.paused = true;
+            Cursor.visible = false;
+            _pauseMenu.gameObject.SetActive ( true );
+            EventSystem.current.SetSelectedGameObject ( _pauseContinue );
+            _settingsMenu.gameObject.SetActive ( false );
+            _howToMenu.gameObject.SetActive ( false );
+            _creditsMenu.gameObject.SetActive ( false );
+            _settingsOpen = false;
+            _howToOpen = false;
+            _creditsOpen = false;
+            Time.timeScale = 0f;
+        }
     }
 
     public void Resume ( )
@@ -44,37 +66,57 @@ public class PauseMenu : MonoBehaviour
         _settingsMenu.gameObject.SetActive ( false );
         _howToMenu.gameObject.SetActive ( false );
         _creditsMenu.gameObject.SetActive ( false );
+        _settingsOpen = false;
+        _howToOpen = false;
+        _creditsOpen = false;
         Time.timeScale = 1f;
     }
 
     public void Settings ( )
-    {
+    {        
         lockOn.paused= true;
         _settingsMenu.gameObject.SetActive ( true );
-        EventSystem.current.SetSelectedGameObject(_continueSecond);
+        _settingsOpen = true;
+        _howToOpen= false;
+        _creditsOpen=false;
+        EventSystem.current.SetSelectedGameObject(_settingsContinue);
         _pauseMenu.gameObject.SetActive( false );
         _howToMenu.gameObject.SetActive ( false );
         _creditsMenu.gameObject.SetActive( false );
+        Time.timeScale = 0f;
     }
 
     public void HowTo ( )
     {
         lockOn.paused=true;
         _howToMenu.gameObject .SetActive ( true );
-        EventSystem.current.SetSelectedGameObject ( _continueThird );
+        _howToOpen=true;
+        _settingsOpen = false;
+        _creditsOpen = false;
+        EventSystem.current.SetSelectedGameObject ( _howToContinue );
         _pauseMenu.gameObject.SetActive(false);
         _settingsMenu .gameObject.SetActive( false );
         _creditsMenu .gameObject.SetActive( false );
+        Time.timeScale = 0f;
     }
 
     public void Credits ( )
     {
         lockOn.paused = true;
         _creditsMenu.gameObject .SetActive ( true );
-        EventSystem.current.SetSelectedGameObject ( _continueFourth );
+        _creditsOpen = true;
+        _settingsOpen = false;
+        _howToOpen = false;
+        EventSystem.current.SetSelectedGameObject ( _creditsContinue );
         _pauseMenu .gameObject.SetActive( false );
         _settingsMenu.gameObject .SetActive( false );
         _howToMenu .gameObject.SetActive( false );
+        Time.timeScale = 0f;
+    }
+
+    public void BackToPause ( )
+    {
+        Paused ( );
     }
 
 }
