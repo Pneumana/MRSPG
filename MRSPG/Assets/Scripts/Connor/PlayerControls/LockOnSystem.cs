@@ -208,10 +208,41 @@ public class LockOnSystem : MonoBehaviour
             if (trackedEnemy != null)
             {
                 var midpoint = (trackedEnemy.transform.position + player.transform.position) / 2;
-                lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, 5 * Time.deltaTime);
+                var influence = Mathf.Clamp01(Vector3.Distance(player.transform.position, trackedEnemy.transform.position) / 10f);
+                lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 * influence) * Time.deltaTime);
 
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
                 freeLook.m_LookAt = lockOnAssist;
+                var start = freeLook.m_XAxis;
+
+
+                //Vector3 dir = lockOnAssist.position - player.transform.position;
+                Vector3 camdir = Camera.main.transform.position - player.transform.position;
+                //dir.y = 0; // keep the direction strictly horizontal
+
+                //Debug.DrawLine(player.transform.position, player.transform.position + (dir * 4), Color.white, Time.deltaTime);
+                var quat = Quaternion.identity;
+                //var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                var cameraRot = Quaternion.LookRotation(-camdir.normalized, Vector3.up);
+
+                //quat = Quaternion.Slerp(cameraRot, look, 5 * Time.deltaTime);
+
+                //freeLook.m_XAxis.Value = quat.eulerAngles.y;
+
+                if(Vector3.Distance(player.transform.position, trackedEnemy.transform.position) > 2)
+                {
+
+                    
+                }
+                Vector3 dir = lockOnAssist.position - player.transform.position;
+                dir.y = 0;
+                var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
+
+
+
+
+
             }
             
             //lockOnAssist.rotation = eul;

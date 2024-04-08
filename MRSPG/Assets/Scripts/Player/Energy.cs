@@ -27,9 +27,7 @@ public class Energy : MonoBehaviour
 
     private void Update ( )
     {
-        //Makes sure Energy Level does not go over the Max allowed Level
-        
-        
+        UIUpdateEnergy ( );
     }
 
     public void LoseEnergy (int amount )
@@ -77,11 +75,14 @@ public class Energy : MonoBehaviour
         }*/
         UIUpdateEnergy();
     }
+
     [ContextMenu("UpdateUI")]
     void UIUpdateEnergy ( )
     {
+        //Code was not updating the UI with this so it was returned to the original so that it will update the UI
+        /*
         _energyImg.fillAmount = currentEnergy/50f;
-        if(currentEnergy == 50)
+        if(currentEnergy != 50)
             _gunRdy.gameObject.SetActive(false);
         else
         {
@@ -93,29 +94,38 @@ public class Energy : MonoBehaviour
         {
             _teleportRdy.gameObject.SetActive(true);
         }
+        */
+
+        //there was a nullreference error from _gunRdy and _teleportRdy so i just made it use this to change the sprite rather that the if else checks
+        //because i *really* didnt want to comment out each reference to _gunRdy and _teleportRdy
+        // - Connor
+        _energyImg.sprite = _energySprite[_energySprite.Length - (1 + Mathf.FloorToInt(currentEnergy/5f))];
+
+        
+
         /*if ( currentEnergy == 50 )
         {
             _energyImg.sprite = _energySprite [ 0 ];
-            _gunRdy.gameObject.SetActive ( true );
-            _teleportRdy.gameObject.SetActive ( true );
+            *//*_gunRdy.gameObject.SetActive ( true );
+            _teleportRdy.gameObject.SetActive ( true );*//*
         }
         else if ( currentEnergy == 45 )
         {
             _energyImg.sprite = _energySprite [ 1 ];
-            _gunRdy.gameObject.SetActive(false);
-            _teleportRdy.gameObject.SetActive ( true );
+            *//*_gunRdy.gameObject.SetActive(false);
+            _teleportRdy.gameObject.SetActive ( true );*//*
         }
         else if ( currentEnergy == 40 )
         {
             _energyImg.sprite = _energySprite [ 2 ];
-            _gunRdy.gameObject.SetActive ( false );
-            _teleportRdy.gameObject.SetActive ( true );
+            *//*_gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );*//*
         }
         else if ( currentEnergy == 35 )
         {
             _energyImg.sprite = _energySprite [ 3 ];
-            _gunRdy.gameObject.SetActive ( false );
-            _teleportRdy.gameObject.SetActive ( true );
+            *//*_gunRdy.gameObject.SetActive ( false );
+            _teleportRdy.gameObject.SetActive ( true );*//*
         }
         else if ( currentEnergy == 30 )
         {

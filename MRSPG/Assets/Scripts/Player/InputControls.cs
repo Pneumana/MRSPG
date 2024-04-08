@@ -101,18 +101,28 @@ public class InputControls : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && !prev)
+        {
             groundedParticles.Play();
+        }
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            animator.SetBool("Falling", false);
             canJump = true;
             dashBoost = 0;
+        }
+
+        if(!canJump)
+        {
+            Waiter(1f);
+            animator.SetBool("Falling", true);
         }
     }
 
     public IEnumerator ApplyDash(Vector3 direction, float speed, float time, bool liveUpdate, string type)
     {
+        animator.SetTrigger("Dash");
         float startTime = Time.time;
         if (type == "Movement") 
         { 
@@ -212,12 +222,12 @@ public class InputControls : MonoBehaviour
     {
         if (canJump)
         {
-            canJump = false;
+            animator.SetTrigger("Jump");
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
             if (dashing) { dashBoost = 1; }
             jumpParticles.Play();
+            canJump = false;
         }
-
     }
 
     public void ForceJump()

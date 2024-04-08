@@ -95,6 +95,7 @@ public class BoomBarrel : MonoBehaviour
             //return;
         }
     }
+    
     //the player would be taking damage every time this went off, so im chaning it to damage the player if they are close enough to be hurt by it.
     void DealDamage ( )
     {

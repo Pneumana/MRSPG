@@ -21,6 +21,7 @@ public class EnvTrigger : MonoBehaviour
             delay = Metronome.inst.GetInterval();
         }
     }
+
     [ContextMenu("Trigger All")]
     public void TriggerAll()
     {
@@ -38,14 +39,16 @@ public class EnvTrigger : MonoBehaviour
     }
     IEnumerator TriggerLoop()
     {
+        if (onlyOnBeat)
+        {
+            yield return new WaitForSeconds(Metronome.inst.interval);
+        }
         int loops = 0;
         do
         {
-            if (Metronome.inst.IsOnBeat() && onlyOnBeat || !onlyOnBeat)
-            {
+            
                 triggers[loops].Activated(delay);
                 loops++;
-            }
             yield return new WaitForSeconds(delay);
         }while(loops < triggers.Count);
         yield return null;

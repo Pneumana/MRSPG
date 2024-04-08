@@ -23,16 +23,10 @@ public class Controller : MonoBehaviour
 
     private void Awake()
     {
-        /*if (controls == null)
-        {
-            controls = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        if (inst == null)
+            inst = this;
         else
-        {
-            if(controls != this)
-                Destroy(gameObject);
-        }*/
+            Destroy(gameObject);
 
         controls = new ControllerSupport();
         controls.Gameplay.Move.performed += ctx => movement.playerInput = ctx.ReadValue<Vector2>();
@@ -40,11 +34,7 @@ public class Controller : MonoBehaviour
 
         controls.Gameplay.Camera.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
         controls.Gameplay.Camera.canceled += ctx => lookInput = Vector2.zero;
-    }
 
-    private void OnEnable()
-    {
-        controls.Gameplay.Enable();
         controls.Gameplay.Jump.performed += movement.OnJump;
         controls.Gameplay.Dash.performed += movement.OnDash;
         controls.Gameplay.Fire.performed += gun.Shoot;
@@ -56,6 +46,12 @@ public class Controller : MonoBehaviour
             controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
             controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
         }
+    }
+
+    private void OnEnable()
+    {
+        controls.Gameplay.Enable();
+
     }
 
     private void OnDisable()

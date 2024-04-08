@@ -13,6 +13,7 @@ public class TargetManager : MonoBehaviour
     public GameObject closestEnemy;
     public float gizmosize;
     public List<GameObject> enemiesInRange;
+    [HideInInspector] public BattleBounds battlebounds;
 
     void Update()
     {

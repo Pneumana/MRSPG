@@ -29,13 +29,11 @@ public class AnimateObelisk : MonoBehaviour
             obeliskPivot.transform.rotation = Quaternion.Euler(Vector3.Lerp(startRot, targetRotation, animTime));
             yield return new WaitForSeconds(0);
         } while (animTime < 1);
-        Debug.Log("wake animation is done");
         StartCoroutine(AnimateIdle());
         yield return null;
     }
     public IEnumerator AnimateIdle()
     {
-        Debug.Log("starting idle loop");
         float animTime = 0;
         do
         {

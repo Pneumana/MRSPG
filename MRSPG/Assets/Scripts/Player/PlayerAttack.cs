@@ -19,6 +19,7 @@ public class PlayerAttack : MonoBehaviour
     private LockOnSystem lockOnSystem;
     private GameObject player;
     private GameObject playerObj;
+    float timeout;
     #endregion
     void Start()
     {
@@ -33,6 +34,15 @@ public class PlayerAttack : MonoBehaviour
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
+        StopAllCoroutines();
+        playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
+        if(playerObj.GetComponent<Animator>().GetInteger("AttackChain") >= 3)
+        {
+            //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+        }
+        StartCoroutine(TimeOutAnimation());
+
+
         if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; } //anti button spam
         if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
@@ -55,16 +65,22 @@ public class PlayerAttack : MonoBehaviour
         {
             EnemyDir = player.transform.forward;
         }
+
+        
+        
+        
         switch (MeleeCombo)
         {
             case 1:
-                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 2:
-                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                
+                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 break;
             case 3:
-                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                
+                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
                 if (HealCombo)
                 {
                     Health health = player.GetComponent<Health>();
@@ -76,4 +92,31 @@ public class PlayerAttack : MonoBehaviour
         RecentAttack = metronome.BeatsPassed;
         meleeHitbox.MeleeAttack(MeleeCombo);
     }
+
+    IEnumerator TimeOutAnimation()
+    {
+        timeout = 0.75f;
+        playerObj.GetComponent<Animator>().SetLayerWeight(1, 1);
+        while (timeout > 0)
+        {
+            timeout -= Time.deltaTime;
+            yield return new WaitForSeconds(0);
+        }
+        Debug.Log("player attack animation timed out");
+        playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
+        playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
+
+        float a = 1;
+        while (a > 0)
+        {
+            a -= Time.deltaTime;
+            playerObj.GetComponent<Animator>().SetLayerWeight(1, a);
+            yield return new WaitForSeconds(0);
+        }
+
+
+
+        yield return null;
+    }
+
 }

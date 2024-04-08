@@ -26,6 +26,8 @@ public class EnemyBody : MonoBehaviour
 
     private bool DoWallDamage;
 
+    float dragBeforeFall = -1;
+
     Rigidbody rb;
     public NavMeshAgent me;
     Transform groundCheck;
@@ -49,7 +51,8 @@ public class EnemyBody : MonoBehaviour
         if(groundCheck!=null)
             groundCheck.transform.position += Vector3.up * Time.deltaTime;
         player = GameObject.Find("PlayerObj");
-        SetEnemyData(_enemy);
+        if(_enemy!=null)
+            SetEnemyData(_enemy);
     }
     void SetEnemyData(EnemySetting _enemy)
     {
@@ -84,8 +87,8 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
-        if(bounds!=null)
-            bounds.enemies.Remove(this);
+        if (bounds != null)
+        { bounds.enemies.Remove(this); }
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/
@@ -106,6 +109,9 @@ public class EnemyBody : MonoBehaviour
         Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
         if (!grounded)
         {
+                if(dragBeforeFall==-1)
+                    dragBeforeFall = rb.drag;
+                rb.drag = 0;
             airTime += Time.deltaTime;
             DisablePathfinding();
         }
@@ -133,6 +139,13 @@ public class EnemyBody : MonoBehaviour
                 }
                 
             }
+            if (dragBeforeFall != -1)
+            {
+                rb.drag = dragBeforeFall;
+                dragBeforeFall = -1;
+            }
+
+
         }
             
 

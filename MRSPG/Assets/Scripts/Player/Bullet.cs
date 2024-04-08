@@ -7,58 +7,79 @@ public class Bullet : MonoBehaviour
     #region  Variables
 
     float _speed = 5;
-    
-    public LockOnSystem targeting;
-    public Energy energy;
-    public Temp_Boss_health tbh;
-    public Transform target;
+
+    [SerializeField]      
+    LockOnSystem _targeting;
+    [SerializeField]
+    Energy _energy;
+    [SerializeField]
+    Temp_Boss_health _tbh;
+    [SerializeField]
+    BoomBarrel _boom;
+    [SerializeField]
+    EnemyBody _enemy;
+    [SerializeField]
+    Transform _target;
 
 
     #endregion
 
     private void Awake ( )
     {
-        energy = GameObject.Find ( "PlayerObj" ).GetComponent<Energy> ( );
+        _energy = GameObject.Find ( "PlayerObj" ).GetComponent<Energy> ( );
 
-        if ( energy == null )
+        if ( _energy == null )
         {
             Debug.LogError ( "Player is NULL" );
         }
 
-        targeting = GameObject.Find ( "TimeScaler" ).GetComponent<LockOnSystem> ( );
+        _targeting = GameObject.Find ( "TimeScaler" ).GetComponent<LockOnSystem> ( );
 
-        if ( targeting == null )
+        if ( _targeting == null )
         {
             Debug.LogError ( "TimeScaler is NULL" );
         }
 
-        //tbh=GameObject.Find("Boss").GetComponent<Temp_Boss_health> ( );
-
-        if ( tbh == null )
-        {
-            Debug.LogError ( "Boss is NULL" );
-        }
-
-        target = targeting.trackedEnemy.transform;
+        _target = _targeting.trackedEnemy.transform;
     }
 
     private void FixedUpdate ( )
     {
-       transform.position = Vector3.MoveTowards ( transform.position , target.transform.position , _speed * Time.fixedDeltaTime );
+       transform.position = Vector3.MoveTowards ( transform.position , _target.transform.position , _speed * Time.fixedDeltaTime );
     }
 
     private void OnCollisionEnter ( Collision shot )
     {
         if ( shot.collider.name == "Boss" )
         {
-            tbh.LoseHealth ( 5 );
+            _tbh.LoseHealth ( 5 );
             Debug.Log ( "Boss took 5 damage" );
             Destroy ( this.gameObject );
         }
         else if (shot.collider.tag=="Enemy")
         {
-            Destroy ( shot.gameObject );
-            Destroy ( this.gameObject );
+            shot.gameObject.TryGetComponent<EnemyBody> ( out EnemyBody enemy );
+            if ( enemy == null )
+            {
+                Debug.LogError ( "EnemyBody Code is NULL" );
+            }
+
+            shot.gameObject.TryGetComponent<BoomBarrel> ( out BoomBarrel bang );
+            if ( bang == null )
+            {
+                Debug.LogError ( "BoomBarrel Code is NULL" );
+            }
+
+            if(enemy!=null)
+            {
+                _enemy.ModifyHealth ( 20 );
+                Destroy ( this.gameObject );
+            }
+            else if ( bang != null )
+            {
+                _boom.TryExplode ( );
+                Destroy ( this.gameObject );
+            }
         }
     }
 }

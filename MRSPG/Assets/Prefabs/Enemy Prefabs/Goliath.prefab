@@ -52,7 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 33c9da18514c7ef40b1a314806ddd10c, type: 2}
+  DisableAttack: 0
   PlayerIsInSight: 0
+  LookAt: 1
 --- !u!54 &317354061117108165
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -97,7 +99,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1
   m_Height: 4
@@ -118,11 +120,16 @@ MonoBehaviour:
   _enemy: {fileID: 11400000, guid: 33c9da18514c7ef40b1a314806ddd10c, type: 2}
   health: 0
   dashImpact: 3
+  grounded: 0
   pushedBack: 0
   disablePathfinding: 0
+  gravityAffected: 1
+  airTime: 0
   bounceOffPlayer: 0
   me: {fileID: 8982726149843319616}
+  bounds: {fileID: 0}
   triggerList: []
+  Immunities: 
 --- !u!195 &8982726149843319616
 NavMeshAgent:
   m_ObjectHideFlags: 0
