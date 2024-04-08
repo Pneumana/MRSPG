@@ -355,6 +355,7 @@ public class Enemy : MonoBehaviour
         this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
         if (!playerInRange)
         {
+            this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
             if (Animations != null)
                 Animations.SetBool("Charge", false);
         }
@@ -404,6 +405,7 @@ public class Enemy : MonoBehaviour
 
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
+        LayerMask Default = LayerMask.GetMask("Default");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
@@ -436,6 +438,7 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
+        if (Physics.CheckSphere(bullet.transform.position, 0.1f, Default)) Destroy(bullet);
         if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
         Animations.SetBool("Attack", false);
     }
