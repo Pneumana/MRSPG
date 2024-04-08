@@ -51,7 +51,8 @@ public class EnemyBody : MonoBehaviour
         if(groundCheck!=null)
             groundCheck.transform.position += Vector3.up * Time.deltaTime;
         player = GameObject.Find("PlayerObj");
-        SetEnemyData(_enemy);
+        if(_enemy!=null)
+            SetEnemyData(_enemy);
     }
     void SetEnemyData(EnemySetting _enemy)
     {
