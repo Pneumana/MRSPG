@@ -8,7 +8,10 @@ public class Settings : MonoBehaviour
 {
     #region Variables
 
-    public Dropdown resDropdown;
+    [SerializeField] 
+    Dropdown _resDropdown;
+    [SerializeField]
+    Button _mainMenuButton;
 
     Resolution [ ] resolutions;
 
@@ -18,7 +21,7 @@ public class Settings : MonoBehaviour
     {
         resolutions = Screen.resolutions;
 
-        resDropdown.ClearOptions ( );
+        _resDropdown.ClearOptions ( );
 
         List<string> options = new List<string> ( );
 
@@ -35,9 +38,14 @@ public class Settings : MonoBehaviour
             }
         }
 
-        resDropdown.AddOptions ( options );
-        resDropdown.value = currentResolutionIndex;
-        resDropdown.RefreshShownValue ( );
+        _resDropdown.AddOptions ( options );
+        _resDropdown.value = currentResolutionIndex;
+        _resDropdown.RefreshShownValue ( );
+    }
+
+    private void Update ( )
+    {
+        
     }
 
     public void SetRes (int resolutionIndex )
