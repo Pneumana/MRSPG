@@ -109,6 +109,7 @@ public class Health : MonoBehaviour
         currentHealth = 5;
         UIUpdateHealth();
     }
+
     private void OnDestroy()
     {
         mat.SetFloat("_Fade", 1);
