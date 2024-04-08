@@ -25,6 +25,11 @@ public class Energy : MonoBehaviour
         UIUpdateEnergy();
     }
 
+    private void Update ( )
+    {
+        UIUpdateEnergy ( );
+    }
+
     public void LoseEnergy (int amount )
     {
         currentEnergy -= amount;
@@ -74,8 +79,10 @@ public class Energy : MonoBehaviour
     [ContextMenu("UpdateUI")]
     void UIUpdateEnergy ( )
     {
+        //Code was not updating the UI with this so it was returned to the original so that it will update the UI
+        /*
         _energyImg.fillAmount = currentEnergy/50f;
-        if(currentEnergy == 50)
+        if(currentEnergy != 50)
             _gunRdy.gameObject.SetActive(false);
         else
         {
@@ -87,7 +94,9 @@ public class Energy : MonoBehaviour
         {
             _teleportRdy.gameObject.SetActive(true);
         }
-        /*if ( currentEnergy == 50 )
+        */
+
+        if ( currentEnergy == 50 )
         {
             _energyImg.sprite = _energySprite [ 0 ];
             _gunRdy.gameObject.SetActive ( true );
@@ -153,7 +162,7 @@ public class Energy : MonoBehaviour
             _gunRdy.gameObject.SetActive ( false );
             _teleportRdy .gameObject.SetActive ( false );
         }
-        else { return; }*/
+        else { return; }
     }
 
 }
