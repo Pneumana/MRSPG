@@ -21405,7 +21405,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3449941b6cec93e488d037eacef27e0c, type: 2}
+  - {fileID: 2100000, guid: 6104886565168ad40b060fac7b3609f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -60503,10 +60503,10 @@ MonoBehaviour:
   _enemy: {fileID: 11400000, guid: 8a447ef2aba80494aa899375f52fd10d, type: 2}
   health: 0
   dashImpact: 3
-  grounded: 0
+  grounded: 1
   pushedBack: 0
   disablePathfinding: 0
-  gravityAffected: 1
+  gravityAffected: 0
   airTime: 0
   bounceOffPlayer: 0
   me: {fileID: 0}
@@ -85563,10 +85563,10 @@ MonoBehaviour:
   _enemy: {fileID: 11400000, guid: 8a447ef2aba80494aa899375f52fd10d, type: 2}
   health: 0
   dashImpact: 3
-  grounded: 0
+  grounded: 1
   pushedBack: 0
   disablePathfinding: 0
-  gravityAffected: 1
+  gravityAffected: 0
   airTime: 0
   bounceOffPlayer: 0
   me: {fileID: 0}
@@ -87855,11 +87855,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1.8377083e-15
+      value: -6.1351443e-17
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 4.35363e-17
+      value: -4.3536226e-17
       objectReference: {fileID: 0}
     - target: {fileID: 3365295868616478280, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_Name
@@ -87893,6 +87893,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4454584165870712108, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 2119414566}
     - target: {fileID: 4897514474071416091, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -87981,6 +87985,18 @@ PrefabInstance:
       propertyPath: m_YAxis.Value
       value: 0.42
       objectReference: {fileID: 0}
+    - target: {fileID: 5860426286602056507, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_XAxis.m_Wrap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860426286602056507, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_XAxis.m_MaxValue
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860426286602056507, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: m_XAxis.m_MinValue
+      value: -180
+      objectReference: {fileID: 0}
     - target: {fileID: 6235049156143459710, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.28177825
@@ -88013,6 +88029,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 522244520}
+    - target: {fileID: 7173669318789965871, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2119414572}
     - target: {fileID: 8181159876383527236, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
