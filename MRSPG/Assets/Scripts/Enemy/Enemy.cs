@@ -302,6 +302,10 @@ public class Enemy : MonoBehaviour
         if (!isGrounded && Rigidbody != null)
         {
             Rigidbody.drag = 0;
+            if (transform.position.y < -50f)
+            {
+                body.ModifyHealth(body.health);
+            }
         }
         else if(isGrounded && Rigidbody != null)
         {
@@ -409,7 +413,7 @@ public class Enemy : MonoBehaviour
         Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
         while (bullet.transform.position != PositionOnBeat)
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 10f * Time.fixedDeltaTime);
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 35f * Time.fixedDeltaTime);
             if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
             {
                 if(_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
@@ -435,8 +439,8 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         if (Physics.CheckSphere(bullet.transform.position, 0.1f)) Destroy(bullet);
-        if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
         Animations.SetBool("Attack", false);
+        Destroy(bullet);
     }
     private void SpinAttack(int Damage)
     {
