@@ -8,6 +8,7 @@ public class BattleBounds : MonoBehaviour
     [Tooltip("The yellow circle is the size of the boundary")]
     public float boundSize;
     [Tooltip("Add the enemies within the boundary")]
+    public List<EnemyBody> SavedEnemies;
     public List<EnemyBody> enemies = new List<EnemyBody>();
     [SerializeField]
     Transform effectiveRange;
@@ -30,7 +31,7 @@ public class BattleBounds : MonoBehaviour
         }
         targetManager = GameObject.FindAnyObjectByType<TargetManager>();
         effectiveRange.localScale = new Vector3(boundSize * 2, boundSize * 2, boundSize * 2);
-
+        SavedEnemies = enemies;
     }
 
     private void Update()
@@ -41,6 +42,11 @@ public class BattleBounds : MonoBehaviour
             if(distance < boundSize)
             {
                 inBattle = true;
+                foreach(EnemyBody enemy in enemies)
+                {
+                    if(!enemy.gameObject.GetComponent<Enemy>().aggro)
+                            enemy.gameObject.GetComponent<Enemy>().aggro = true;
+                }
                 targetManager.battlebounds = this;
                 damageBuildup.Stop();
             }

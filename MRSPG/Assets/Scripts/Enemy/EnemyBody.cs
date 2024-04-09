@@ -188,7 +188,8 @@ public class EnemyBody : MonoBehaviour
 
     public void DisablePathfinding()
     {
-        me.enabled = false;
+        if (me != null)
+            me.enabled = false;
         rb.isKinematic = false;
         disablePathfinding = true;
     }
