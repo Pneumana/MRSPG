@@ -149,7 +149,7 @@ public class InputControls : MonoBehaviour
             if (type == "Movement")
             {
                 //Dash into enemy here:
-                Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 1f, enemyLayer);
+                Collider[] hitEnemies = Physics.OverlapSphere(playerObj.position, 2.5f, enemyLayer);
                 foreach (Collider enemy in hitEnemies)
                 {
                     if (enemy.gameObject.GetComponent<NavMeshAgent>() != null) { enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false; }
@@ -252,6 +252,6 @@ public class InputControls : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, 0.4f);
-        Gizmos.DrawWireSphere(playerObj.position, 1f);
+        Gizmos.DrawWireSphere(playerObj.position, 2.5f);
     }
 }

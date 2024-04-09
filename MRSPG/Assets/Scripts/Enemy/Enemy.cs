@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
-//using UnityEditor;
-//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
@@ -61,7 +59,7 @@ public class Enemy : MonoBehaviour
     bool ShootingRange;
     public bool PlayerIsInSight;
     public bool LookAt = true;
-    bool aggro = false;
+    [HideInInspector] public bool aggro = false;
     LayerMask PlayerMask;
 
     LayerMask GroundMask;
@@ -219,7 +217,7 @@ public class Enemy : MonoBehaviour
         }
         if (CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
-            if (body.me.enabled)
+            if (body.me != null && body.me.enabled)
                 body.me.destination = _enemy.PlayerObject.transform.position;
             aggro = true;
         }
@@ -227,7 +225,7 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        if(Animations!=null)
+        if (Animations != null && body.me != null)
             Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
 
         if(DisableAttack)
@@ -269,7 +267,7 @@ public class Enemy : MonoBehaviour
             {
                 aggro = true;
             }
-            if (ShootingRange && Metronome.IsOnBeat() && CanAttack)
+            if (aggro && Metronome.IsOnBeat() && CanAttack)
             {
                 StartCoroutine(StartAttack(_enemy.pattern));
             }
@@ -304,6 +302,10 @@ public class Enemy : MonoBehaviour
         if (!isGrounded && Rigidbody != null)
         {
             Rigidbody.drag = 0;
+            if (transform.position.y < -50f)
+            {
+                body.ModifyHealth(body.health);
+            }
         }
         else if(isGrounded && Rigidbody != null)
         {
@@ -314,7 +316,7 @@ public class Enemy : MonoBehaviour
 
         if (aggro)
         {
-            if (body.me.enabled)
+            if (body.me != null && body.me.enabled)
             {
                 //if(body.me.isPathStale)
 
@@ -404,7 +406,6 @@ public class Enemy : MonoBehaviour
 
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
-        LayerMask Default = LayerMask.GetMask("Default");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
@@ -412,7 +413,7 @@ public class Enemy : MonoBehaviour
         Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
         while (bullet.transform.position != PositionOnBeat)
         {
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 10f * Time.fixedDeltaTime);
+            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 35f * Time.fixedDeltaTime);
             if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
             {
                 if(_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
@@ -437,9 +438,9 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
-        if (Physics.CheckSphere(bullet.transform.position, 0.1f, Default)) Destroy(bullet);
-        if (bullet != null) { Destroy(bullet); Debug.Log("The bullet did not collide with anything"); }
+        if (Physics.CheckSphere(bullet.transform.position, 0.1f)) Destroy(bullet);
         Animations.SetBool("Attack", false);
+        Destroy(bullet);
     }
     private void SpinAttack(int Damage)
     {
@@ -465,7 +466,7 @@ public class Enemy : MonoBehaviour
             foreach (Attack attack in pattern)
             {
                 if (IsStaggered) { IsStaggered = false; break; }
-                if (playerInRange || ShootingRange)
+                if (playerInRange || ShootingRange || aggro)
                 {
                     switch (attack)
                     {
