@@ -98,12 +98,12 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
-
+        Debug.Log("player died");
         if (currentCheckpoint != null)
         {
             currentCheckpoint.GetComponent<CheckpointObelisk>().RespawnReset();
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
-            GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
+            GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
         }
 

@@ -13,7 +13,9 @@ public class DeathPlane : MonoBehaviour
     public GameObject player;
 
     public Vector2 bounds;
-    bool fell = false;
+    Coroutine fell;
+
+    bool started;
 
     private void Update()
     {
@@ -29,10 +31,9 @@ public class DeathPlane : MonoBehaviour
         if(player.transform.position.y < yEnd)
         {
             //start fade
-            if (!fell)
+            if (!started)
             {
-                StartCoroutine(FadeToBlack());
-                    fell = true;
+                    fell = StartCoroutine(FadeToBlack()); ;
             }
 
         }
@@ -41,7 +42,7 @@ public class DeathPlane : MonoBehaviour
     IEnumerator FadeToBlack()
     {
         //create black image here
-
+        started = true;
         var b = new GameObject();
         b.name = "FadeOut";
         b.AddComponent<RectTransform>();
@@ -78,8 +79,7 @@ public class DeathPlane : MonoBehaviour
         GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = player.transform;
 
         player.GetComponentInParent<Health>().Die();
-
-        fell = false;
+        started = false;
         do
         {
             t -= Time.deltaTime;
