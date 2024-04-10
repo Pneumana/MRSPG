@@ -70,6 +70,7 @@ public class LockOnSystem : MonoBehaviour
 
     private void Start()
     {
+        paused = false;
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
         energy = FindFirstObjectByType<Energy>();
         //lockOnAssist = GameObject.Find("LockOnAssist").transform;
@@ -104,6 +105,8 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Update()
     {
+        //Debug.LogWarning(Time.timeScale + " is the TIMESCALE");
+
         if(swapTargetCD>0)
             swapTargetCD-=Time.deltaTime;
         if (trackedEnemy != null)
