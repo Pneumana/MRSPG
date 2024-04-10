@@ -382,7 +382,7 @@ public class Enemy : MonoBehaviour
 
         if (Animations != null)
             Animations.SetBool("Charge", false);
-        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
