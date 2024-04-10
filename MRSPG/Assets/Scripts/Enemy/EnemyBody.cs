@@ -70,6 +70,9 @@ public class EnemyBody : MonoBehaviour
         StartCoroutine(Wait(1f));
         if(this.GetComponent<Animator>()!=null)
             this.GetComponent<Animator>().SetBool("TakeDamage", true);
+
+
+
         if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
@@ -107,6 +110,7 @@ public class EnemyBody : MonoBehaviour
         }
         disablePathfinding = true;
         gameObject.SetActive(false);
+
         //Destroy(gameObject);
     }
     private void Update()
@@ -287,6 +291,8 @@ public class EnemyBody : MonoBehaviour
         }
 
         ModifyHealth(0);
+        if (GetComponent<HealthBar>() != null)
+            GetComponent<HealthBar>().Refresh();
     }
 
     private void OnDestroy()
