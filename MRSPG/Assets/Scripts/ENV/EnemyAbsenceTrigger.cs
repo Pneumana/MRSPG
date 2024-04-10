@@ -31,7 +31,12 @@ public class EnemyAbsenceTrigger : MonoBehaviour
         {
             enemies.Add(removed);
         }
-        if(enemies.Count ==0)
-            parent.TriggerAll();
+        if(enemies.Count == 0)
+        {
+            if(parent!=null)
+                parent.TriggerAll();
+
+        }
+
     }
 }
