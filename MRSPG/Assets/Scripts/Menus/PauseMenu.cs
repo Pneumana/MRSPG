@@ -36,6 +36,7 @@ public class PauseMenu : MonoBehaviour
     private void Awake ( )
     {        
         lvlMusic.Play ( );
+        pausedMusic.Stop ( );
     }
 
     private void Update ( )
