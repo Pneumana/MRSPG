@@ -97,7 +97,8 @@ public class Enemy : MonoBehaviour
             case EnemyType.Boss:
                 boss_enemy = _enemy as BossEnemySettings;
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
-                if(boss_enemy.EnemyName == "Homunculus")
+                Animations = enemyObj.GetComponent<Animator>();
+                if (boss_enemy.EnemyName == "Homunculus")
                 {
                     Gun = gameObject.transform.GetChild(0).Find("Gun");
                 }
