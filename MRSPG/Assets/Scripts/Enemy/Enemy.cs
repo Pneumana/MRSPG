@@ -98,8 +98,7 @@ public class Enemy : MonoBehaviour
             case EnemyType.Boss:
                 boss_enemy = _enemy as BossEnemySettings;
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
-                Animations = enemyObj.GetComponent<Animator>();
-                if (boss_enemy.EnemyName == "Homunculus")
+                if(boss_enemy.EnemyName == "Homunculus")
                 {
                     Gun = gameObject.transform.GetChild(0).Find("Gun");
                 }
@@ -369,10 +368,9 @@ public class Enemy : MonoBehaviour
         charged = true;
         this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
     }
-    private IEnumerator Lunge()
+    private void Lunge()
     {
         Debug.Log("Used the lunge function");
-        yield return new WaitForSeconds(Metronome.GetInterval());
     }
     private void LightAttack(int Damage)
     {
@@ -383,7 +381,10 @@ public class Enemy : MonoBehaviour
     }
     private void HeavyAttack(int Damage)
     {
-        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+
+        if (Animations != null)
+            Animations.SetBool("Charge", false);
+        if (charged && Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
         }
@@ -498,14 +499,7 @@ public class Enemy : MonoBehaviour
                             if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                             break;
                         case Attack.Spin:
-                            if (Animations != null)
-                                Animations.SetTrigger("Spin");
                             if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
-                            break;
-                        case Attack.Lunge:
-                            if (Animations != null)
-                                Animations.SetTrigger("Lunge");
-                            if (PlayerIsInSight == true) StartCoroutine(Lunge());
                             break;
                         case Attack.Lag:
                             if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
