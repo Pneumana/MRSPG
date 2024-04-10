@@ -41,6 +41,13 @@ public class HitscanBullet : MonoBehaviour
                     Debug.DrawLine(transform.position, hit.point, Color.red, 10);
                     if (hit.collider != null)
                     {
+                        var barrel = hit.collider.gameObject.GetComponent<BoomBarrel>(); ;
+                        if (barrel != null)
+                        {
+                            barrel.TryExplode();
+                            continue;
+                        }
+
                         var AI = hit.collider.gameObject.GetComponent<CircleStrafePlayerAI>();
                         if (AI != null)
                         {
