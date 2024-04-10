@@ -46,6 +46,7 @@ public class PauseMenu : MonoBehaviour
         if ( control.controls.Gameplay.PauseGame.IsPressed ( ) )
         {
             _isPaused = true;
+            Debug.Log ( "Game is pausing" );
             Paused ( );
         }
 
@@ -75,6 +76,7 @@ public class PauseMenu : MonoBehaviour
             _howToMenu.gameObject.SetActive ( false );
             _creditsMenu.gameObject.SetActive ( false );
             Time.timeScale = 0f;
+            Debug.Log ( "Game is Paused" );
         }
         else
         {
