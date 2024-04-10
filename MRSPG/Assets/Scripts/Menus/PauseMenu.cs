@@ -4,41 +4,38 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField]
-    Image _pauseMenu, _settingsMenu, _howToMenu, _creditsMenu;
+    [Header ( "UI Panels" )]
+    [SerializeField] Image _pauseMenu;
+    [SerializeField] Image _settingsMenu;
+    [SerializeField] Image _howToMenu;
+    [SerializeField] Image _creditsMenu;
 
-    [SerializeField]
-    GameObject _pauseContinue, _settingsContinue, _howToContinue, _creditsContinue;
+    [Space ( 10 )]
+    [Header ( "Continue Buttons" )]
+    [SerializeField] GameObject _pauseContinue;
+    [SerializeField] GameObject _settingsContinue;
+    [SerializeField] GameObject _howToContinue;
+    [SerializeField] GameObject _creditsContinue;
 
     bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused;
 
+    [Space(10)]
+    [Header("Needed Objects")]
     public LockOnSystem lockOn;
     public Controller control;
-    public AudioSource lvlmusic, pausedMusic;
+    public AudioSource lvlMusic, pausedMusic;
 
     #endregion
 
-
-    private void Start ( )
-    {
-        lvlmusic = GameObject.Find("Main Camera").GetComponent<AudioSource>();
-
-        if ( lvlmusic == null ) 
-        {
-            Debug.LogError ( "Main Camera Audio is NULL" );
-        }
-
-        pausedMusic = this.GetComponent<AudioSource> ( );
-
-        if ( pausedMusic == null )
-        {
-            Debug.LogError ( "Canvas Audio is NULL" );
-        }
+    private void Awake ( )
+    {        
+        lvlMusic.Play ( );
     }
 
     private void Update ( )
@@ -50,19 +47,7 @@ public class PauseMenu : MonoBehaviour
             Paused ( );
         }
 
-        if(_isPaused==true)
-        {
-           lvlmusic.gameObject.SetActive(false);
-            pausedMusic.gameObject.SetActive(true);
-            pausedMusic.Play ( );
-        }
-        else if(_isPaused==false)
-        {
-            lvlmusic.gameObject.SetActive ( true );
-            lvlmusic.Play ( );
-            pausedMusic.gameObject.SetActive ( false );
-        }
-    }
+    }    
 
     public void Paused ( )
     {
@@ -75,6 +60,7 @@ public class PauseMenu : MonoBehaviour
             _settingsMenu.gameObject.SetActive ( false );
             _howToMenu.gameObject.SetActive ( false );
             _creditsMenu.gameObject.SetActive ( false );
+            SwitchMusic ( );
             Time.timeScale = 0f;
             Debug.Log ( "Game is Paused" );
         }
@@ -90,7 +76,31 @@ public class PauseMenu : MonoBehaviour
             _settingsOpen = false;
             _howToOpen = false;
             _creditsOpen = false;
+            SwitchMusic ( );
             Time.timeScale = 0f;
+        }
+    }
+
+    void SwitchMusic ( )
+    {
+
+        if ( _isPaused == true )
+        {
+            lvlMusic.Stop ( );
+            lvlMusic.mute = true;   
+            lvlMusic.enabled = false;
+            pausedMusic.enabled = true;
+            pausedMusic.mute = false;
+            pausedMusic.Play ( );
+        }
+        else if ( _isPaused == false )
+        {
+            pausedMusic.Stop ( );
+            pausedMusic.mute = true;
+            pausedMusic.enabled = false;
+            lvlMusic.enabled = true;       
+            lvlMusic.mute = false;
+            lvlMusic.Play ( );
         }
     }
 
@@ -105,6 +115,7 @@ public class PauseMenu : MonoBehaviour
         _settingsOpen = false;
         _howToOpen = false;
         _creditsOpen = false;
+        SwitchMusic ( );
         Time.timeScale = 1f;
     }
 
