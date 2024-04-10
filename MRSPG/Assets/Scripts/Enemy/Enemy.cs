@@ -435,9 +435,9 @@ public class Enemy : MonoBehaviour
                 Destroy(bullet);
                 break;
             }
+            else if (Physics.CheckSphere(bullet.transform.position, 0.1f)) Destroy(bullet);
             yield return null;
         }
-        if (Physics.CheckSphere(bullet.transform.position, 0.1f)) Destroy(bullet);
         Animations.SetBool("Attack", false);
         Destroy(bullet);
     }
