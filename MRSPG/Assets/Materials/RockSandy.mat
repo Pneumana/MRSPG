@@ -38,7 +38,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _LerpSand: 0.22
+    - _Iridescance: 0.1
+    - _LerpSand: 0
     - _MainNoiseSize: 20
     - _NormalBias: 0
     - _NormalStength: 0.01
@@ -49,12 +50,13 @@ Material:
     - _SineDistortionScale: 5
     - _SineScale: 8
     - _UseGradient: 0
-    - _UseSineNormal: 1
-    - _WarpIntensity: -1.02
+    - _UseSineNormal: 0
+    - _WarpIntensity: 0
     - _XWarpScale: 2
     - _YWarpScale: 2
     m_Colors:
-    - _LerpA: {r: 0.9157146, g: 0.80451226, b: 0.9528302, a: 0}
+    - _IridescantOffset: {r: 0.02, g: 0.02, b: 0, a: 0}
+    - _LerpA: {r: 0.774544, g: 0.623309, b: 0.8207547, a: 0}
     - _LerpB: {r: 0.6421077, g: 0.5019608, b: 0.74509805, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

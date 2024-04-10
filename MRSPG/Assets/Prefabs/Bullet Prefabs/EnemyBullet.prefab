@@ -9850,11 +9850,12 @@ MonoBehaviour:
   destroyed: 0
   damage: 1
   homingTarget: {fileID: 0}
-  maxTurnDelta: 3
+  maxTurnDelta: 0
   acceleration: 100
   collisions:
     serializedVersion: 2
     m_Bits: 201
+  initDir: {x: 0, y: 0, z: 0}
 --- !u!54 &408808775352550176
 Rigidbody:
   m_ObjectHideFlags: 0
