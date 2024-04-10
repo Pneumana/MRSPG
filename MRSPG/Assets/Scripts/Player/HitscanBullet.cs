@@ -34,7 +34,7 @@ public class HitscanBullet : MonoBehaviour
             if (enemyCast.Length > 0)
             {
                 Debug.Log("Hit enemy x " + enemyCast.Length + " " + enemyCast[0].collider.gameObject.name, enemyCast[0].collider.gameObject);
-                Destroy(enemyCast[0].collider.gameObject);
+                //Destroy(enemyCast[0].collider.gameObject);
                 
                 foreach (RaycastHit hit in enemyCast)
                 {
@@ -47,13 +47,22 @@ public class HitscanBullet : MonoBehaviour
                             barrel.TryExplode();
                             continue;
                         }
+                        else
+                        {
+                            Debug.Log("no exploding barrel component on " + gameObject);
+                        }
 
-                        var AI = hit.collider.gameObject.GetComponent<CircleStrafePlayerAI>();
-                        if (AI != null)
+                        var body = hit.collider.gameObject.GetComponent<EnemyBody>();
+                        if (body != null)
+                        {
+                            body.ModifyHealth(5);
+                        }
+                        //var AI = hit.collider.gameObject.GetComponent<CircleStrafePlayerAI>();
+                        /*if (AI != null)
                         {
                             AI.gameObject.GetComponent<NavMeshAgent>().enabled = false;
                             AI.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(transform.forward.x, 0.1f, transform.forward.z) * 15, ForceMode.Impulse);
-                        }
+                        }*/
 
 
                     }
