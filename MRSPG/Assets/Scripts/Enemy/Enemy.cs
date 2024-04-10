@@ -66,7 +66,6 @@ public class Enemy : MonoBehaviour
     private Metronome Metronome;
     GameObject Flare;
 
-    bool charged;
     #endregion
 
     #region Define Enemy
@@ -365,7 +364,6 @@ public class Enemy : MonoBehaviour
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
         yield return new WaitForSeconds(Metronome.GetInterval());
         //if (ChargeParticle != null) ChargeParticle.Stop();
-        charged = true;
         this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
     }
     private void Lunge()

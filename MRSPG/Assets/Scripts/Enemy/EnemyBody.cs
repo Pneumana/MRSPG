@@ -135,7 +135,8 @@ public class EnemyBody : MonoBehaviour
                 //take fall damage
                 ModifyHealth(1);
                     EnablePathfinding();
-                    me.enabled = true;
+                    if(me != null)
+                        me.enabled = true;
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
@@ -143,7 +144,8 @@ public class EnemyBody : MonoBehaviour
                 {
                     airTime = 0;
                     EnablePathfinding();
-                    me.enabled = true;
+                    if (me != null)
+                        me.enabled = true;
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
@@ -267,7 +269,8 @@ public class EnemyBody : MonoBehaviour
 
     public void Recover()
     {
-        me.enabled = true;
+        if (me != null)
+            me.enabled = true;
         //rb.isKinematic = true;
         //Debug.Log(gameObject.name + "recovered");
     }
