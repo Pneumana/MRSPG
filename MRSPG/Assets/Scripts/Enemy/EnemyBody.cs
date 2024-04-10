@@ -8,6 +8,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyBody : MonoBehaviour
 {
+
+    Vector3 startPosition;
     GameObject player;
     public EnemySetting _enemy;
     public int health;
@@ -53,13 +55,14 @@ public class EnemyBody : MonoBehaviour
         player = GameObject.Find("PlayerObj");
         if(_enemy!=null)
             SetEnemyData(_enemy);
+        startPosition = transform.position;
     }
     void SetEnemyData(EnemySetting _enemy)
     {
         health = _enemy.EnemyHealth;
     }
 
-    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Explosive)
+    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Basic)
     {
         if(Immunities.Contains(type))
             return;
@@ -88,16 +91,23 @@ public class EnemyBody : MonoBehaviour
     void Die()
     {
         if (bounds != null)
-        { bounds.enemies.Remove(this); }
+        { bounds.defeated++; }
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/
+
+/*        foreach (EnemyAbsenceTrigger trigger in triggerList)
+        {
+            trigger.UpdateEnemyList(this);
+        }*/
+
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
         disablePathfinding = true;
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
     }
     private void Update()
     {
@@ -263,11 +273,21 @@ public class EnemyBody : MonoBehaviour
     }
 
 
-    private void OnDestroy()
+    public void Respawn()
     {
+        transform.position = startPosition;
+        health = _enemy.EnemyHealth;
+
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
+
+        ModifyHealth(0);
+    }
+
+    private void OnDestroy()
+    {
+       
     }
 }

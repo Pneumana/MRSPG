@@ -101,6 +101,7 @@ public class Health : MonoBehaviour
 
         if (currentCheckpoint != null)
         {
+            currentCheckpoint.GetComponent<CheckpointObelisk>().RespawnReset();
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
             GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up;
             GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
