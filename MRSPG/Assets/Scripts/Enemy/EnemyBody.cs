@@ -156,10 +156,10 @@ public class EnemyBody : MonoBehaviour
             }
 
 
-            if (health <= 0)
-            {
-                Die();
-            }
+        }
+        if (health <= 0)
+        {
+            Die();
         }
             
 
