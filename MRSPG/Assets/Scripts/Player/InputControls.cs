@@ -70,6 +70,7 @@ public class InputControls : MonoBehaviour
 
     private void Start()
     {
+        cam = Camera.main.transform;
         player = GameObject.Find("Player");
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();

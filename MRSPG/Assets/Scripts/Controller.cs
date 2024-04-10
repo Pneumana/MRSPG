@@ -26,7 +26,10 @@ public class Controller : MonoBehaviour
         if (inst == null)
             inst = this;
         else
-            Destroy(gameObject);
+        {
+            if(inst!=this)
+                Destroy(gameObject);
+        }
 
         controls = new ControllerSupport();
         controls.Gameplay.Move.performed += ctx => movement.playerInput = ctx.ReadValue<Vector2>();
