@@ -8,25 +8,58 @@ using UnityEngine.EventSystems;
 public class PauseMenu : MonoBehaviour
 {
     #region Variables
+
     [SerializeField]
     Image _pauseMenu, _settingsMenu, _howToMenu, _creditsMenu;
 
     [SerializeField]
     GameObject _pauseContinue, _settingsContinue, _howToContinue, _creditsContinue;
 
-    bool _settingsOpen, _howToOpen, _creditsOpen;
+    bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused;
 
     public LockOnSystem lockOn;
     public Controller control;
+    public AudioSource lvlmusic, pausedMusic;
 
     #endregion
 
+
+    private void Start ( )
+    {
+        lvlmusic = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+
+        if ( lvlmusic == null ) 
+        {
+            Debug.LogError ( "Main Camera Audio is NULL" );
+        }
+
+        pausedMusic = this.GetComponent<AudioSource> ( );
+
+        if ( pausedMusic == null )
+        {
+            Debug.LogError ( "Canvas Audio is NULL" );
+        }
+    }
 
     private void Update ( )
     {
         if ( control.controls.Gameplay.PauseGame.IsPressed ( ) )
         {
+            _isPaused = true;
             Paused ( );
+        }
+
+        if(_isPaused==true)
+        {
+           lvlmusic.gameObject.SetActive(false);
+            pausedMusic.gameObject.SetActive(true);
+            pausedMusic.Play ( );
+        }
+        else if(_isPaused==false)
+        {
+            lvlmusic.gameObject.SetActive ( true );
+            lvlmusic.Play ( );
+            pausedMusic.gameObject.SetActive ( false );
         }
     }
 
@@ -62,6 +95,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume ( )
     {
         lockOn.paused= false;
+        _isPaused = false;
         _pauseMenu.gameObject .SetActive ( false );
         _settingsMenu.gameObject.SetActive ( false );
         _howToMenu.gameObject.SetActive ( false );
@@ -75,6 +109,7 @@ public class PauseMenu : MonoBehaviour
     public void Settings ( )
     {        
         lockOn.paused= true;
+        _isPaused = true;
         _settingsMenu.gameObject.SetActive ( true );
         _settingsOpen = true;
         _howToOpen= false;
@@ -89,6 +124,7 @@ public class PauseMenu : MonoBehaviour
     public void HowTo ( )
     {
         lockOn.paused=true;
+        _isPaused = true;
         _howToMenu.gameObject .SetActive ( true );
         _howToOpen=true;
         _settingsOpen = false;
@@ -103,6 +139,7 @@ public class PauseMenu : MonoBehaviour
     public void Credits ( )
     {
         lockOn.paused = true;
+        _isPaused = true;
         _creditsMenu.gameObject .SetActive ( true );
         _creditsOpen = true;
         _settingsOpen = false;
