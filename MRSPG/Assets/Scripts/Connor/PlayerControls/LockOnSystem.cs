@@ -144,7 +144,8 @@ public class LockOnSystem : MonoBehaviour
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
                 lockOnAssist.position = player.transform.position + player.transform.forward;
-                freeLook.m_LookAt = lockOnAssist;
+                if(freeLook!=null)
+                    freeLook.m_LookAt = lockOnAssist;
             }
             else
             {
@@ -185,7 +186,8 @@ public class LockOnSystem : MonoBehaviour
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
                 lockOnAssist.position = player.transform.position + player.transform.forward;
-                freeLook.m_LookAt = lockOnAssist;
+                if (freeLook != null)
+                    freeLook.m_LookAt = lockOnAssist;
 
             }
             else
@@ -212,8 +214,13 @@ public class LockOnSystem : MonoBehaviour
                 lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 * influence) * Time.deltaTime);
 
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-                freeLook.m_LookAt = lockOnAssist;
-                var start = freeLook.m_XAxis;
+
+                if (freeLook != null)
+                {
+
+                        freeLook.m_LookAt = lockOnAssist;
+                    var start = freeLook.m_XAxis;
+                }
 
 
                 //Vector3 dir = lockOnAssist.position - player.transform.position;
@@ -237,7 +244,8 @@ public class LockOnSystem : MonoBehaviour
                 Vector3 dir = lockOnAssist.position - player.transform.position;
                 dir.y = 0;
                 var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-                freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
+                if (freeLook != null)
+                    freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
 
 
 
@@ -401,8 +409,12 @@ public class LockOnSystem : MonoBehaviour
         //Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.red);
            // Debug.DrawLine(player.transform.position, player.transform.position + dir, Color.cyan, 10);
         var xangle = Mathf.Rad2Deg * (Mathf.Atan2(player.transform.position.x - (player.transform.position.x + dir.x), player.transform.position.z - (player.transform.position.z + dir.z)));
-        var xLerp = Mathf.MoveTowards(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
+        if (freeLook != null)
+        {
+            var xLerp = Mathf.MoveTowards(freeLook.m_XAxis.Value, xangle - 180, 0.5f);
         var yLerp = Mathf.MoveTowards(freeLook.m_YAxis.Value, -dir.y, 0.5f);
+
+        }
 
         //Vector3 dir = target - transform.position;
         //dir.y = 0; // keep the direction strictly horizontal
