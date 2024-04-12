@@ -172,6 +172,8 @@ public class EnemyBody : MonoBehaviour
         if (pushedBack)
         {
             RaycastHit hit;
+            if (rb == null)
+                return;
             if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && DoWallDamage)
             {
                 Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
@@ -265,10 +267,15 @@ public class EnemyBody : MonoBehaviour
         }
         Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
-        rb.isKinematic = false;
+        if(rb!=null)
+            rb.isKinematic = false;
         DoWallDamage = (source == "Dash");
-        if (source == "Dash") { rb.AddForce(dir, mode); }
-        else { rb.velocity = dir; }
+        if (source == "Dash") {
+            if (rb != null)
+                rb.AddForce(dir, mode); 
+        }
+        else { if (rb != null)
+                rb.velocity = dir; }
     }
 
     public void Recover()
