@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,23 +97,60 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void Die()
+    public IEnumerator Die()
     {
+
         Debug.Log("player died");
         if (currentCheckpoint != null)
         {
             currentCheckpoint.GetComponent<CheckpointObelisk>().RespawnReset();
-            GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
-            GameObject.Find("PlayerObj").transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
-            GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
-        }
 
+            var obj = GameObject.Find("PlayerObj");
+            var input = GameObject.Find("Player").GetComponent<InputControls>();
+            input.velocity = Vector3.zero;
+            input.doGravity = false;
+
+
+            Debug.Log("warping player to " + (currentCheckpoint.spawnPosition + Vector3.up * 1.5f));
+            input.controller.enabled = false;
+            obj.transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
+            input.controller.enabled = true;
+            GameObject.Find("Player").GetComponent<InputControls>().velocity = Vector3.zero;
+            input.doGravity = true;
+
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = obj.transform;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = obj.transform;
+            input.doMovement = true;
+            StartCoroutine(ResetPosition());
+        }
+        else
+        {
+            Debug.Log("no checkpoint to respawn the player at!");
+        }
         currentHealth = 5;
         UIUpdateHealth();
+        yield return null;
     }
 
     private void OnDestroy()
     {
         mat.SetFloat("_Fade", 1);
+    }
+    IEnumerator ResetPosition()
+    {
+        Debug.Log("reset pos loop");
+        var obj = GameObject.Find("PlayerObj");
+        var target = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
+        obj.transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
+        int attempts = 0;
+        while(obj.transform.position != target)
+        {
+            attempts++;
+            obj.transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
+            yield return new WaitForSeconds(0);
+        }
+
+        yield return null;
     }
 }
