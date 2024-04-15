@@ -15,6 +15,7 @@ public class InputControls : MonoBehaviour
     public CharacterController controller;
     public GameObject player;
     public Transform playerObj;
+    private MeleeHitbox meleeHitbox;
     public float speed;
     public float jump;
 
@@ -76,6 +77,7 @@ public class InputControls : MonoBehaviour
     {
         cam = Camera.main.transform;
         player = GameObject.Find("Player");
+        meleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();
         if (instance == null)
@@ -183,6 +185,15 @@ public class InputControls : MonoBehaviour
                     {
                         body.HitByPlayerDash(transform);
                     }
+                }
+            }
+
+            if (type == "MeleeSlide")
+            {
+                if(meleeHitbox.EnemyInRange())
+                {
+                    startTime -= 2 * Time.deltaTime;
+                    //break;
                 }
             }
 
