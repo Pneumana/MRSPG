@@ -8,8 +8,8 @@ public class PulseTextures : MonoBehaviour
     [SerializeField] int materialFrameSkips;
     [SerializeField] float delta = 0.02f;
 
-    [Range(0,1)]
-    [SerializeField] float eyebleed;
+    [Range(0,0.7f)]
+    [SerializeField] float eyebleed = 0.5f;
 
     // Start is called before the first frame update
     void Start()
