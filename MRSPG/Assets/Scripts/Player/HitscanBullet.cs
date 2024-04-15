@@ -112,7 +112,7 @@ public class HitscanBullet : MonoBehaviour
         float t = 0;
         do
         {
-            t += Time.deltaTime;
+            t += Time.deltaTime * 2;
             lr.widthMultiplier = (t * 4) + 1;
             lr.material.SetFloat("_Fade", t);
             yield return new WaitForSeconds(0);

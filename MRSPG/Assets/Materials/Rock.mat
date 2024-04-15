@@ -38,23 +38,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DirtMultiplier: 0
+    - _DirtScale: 0
+    - _Iridescance: 0
     - _LerpSand: 0
-    - _MainNoiseSize: 15
-    - _NormalBias: 1
-    - _NormalStength: 0.1
+    - _MainNoiseSize: 40
+    - _NormalBias: 0.5
+    - _NormalStength: 0.05
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Roughness: 0
+    - _Roughness: 0.77
     - _SineDistortionIntensity: 0
     - _SineDistortionScale: 0
     - _SineScale: 5
     - _UseSineNormal: 0
-    - _WarpIntensity: 1
+    - _WarpIntensity: 0
     - _XWarpScale: 10
     - _YWarpScale: 10
     m_Colors:
-    - _LerpA: {r: 1, g: 1, b: 1, a: 0}
-    - _LerpB: {r: 0.745283, g: 0.6395797, b: 0.5027145, a: 0}
+    - _IridescantOffset: {r: 0.02, g: 0.02, b: 0, a: 0}
+    - _LerpA: {r: 0.7058824, g: 0.41394714, b: 0.10588234, a: 0}
+    - _LerpB: {r: 0.60784316, g: 0.28627452, b: 0.09411766, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5941193950819042020

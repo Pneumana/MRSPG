@@ -105,7 +105,7 @@ public class InputControls : MonoBehaviour
     {
         if (!doGravity)
             return;
-        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        var _isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         RaycastHit hit;
         var dist = Mathf.Abs((velocity.y * Time.deltaTime) * 1);
         dist = Mathf.Max(dist, 10 * Time.deltaTime);
@@ -122,7 +122,7 @@ public class InputControls : MonoBehaviour
         Debug.DrawLine(groundCheck.position, hit.point, Color.blue, Time.deltaTime);
 
 
-        if (isGrounded && velocity.y < 0)
+        if (isGrounded && velocity.y < 0 || _isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
             animator.SetBool("Falling", false);
