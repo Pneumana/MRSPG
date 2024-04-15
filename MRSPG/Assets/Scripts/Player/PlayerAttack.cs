@@ -37,10 +37,6 @@ public class PlayerAttack : MonoBehaviour
     {
         StopAllCoroutines();
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
-        if(playerObj.GetComponent<Animator>().GetInteger("AttackChain") >= 3)
-        {
-            //if (inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
-        }
         StartCoroutine(TimeOutAnimation());
 
 
@@ -101,7 +97,7 @@ public class PlayerAttack : MonoBehaviour
             timeout -= Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
-        Debug.Log("player attack animation timed out");
+        //Debug.Log("player attack animation timed out");
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
         //MeleeSide = 2;

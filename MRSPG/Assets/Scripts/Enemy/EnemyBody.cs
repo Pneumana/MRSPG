@@ -176,8 +176,8 @@ public class EnemyBody : MonoBehaviour
                 return;
             if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && DoWallDamage)
             {
-                Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
-                Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
+                //Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
+                //Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
 
                 ModifyHealth(5);
                 rb.velocity = Vector3.zero;
@@ -198,7 +198,7 @@ public class EnemyBody : MonoBehaviour
                     {
                         me.enabled = true;
                         rb.isKinematic = true;
-                        Debug.Log(gameObject.name + " recovered from pushback");
+                        //Debug.Log(gameObject.name + " recovered from pushback");
                     }
                 }
                 pushedBack = false;
@@ -245,7 +245,7 @@ public class EnemyBody : MonoBehaviour
 
     public void HitByPlayerDash(Transform player)
     {
-        Debug.Log(gameObject.name + " pushed by player");
+        //Debug.Log(gameObject.name + " pushed by player");
         //var dir = player.position - transform.position;
         if (InputControls.instance.dashTime > 0)
         {
@@ -265,7 +265,7 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        Debug.Log(gameObject.name + " shoved");
+        //Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         if(rb!=null)
             rb.isKinematic = false;
