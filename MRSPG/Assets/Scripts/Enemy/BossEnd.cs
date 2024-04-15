@@ -7,6 +7,7 @@ public class BossEnd : MonoBehaviour
 {
     private void OnDestroy()
     {
-        SceneManager.LoadScene("Level 1.5");
+        Debug.Log("Ooops");
+        //SceneManager.LoadScene("Level 1.5");
     }
 }
