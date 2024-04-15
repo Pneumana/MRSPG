@@ -388,7 +388,7 @@ public class LockOnSystem : MonoBehaviour
 
             if (controller.controls.Gameplay.Slowdown.WasPressedThisFrame() || controller.controls.Gameplay.Fire.WasPressedThisFrame() && energy.currentEnergy >= 50)
             {
-            Debug.Log("start input");
+            //Debug.Log("start input");
                 remainingTime = useTime;
             if(cooldown <= 0)
             {
@@ -427,14 +427,14 @@ public class LockOnSystem : MonoBehaviour
         {
             if (controller.lookInput.x > 0)
             {
-                Debug.Log("looking right");
+                //Debug.Log("looking right");
                 //right
                 if (rightTrackedEnemy != null)
                     trackedEnemy = rightTrackedEnemy;
             }
             else if (controller.lookInput.x < 0)
             {
-                Debug.Log("looking left");
+                //Debug.Log("looking left");
                 //left
                 if (leftTrackedEnemy != null)
                     trackedEnemy = leftTrackedEnemy;
@@ -497,7 +497,7 @@ public class LockOnSystem : MonoBehaviour
         
             if (controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
             {
-                Debug.Log("end input");
+                //Debug.Log("end input");
                 //if (!dontSwapPositions)
                     SwapPositions();
                 cooldown = cooldownTime;

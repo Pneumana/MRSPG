@@ -15,6 +15,7 @@ public class InputControls : MonoBehaviour
     public CharacterController controller;
     public GameObject player;
     public Transform playerObj;
+    private MeleeHitbox meleeHitbox;
     public float speed;
     public float jump;
 
@@ -76,6 +77,7 @@ public class InputControls : MonoBehaviour
     {
         cam = Camera.main.transform;
         player = GameObject.Find("Player");
+        meleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();
         if (instance == null)
@@ -105,7 +107,7 @@ public class InputControls : MonoBehaviour
     {
         if (!doGravity)
             return;
-        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        var _isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         RaycastHit hit;
         var dist = Mathf.Abs((velocity.y * Time.deltaTime) * 1);
         dist = Mathf.Max(dist, 10 * Time.deltaTime);
@@ -122,7 +124,7 @@ public class InputControls : MonoBehaviour
         Debug.DrawLine(groundCheck.position, hit.point, Color.blue, Time.deltaTime);
 
 
-        if (isGrounded && velocity.y < 0)
+        if (isGrounded && velocity.y < 0 || _isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
             animator.SetBool("Falling", false);
@@ -183,6 +185,15 @@ public class InputControls : MonoBehaviour
                     {
                         body.HitByPlayerDash(transform);
                     }
+                }
+            }
+
+            if (type == "MeleeSlide")
+            {
+                if(meleeHitbox.EnemyInRange())
+                {
+                    startTime -= 2 * Time.deltaTime;
+                    //break;
                 }
             }
 
