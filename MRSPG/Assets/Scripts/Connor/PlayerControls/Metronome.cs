@@ -24,6 +24,8 @@ public class Metronome : MonoBehaviour
 
     public static Metronome inst;
 
+    public Vector3 startPos;
+
     [SerializeField] public int framesToSkip;
     [Header("Not a direct 1:1 for number of beats displayed")]
     [SerializeField] float beatPopulation;
@@ -39,6 +41,7 @@ public class Metronome : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        startPos = transform.position;
         intervalMax = GetInterval();
     }
 

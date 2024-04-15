@@ -95,9 +95,9 @@ public class ComboManager : MonoBehaviour
             {
                 comboBar.fillAmount = (currentPoints - pointsPerTier[currentTier-1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]);
                 prevFillComboBar.fillAmount = 1f - comboBar.fillAmount;
-                Debug.Log("difference = " + currentPoints + " - " + pointsPerTier[currentTier-1] + " = " + (currentPoints - pointsPerTier[currentTier - 1]));
-                Debug.Log("difference = " + pointsPerTier[currentTier] + " - " + pointsPerTier[currentTier - 1] + " = " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]));
-                Debug.Log("divide = " + (currentPoints - pointsPerTier[currentTier - 1]) + " / " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]) + " = " + ((currentPoints - pointsPerTier[currentTier - 1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1])));
+                //Debug.Log("difference = " + currentPoints + " - " + pointsPerTier[currentTier-1] + " = " + (currentPoints - pointsPerTier[currentTier - 1]));
+                //Debug.Log("difference = " + pointsPerTier[currentTier] + " - " + pointsPerTier[currentTier - 1] + " = " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]));
+                //Debug.Log("divide = " + (currentPoints - pointsPerTier[currentTier - 1]) + " / " + (pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1]) + " = " + ((currentPoints - pointsPerTier[currentTier - 1]) / ((float)pointsPerTier[currentTier] - (float)pointsPerTier[currentTier - 1])));
             }
             else
             {

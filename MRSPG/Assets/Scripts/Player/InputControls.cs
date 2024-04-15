@@ -61,6 +61,10 @@ public class InputControls : MonoBehaviour
     [SerializeField] ParticleSystem groundedParticles;
     [SerializeField] ParticleSystem jumpParticles;
 
+    bool playedLand;
+    bool playedJump;
+    int noGroundFrames;
+
     [SerializeField] Animator animator;
 
     #endregion
@@ -93,18 +97,30 @@ public class InputControls : MonoBehaviour
         }
 
         ApplyGravity();
+        
         MovePlayer(movePlayer);
     }
 
     public void ApplyGravity()
     {
-        var prev = isGrounded;
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        if (isGrounded && !prev)
+        if (!doGravity)
+            return;
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        RaycastHit hit;
+        var dist = Mathf.Abs((velocity.y * Time.deltaTime) * 1);
+        dist = Mathf.Max(dist, 10 * Time.deltaTime);
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out hit, dist , groundMask);
+        if(!isGrounded)
+            noGroundFrames++;
+        else
         {
-            groundedParticles.Play();
+            noGroundFrames = 0;
         }
+        if (noGroundFrames > 15)
+            
+        Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.up * ((velocity.y * Time.deltaTime) * 1)), Color.cyan, Time.deltaTime);
+        Debug.DrawLine(groundCheck.position, hit.point, Color.blue, Time.deltaTime);
+
 
         if (isGrounded && velocity.y < 0)
         {
@@ -112,12 +128,18 @@ public class InputControls : MonoBehaviour
             animator.SetBool("Falling", false);
             canJump = true;
             dashBoost = 0;
+            if (!playedLand)
+            {
+                groundedParticles.Play();
+                playedLand = true;
+            }
         }
 
         if(!canJump)
         {
             Waiter(1f);
             animator.SetBool("Falling", true);
+            playedLand = false;
         }
     }
 
@@ -193,11 +215,12 @@ public class InputControls : MonoBehaviour
     }
     public void MovePlayer(Vector3 movePlayer)
     {
-        if(doMovement)
+        if (doMovement)
             movePlayer = new Vector3(playerInput.x, 0f, playerInput.y);
 
         velocity.y += gravity * gravityMultiplier * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        if (controller.enabled)
+            controller.Move(velocity * Time.deltaTime);
 
         if (movePlayer.magnitude >= 0.1f)
         {
@@ -209,7 +232,8 @@ public class InputControls : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward * playerInput.magnitude;
-            controller.Move(moveDirection * Time.deltaTime * speed);
+            if(controller.enabled)
+                controller.Move(moveDirection * Time.deltaTime * speed);
         }
         else
         {
@@ -226,6 +250,7 @@ public class InputControls : MonoBehaviour
             animator.SetTrigger("Jump");
             velocity.y = Mathf.Sqrt(jump * -2f * gravity);
             if (dashing) { dashBoost = 1; }
+            playedLand = false;
             jumpParticles.Play();
             canJump = false;
         }
