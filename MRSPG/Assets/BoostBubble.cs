@@ -8,12 +8,12 @@ public class BoostBubble : MonoBehaviour
     [SerializeField] float boost;
     [SerializeField] float respawnTime;
 
-    Renderer rend;
+    public Renderer rend;
     Collider coll;
+
     // Start is called before the first frame update
     void Start()
     {
-        rend = GetComponent<Renderer>();
         coll = GetComponent<Collider>();
     }
 
@@ -26,7 +26,7 @@ public class BoostBubble : MonoBehaviour
             StartCoroutine(Popped());
         }
     }
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "PlayerObj")
         {
@@ -34,7 +34,7 @@ public class BoostBubble : MonoBehaviour
             InputControls.instance.velocity.y = boost;
             StartCoroutine(Popped());
         }
-    }
+    }*/
 
     IEnumerator Popped()
     {

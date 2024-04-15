@@ -23,8 +23,20 @@ public class EnemyAbsenceTrigger : MonoBehaviour
 
     public void UpdateEnemyList(EnemyBody removed)
     {
-        enemies.Remove(removed);
-        if(enemies.Count ==0)
-            parent.TriggerAll();
+        if (enemies.Contains(removed))
+        {
+            enemies.Remove(removed);
+        }
+        else
+        {
+            enemies.Add(removed);
+        }
+        if(enemies.Count == 0)
+        {
+            if(parent!=null)
+                parent.TriggerAll();
+
+        }
+
     }
 }

@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
 {
     #region variables
     public int MeleeCombo; //Will be out of date if read by other scripts
+    public byte MeleeSide; //For animation
     public int RecentAttack;
     public bool DealtDamage;
     public bool HealCombo;
@@ -29,7 +30,7 @@ public class PlayerAttack : MonoBehaviour
         lockOnSystem = GameObject.Find("TimeScaler").GetComponent<LockOnSystem>();
         player = GameObject.Find("Player");
         playerObj = GameObject.Find("PlayerObj");
-        MeleeCombo = 1;
+        MeleeCombo = 2;
         HealCombo = true;
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
@@ -38,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
         if(playerObj.GetComponent<Animator>().GetInteger("AttackChain") >= 3)
         {
-            //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+            //if (inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
         }
         StartCoroutine(TimeOutAnimation());
 
@@ -65,22 +66,19 @@ public class PlayerAttack : MonoBehaviour
         {
             EnemyDir = player.transform.forward;
         }
-
-        
-        
-        
         switch (MeleeCombo)
         {
             case 1:
                 //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 +((MeleeSide + 1)% 2));
                 break;
             case 2:
-                
                 //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 + ((MeleeSide + 1) % 2));
                 break;
             case 3:
-                
                 //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 3);
                 if (HealCombo)
                 {
                     Health health = player.GetComponent<Health>();
@@ -88,6 +86,7 @@ public class PlayerAttack : MonoBehaviour
                 }
                 break;
         }
+        //StartCoroutine(TimeOutAnimation());
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
         meleeHitbox.MeleeAttack(MeleeCombo);
@@ -105,6 +104,7 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log("player attack animation timed out");
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
+        //MeleeSide = 2;
 
         float a = 1;
         while (a > 0)

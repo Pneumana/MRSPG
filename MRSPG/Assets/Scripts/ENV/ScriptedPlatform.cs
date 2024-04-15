@@ -22,7 +22,6 @@ public class ScriptedPlatform : MonoBehaviour, IEnvTriggered
     }
     public void Activated(float delay)
     {
-        Debug.Log("triggered");
         canMove = true;
         //StartCoroutine(MoveLoop(delay));
     }

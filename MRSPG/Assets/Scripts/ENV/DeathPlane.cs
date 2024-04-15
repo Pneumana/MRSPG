@@ -13,7 +13,9 @@ public class DeathPlane : MonoBehaviour
     public GameObject player;
 
     public Vector2 bounds;
-    bool fell = false;
+    Coroutine fell;
+
+    bool started;
 
     private void Update()
     {
@@ -25,14 +27,15 @@ public class DeathPlane : MonoBehaviour
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = player.transform;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = null;
+            var input = GameObject.Find("Player").GetComponent<InputControls>();
+            input.doMovement = false;
         }
         if(player.transform.position.y < yEnd)
         {
             //start fade
-            if (!fell)
+            if (fell==null)
             {
-                StartCoroutine(FadeToBlack());
-                    fell = true;
+                    fell = StartCoroutine(FadeToBlack()); ;
             }
 
         }
@@ -41,12 +44,14 @@ public class DeathPlane : MonoBehaviour
     IEnumerator FadeToBlack()
     {
         //create black image here
-
+        started = true;
         var b = new GameObject();
         b.name = "FadeOut";
         b.AddComponent<RectTransform>();
         b.AddComponent<Image>();
         b.transform.SetParent(GameObject.Find("Canvas").transform);
+
+        //player.GetComponent<CharacterController>().enabled = false;
 
         var brec = b.GetComponent<RectTransform>();
         brec.anchoredPosition = Vector2.zero;
@@ -71,15 +76,9 @@ public class DeathPlane : MonoBehaviour
 
         //reset player position/spawnpoint
         //re-enable player input.
-
-
-        GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
-        GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = player.transform;
-        GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = player.transform;
-
-        player.GetComponentInParent<Health>().Die();
-
-        fell = false;
+        //player.GetComponentInParent<InputControls>().velocity = Vector3.zero;
+        player.GetComponentInParent<Health>().StartCoroutine("Die");
+        started = false;
         do
         {
             t -= Time.deltaTime;
@@ -88,6 +87,7 @@ public class DeathPlane : MonoBehaviour
             yield return new WaitForSeconds(0);
         } while (t > 0);
         Destroy(b);
+        fell = null;
         yield return null;
     }
 

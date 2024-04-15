@@ -42,4 +42,9 @@ public class HealthBar : MonoBehaviour
         }
         running = false;
     }
+    public void Refresh()
+    {
+        Debug.Log("refresging healthbar");
+        current = enemy._enemy.EnemyHealth;
+    }
 }

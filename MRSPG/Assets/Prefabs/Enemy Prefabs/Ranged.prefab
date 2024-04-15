@@ -499,7 +499,6 @@ GameObject:
   - component: {fileID: 6718444960042176305}
   - component: {fileID: 2002438217723907631}
   - component: {fileID: 7327319610459168486}
-  - component: {fileID: 5465244743263157538}
   - component: {fileID: 458034912411701020}
   m_Layer: 6
   m_Name: Ranged
@@ -562,6 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 35519fff0e78459479fce2cb607324ec, type: 2}
+  DisableAttack: 0
   PlayerIsInSight: 0
   LookAt: 1
 --- !u!114 &6718444960042176305
@@ -585,9 +585,10 @@ MonoBehaviour:
   gravityAffected: 1
   airTime: 0
   bounceOffPlayer: 0
-  me: {fileID: 5465244743263157538}
+  me: {fileID: 0}
   bounds: {fileID: 0}
   triggerList: []
+  Immunities: 
 --- !u!54 &2002438217723907631
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -660,28 +661,6 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 6
     m_NumAlphaKeys: 2
---- !u!195 &5465244743263157538
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4986009800001572584}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.52
-  m_Speed: 0
-  m_Acceleration: 0
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 2
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
-  m_AutoRepath: 1
-  m_Height: 1.37
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!95 &458034912411701020
 Animator:
   serializedVersion: 7

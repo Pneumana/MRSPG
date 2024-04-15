@@ -8,6 +8,9 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     public Vector3 spawnPosition;
     GameObject player;
     AnimateObelisk anim;
+
+    public List<GameObject> encountersAhead = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,5 +39,27 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
         if (anim != null)
             anim.StartCoroutine("AnimateWakeUp");
         //StartCoroutine(MoveLoop(delay));
+    }
+
+    public void RespawnReset()
+    {
+        Debug.Log("respawn reset");
+        foreach(GameObject go in encountersAhead)
+        {
+            Debug.Log(go.name + " is resetting");
+            go.SetActive(true);
+            var bb = go.GetComponent<BattleBounds>();
+
+            bb.StopAllCoroutines();
+            bb.inBattle = false;
+            if(bb.defeated!=bb.enemies.Count)
+                bb.defeated = 0;
+            foreach(GameObject enemy in bb.enemies)
+            {
+                enemy.SetActive(true);
+                enemy.GetComponent<EnemyBody>().Respawn();
+
+            }
+        }
     }
 }

@@ -40,7 +40,6 @@ public class Tutorial : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Tutorial was entered");
         if(collision.CompareTag("TutorialTrigger"))
         {
             point = collision.GetComponent<SetTutorialPoint>();

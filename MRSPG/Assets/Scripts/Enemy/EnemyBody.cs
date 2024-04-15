@@ -8,6 +8,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyBody : MonoBehaviour
 {
+
+    Vector3 startPosition;
     GameObject player;
     public EnemySetting _enemy;
     public int health;
@@ -53,13 +55,14 @@ public class EnemyBody : MonoBehaviour
         player = GameObject.Find("PlayerObj");
         if(_enemy!=null)
             SetEnemyData(_enemy);
+        startPosition = transform.position;
     }
     void SetEnemyData(EnemySetting _enemy)
     {
         health = _enemy.EnemyHealth;
     }
 
-    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Explosive)
+    public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Basic)
     {
         if(Immunities.Contains(type))
             return;
@@ -67,6 +70,9 @@ public class EnemyBody : MonoBehaviour
         StartCoroutine(Wait(1f));
         if(this.GetComponent<Animator>()!=null)
             this.GetComponent<Animator>().SetBool("TakeDamage", true);
+
+
+
         if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
@@ -88,16 +94,24 @@ public class EnemyBody : MonoBehaviour
     void Die()
     {
         if (bounds != null)
-        { bounds.enemies.Remove(this); }
+        { bounds.defeated++; }
         /*Debug.Log("The enemy has died");
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
         else { energy.GainEnergy(5); }*/
+
+/*        foreach (EnemyAbsenceTrigger trigger in triggerList)
+        {
+            trigger.UpdateEnemyList(this);
+        }*/
+
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
         disablePathfinding = true;
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+
+        //Destroy(gameObject);
     }
     private void Update()
     {
@@ -125,7 +139,8 @@ public class EnemyBody : MonoBehaviour
                 //take fall damage
                 ModifyHealth(1);
                     EnablePathfinding();
-                    me.enabled = true;
+                    if(me != null)
+                        me.enabled = true;
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
@@ -133,7 +148,8 @@ public class EnemyBody : MonoBehaviour
                 {
                     airTime = 0;
                     EnablePathfinding();
-                    me.enabled = true;
+                    if (me != null)
+                        me.enabled = true;
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
@@ -147,11 +163,17 @@ public class EnemyBody : MonoBehaviour
 
 
         }
+        if (health <= 0)
+        {
+            Die();
+        }
             
 
         if (pushedBack)
         {
             RaycastHit hit;
+            if (rb == null)
+                return;
             if(Physics.Raycast(transform.position + rb.velocity.normalized, rb.velocity.normalized, out hit, rb.velocity.magnitude * Time.deltaTime) && DoWallDamage)
             {
                 Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
@@ -188,7 +210,8 @@ public class EnemyBody : MonoBehaviour
 
     public void DisablePathfinding()
     {
-        me.enabled = false;
+        if (me != null)
+            me.enabled = false;
         rb.isKinematic = false;
         disablePathfinding = true;
     }
@@ -244,25 +267,43 @@ public class EnemyBody : MonoBehaviour
         }
         Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
-        rb.isKinematic = false;
+        if(rb!=null)
+            rb.isKinematic = false;
         DoWallDamage = (source == "Dash");
-        if (source == "Dash") { rb.AddForce(dir, mode); }
-        else { rb.velocity = dir; }
+        if (source == "Dash") {
+            if (rb != null)
+                rb.AddForce(dir, mode); 
+        }
+        else { if (rb != null)
+                rb.velocity = dir; }
     }
 
     public void Recover()
     {
-        me.enabled = true;
+        if (me != null)
+            me.enabled = true;
         //rb.isKinematic = true;
         //Debug.Log(gameObject.name + "recovered");
     }
 
 
-    private void OnDestroy()
+    public void Respawn()
     {
+        transform.position = startPosition;
+        health = _enemy.EnemyHealth;
+
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
+
+        ModifyHealth(0);
+        if (GetComponent<HealthBar>() != null)
+            GetComponent<HealthBar>().Refresh();
+    }
+
+    private void OnDestroy()
+    {
+       
     }
 }

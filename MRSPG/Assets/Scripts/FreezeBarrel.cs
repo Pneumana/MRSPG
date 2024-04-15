@@ -10,9 +10,10 @@ public class FreezeBarrel : MonoBehaviour
     int _maxHealth = 1;
     public int currentHealth;
 
-
     [SerializeField]
     FreezeBarrel freezeReset;
+    [SerializeField]
+    GameObject _frozenExplosion;
 
     #endregion
 
@@ -43,12 +44,12 @@ public class FreezeBarrel : MonoBehaviour
 
         if ( currentHealth == 0 )
         {
-            DetecAfterDetonated ( );
+            DetectAfterDetonated ( );
             StartCoroutine ( PauseBeforeGone ( ) );
         }
     }
 
-    void DetecAfterDetonated ( )
+    void DetectAfterDetonated ( )
     {
         Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _freezeRadius );
 
@@ -64,6 +65,7 @@ public class FreezeBarrel : MonoBehaviour
         GameObject.Find ( "Player" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll;
         GameObject.FindWithTag ( "Enemy" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll; 
         Debug.Log ( "Everything is Frozen" );
+        _frozenExplosion = Instantiate ( _frozenExplosion , transform.position , Quaternion.identity );
         StartCoroutine ( Frozen ( ) );
     }
 
