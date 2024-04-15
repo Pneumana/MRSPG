@@ -170,6 +170,7 @@ public class LockOnSystem : MonoBehaviour
                 //HideTargets();
                 /*                if(!controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
                                     StopLockOn();*/
+                player.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 freeAim = true;
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             }
@@ -233,6 +234,7 @@ public class LockOnSystem : MonoBehaviour
                 var b = trackedEnemy.transform.position;
                 b.y = 0;
 
+
                 var dist = Vector3.Distance(a, b);
                 var influence = Mathf.Clamp01(dist / 5);
 
@@ -272,7 +274,12 @@ public class LockOnSystem : MonoBehaviour
 
 
                 Vector3 dir = lockOnAssist.position - player.transform.position;
+
+                
+
                 dir.y = 0;
+                player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                //player.transform.parent.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
                 var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
                 if (freeLook != null)
                 {
@@ -290,6 +297,10 @@ public class LockOnSystem : MonoBehaviour
             /*freeLook.m_XAxis.Value = lockOnAssist.rotation.eulerAngles.y;
             freeLook.m_YAxis.Value = 1 -  (lockOnAssist.rotation.eulerAngles.x);*/
 
+        }
+        else
+        {
+            
         }
 
         InputEventStartSlowDown();

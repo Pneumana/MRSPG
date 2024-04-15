@@ -107,7 +107,9 @@ public class InputControls : MonoBehaviour
             return;
         //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         RaycastHit hit;
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out hit, Mathf.Abs((velocity.y * Time.deltaTime) *1) , groundMask);
+        var dist = Mathf.Abs((velocity.y * Time.deltaTime) * 1);
+        dist = Mathf.Max(dist, 10 * Time.deltaTime);
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out hit, dist , groundMask);
         if(!isGrounded)
             noGroundFrames++;
         else
