@@ -40925,6 +40925,17 @@ Transform:
   - {fileID: 1030797499}
   m_Father: {fileID: 1303422683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1152865036 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3026932653264825419, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+  m_PrefabInstance: {fileID: 1336648994}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1153114774 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 99d6621b08259fa45aac23b791d0bf6a, type: 3}
@@ -48724,6 +48735,17 @@ Transform:
   - {fileID: 1152537515}
   m_Father: {fileID: 534327705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1313570118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1635861725689654833, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+  m_PrefabInstance: {fileID: 1336648994}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1314245545
 GameObject:
   m_ObjectHideFlags: 0
@@ -49122,6 +49144,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6202000842600906584, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: _healthImg
+      value: 
+      objectReference: {fileID: 1313570118}
     - target: {fileID: 404672735038670452, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.073040776
@@ -49130,13 +49156,17 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.073040776
       objectReference: {fileID: 0}
+    - target: {fileID: 1387221332289506120, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: _energyImg
+      value: 
+      objectReference: {fileID: 1152865036}
     - target: {fileID: 1826062822712188319, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 595589017}
     - target: {fileID: 1826062822712188319, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadMainMenu
+      value: BackMainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 3164777090741701887, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalPosition.x
