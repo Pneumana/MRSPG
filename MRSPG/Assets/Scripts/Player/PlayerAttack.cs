@@ -37,10 +37,6 @@ public class PlayerAttack : MonoBehaviour
     {
         StopAllCoroutines();
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
-        if(playerObj.GetComponent<Animator>().GetInteger("AttackChain") >= 3)
-        {
-            //if (inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
-        }
         StartCoroutine(TimeOutAnimation());
 
 
@@ -69,20 +65,20 @@ public class PlayerAttack : MonoBehaviour
         switch (MeleeCombo)
         {
             case 1:
-                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 20, 0.15f, false, "MeleeSlide")); }
                 //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 +((MeleeSide + 1)% 2));
                 break;
             case 2:
-                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 20, 0.15f, false, "MeleeSlide")); }
                 //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 + ((MeleeSide + 1) % 2));
                 break;
             case 3:
-                //if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.05f, false, "MeleeSlide")); }
+                if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 30, 0.10f, false, "MeleeSlide")); }
                 //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 3);
                 if (HealCombo)
                 {
                     Health health = player.GetComponent<Health>();
-                    if (health.currentHealth < 4) { health.LoseHealth(-1); }
+                    if (health.currentHealth < 4) { health.LoseHealth(-1); StartCoroutine(health.HealHUD());  }
                 }
                 break;
         }
@@ -101,7 +97,7 @@ public class PlayerAttack : MonoBehaviour
             timeout -= Time.deltaTime;
             yield return new WaitForSeconds(0);
         }
-        Debug.Log("player attack animation timed out");
+        //Debug.Log("player attack animation timed out");
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
         //MeleeSide = 2;

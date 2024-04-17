@@ -178,7 +178,7 @@ public class SybilLedgeGrab : MonoBehaviour
     }
     void JumpLedge()
     {
-        Debug.Log("jumping ledge");
+        //Debug.Log("jumping ledge");
         //jump up
         InputControls.instance.gravityMultiplier = 4;
         grabbed = false;

@@ -5,8 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class BossEnd : MonoBehaviour
 {
-    private void OnDestroy()
+
+    EnemyBody body;
+
+    private void Start()
     {
-        SceneManager.LoadScene("Level 1.5");
+        body = GetComponent<EnemyBody>();
+    }
+
+    private void Update()
+    {
+        if(body.health <= 0)
+        {
+            SceneManager.LoadScene("Level 1.5");
+        }
     }
 }

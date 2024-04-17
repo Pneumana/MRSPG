@@ -94,22 +94,4 @@ public class MeleeHitbox : MonoBehaviour
         if (inputControls == null) return false;
         return Physics.CheckBox(transform.position, HitboxSize, transform.rotation, inputControls.enemyLayer);
     }
-    //Added by connor
-    private void OnTriggerEnter(Collider other)
-    {
-        print("OnTriggerEnter");
-        if (other.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) //checks if target collider is from an enemy, also gets target's scripts
-        {
-            if (!hurtList.Contains(enemyBody))
-            {
-                Debug.Log("hurting " + enemyBody.name);
-                hurtList.Add(enemyBody);
-                enemyBody.ModifyHealth(1);
-            }
-        }
-        else
-        {
-            Debug.Log(other.gameObject.name + " has no enemy body", other.gameObject);
-        }
-    }
 }

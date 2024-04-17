@@ -70,7 +70,7 @@ public class ComboManager : MonoBehaviour
             {
             while(currentPoints > pointsPerTier[currentTier])
             {
-                Debug.Log("tier up");
+                //Debug.Log("tier up");
                 currentTier++;
             }
 
@@ -117,7 +117,7 @@ public class ComboManager : MonoBehaviour
             if (startedTimestamp == 0)
             {
                 startedTimestamp = Time.time;
-                Debug.Log("started @ " + startedTimestamp);
+                //Debug.Log("started @ " + startedTimestamp);
             }
 
             if(startedTimestamp - eventAddedTimeStamp[0] > 0.25f)
