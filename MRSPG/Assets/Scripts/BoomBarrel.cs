@@ -31,9 +31,6 @@ public class BoomBarrel : MonoBehaviour
             Debug.LogError ( "Player is NULL" );
         }
 
-        //Formerly
-        //_boomAgain= GameObject.Find("Boom Barrel").GetComponent<BoomBarrel>();
-        //not sure if that line is needed but there's a null ref error happening because of "Boom Barrel" not existing
         _boomAgain = GetComponent<BoomBarrel>();
 
         if ( _boomAgain == null )
@@ -72,7 +69,6 @@ public class BoomBarrel : MonoBehaviour
     void DetectionAfterExplosion ( )
     {
         Collider [ ] colliders = Physics.OverlapSphere ( transform.position , _boomRadius, LayerMask.GetMask("Enemy", "Player", "Ground") );
-        Debug.Log(colliders.Length + " objects were hit by explosion");
         foreach( Collider collider in colliders )
         {
             Debug.Log(collider.gameObject.name + " was hit by explosion from " + gameObject.name, collider.gameObject);
@@ -86,27 +82,17 @@ public class BoomBarrel : MonoBehaviour
             {
                 if(barrel.gameObject != gameObject)
                 {
-
-                Debug.Log(gameObject.name + "'s explosion triggered " + barrel.gameObject.name);
                 barrel.TryExplode();
                 }
             }
-            //DealDamage ( );
-            //return;
         }
     }
     
-    //the player would be taking damage every time this went off, so im chaning it to damage the player if they are close enough to be hurt by it.
     void DealDamage ( )
     {
         _playerHealth.LoseHealth ( 5 );
 
         Debug.Log ( "Enemy Took 5 Damage" );
-
-/*        if ( GameObject.Find ( "Boom Barrel" ) )
-        {
-            _boomAgain.Explode ( );
-        }*/
     }
 
     IEnumerator Explode ( )

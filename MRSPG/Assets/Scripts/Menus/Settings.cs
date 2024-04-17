@@ -1,25 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 public class Settings : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] 
-    Dropdown _resDropdown;
-    [SerializeField]
-    Button _mainMenuButton;
+    [SerializeField] Dropdown _resDropdown;
+    [SerializeField] Toggle _noAA;
+    [SerializeField] Toggle _2xAA;
+    [SerializeField] Toggle _4xAA;
+    [SerializeField] Toggle _8xAA;
 
-    Resolution [ ] resolutions;
+    Resolution [ ] _resolutions;
 
     #endregion
 
     private void Start ( )
     {
-        resolutions = Screen.resolutions;
+        GetResolutions();
+    }
+
+    void GetResolutions ( )
+    {
+        _resolutions = Screen.resolutions;
 
         _resDropdown.ClearOptions ( );
 
@@ -27,12 +35,12 @@ public class Settings : MonoBehaviour
 
         int currentResolutionIndex = 0;
 
-        for ( int i = 0 ; i < resolutions.Length ; i++ )
+        for ( int i = 0 ; i < _resolutions.Length ; i++ )
         {
-            string option = resolutions [ i ].width + "x" + resolutions [ i ].height;
+            string option = _resolutions [ i ].width + "x" + _resolutions [ i ].height;
             options.Add ( option );
 
-            if ( resolutions [i].width==Screen.currentResolution.width && resolutions [i].height==Screen.currentResolution.height )
+            if ( _resolutions [ i ].width == Screen.currentResolution.width && _resolutions [ i ].height == Screen.currentResolution.height )
             {
                 currentResolutionIndex = i;
             }
@@ -43,14 +51,9 @@ public class Settings : MonoBehaviour
         _resDropdown.RefreshShownValue ( );
     }
 
-    private void Update ( )
-    {
-        
-    }
-
     public void SetRes (int resolutionIndex )
     {
-        Resolution resolution= resolutions [ resolutionIndex ];
+        Resolution resolution= _resolutions [ resolutionIndex ];
         Screen.SetResolution ( resolution.width , resolution.height , Screen.fullScreen );
     }
 
@@ -59,8 +62,51 @@ public class Settings : MonoBehaviour
         Screen.fullScreen = isFullscreen;
     }
 
-    public void SetAntiAliasing ( )
+    public void SetAntiAliasingNone ( )
     {
+        QualitySettings.antiAliasing = 1;
 
+        if ( _noAA == true )
+        {
+            _2xAA.isOn = false;
+            _4xAA.isOn = false;
+            _8xAA.isOn = false;
+        }
+    }
+
+    public void SetAntiAliasingTwo ( )
+    {
+        QualitySettings.antiAliasing = 2;
+
+        if (_2xAA==true)
+        {
+            _noAA.isOn = false;
+            _4xAA.isOn = false;
+            _8xAA.isOn = false;
+        }
+    }
+
+    public void SetAntiAliasingFour ( )
+    {
+        QualitySettings.antiAliasing = 4;
+
+        if ( _4xAA == true )
+        {
+            _noAA.isOn = false;
+            _2xAA.isOn = false;
+            _8xAA.isOn = false;
+        }
+    }
+
+    public void SetAntiAliasingEight ( )
+    {
+        QualitySettings.antiAliasing = 8;
+
+        if ( _8xAA == true )
+        {
+            _noAA.isOn = false;
+            _2xAA.isOn = false;
+            _4xAA.isOn = false;
+        }
     }
 }

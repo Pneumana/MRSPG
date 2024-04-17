@@ -64,7 +64,6 @@ public class FreezeBarrel : MonoBehaviour
     {
         GameObject.Find ( "Player" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll;
         GameObject.FindWithTag ( "Enemy" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.FreezeAll; 
-        Debug.Log ( "Everything is Frozen" );
         _frozenExplosion = Instantiate ( _frozenExplosion , transform.position , Quaternion.identity );
         StartCoroutine ( Frozen ( ) );
     }
@@ -75,7 +74,6 @@ public class FreezeBarrel : MonoBehaviour
         yield return new WaitForSeconds ( 3 );
         GameObject.Find ( "Player" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.None;
         GameObject.FindWithTag ( "Enemy" ).GetComponent<Rigidbody> ( ).constraints = RigidbodyConstraints.None;
-        Debug.Log ( "Everything is Unfrozen" );
     }
     
 
