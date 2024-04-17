@@ -27,6 +27,9 @@ public class Health : MonoBehaviour
     [SerializeField] ScriptableRendererFeature damageHUD;
     [SerializeField] Material mat;
 
+    [SerializeField] ScriptableRendererFeature healHUD;
+    [SerializeField] Material mat2;
+
     #endregion
 
     private void Awake()
@@ -50,6 +53,25 @@ public class Health : MonoBehaviour
         } while (t < hurtFadeTime);
 
         damageHUD.SetActive(false);
+
+        yield return null;
+    }
+
+    public IEnumerator HealHUD()
+    {
+        healHUD.SetActive(true);
+        mat2.SetFloat("_Fade", 0);
+        yield return new WaitForSecondsRealtime(hurtDisplayTime);
+
+        float t = 0;
+        do
+        {
+            t += Time.unscaledDeltaTime;
+            mat2.SetFloat("_Fade", t);
+            yield return new WaitForSecondsRealtime(0);
+        } while (t < hurtFadeTime);
+
+        healHUD.SetActive(false);
 
         yield return null;
     }
