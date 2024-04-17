@@ -250,7 +250,6 @@ public class EnemyBody : MonoBehaviour
         if (InputControls.instance.dashTime > 0)
         {
             Shoved(player.forward * dashImpact, "Dash");
-            Debug.Log("Shoved");
         }
         else
         {
@@ -258,7 +257,6 @@ public class EnemyBody : MonoBehaviour
             {
                 GetComponent<Rigidbody>().velocity = -transform.forward * dashImpact;
             }
-            Debug.Log("Bounced");
         }
     }
     public void Shoved(Vector3 dir, string source, ForceMode mode = ForceMode.Impulse)
