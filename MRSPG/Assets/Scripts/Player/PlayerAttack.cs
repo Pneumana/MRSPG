@@ -78,7 +78,7 @@ public class PlayerAttack : MonoBehaviour
                 if (HealCombo)
                 {
                     Health health = player.GetComponent<Health>();
-                    if (health.currentHealth < 4) { health.LoseHealth(-1); }
+                    if (health.currentHealth < 4) { health.LoseHealth(-1); StartCoroutine(health.HealHUD());  }
                 }
                 break;
         }

@@ -464,7 +464,7 @@ public class Enemy : MonoBehaviour
             CanAttack = false;
             foreach (Attack attack in pattern)
             {
-                if (IsStaggered) { IsStaggered = false; break; }
+                if (IsStaggered) { IsStaggered = false; yield return new WaitForSeconds(Metronome.GetInterval()); break; }
                 if (playerInRange || ShootingRange || aggro)
                 {
                     switch (attack)
