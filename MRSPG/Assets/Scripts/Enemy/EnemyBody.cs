@@ -265,7 +265,6 @@ public class EnemyBody : MonoBehaviour
         {
 
         }
-        //Debug.Log(gameObject.name + " shoved");
         pushedBack = true;
         if(rb!=null)
             rb.isKinematic = false;
@@ -274,8 +273,10 @@ public class EnemyBody : MonoBehaviour
             if (rb != null)
                 rb.AddForce(dir, mode); 
         }
-        else { if (rb != null)
-                rb.velocity = dir; }
+        else if (rb != null)
+        {       
+            rb.velocity = dir;
+        }
     }
 
     public void Recover()

@@ -23,6 +23,10 @@ public class ScriptedPlatform : MonoBehaviour, IEnvTriggered
     public void Activated(float delay)
     {
         canMove = true;
+        foreach(ParticleSystem sys in transform.GetComponentsInChildren<ParticleSystem>())
+        {
+            sys.Play();
+        }
         //StartCoroutine(MoveLoop(delay));
     }
     IEnumerator MoveLoop(float delay)
