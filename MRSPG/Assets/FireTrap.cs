@@ -13,14 +13,20 @@ public class FireTrap : MonoBehaviour
     [SerializeField] GameObject fireball;
     [SerializeField] Image warn;
 
+    [SerializeField] Animator rig;
+
     float targetWarnFill;
     int loops;
     [SerializeField]Vector3 launchPos;
+
+    float scale = 1;
+    float maxscale = 1.25f;
 
     // Start is called before the first frame update
     void Start()
     {
         bpm = (1 / ((float)Metronome.inst.BPM / 60));
+        rig.SetFloat("IntervalSpeed", (Metronome.inst.BPM / 60));
     }
 
     // Update is called once per frame
@@ -38,6 +44,8 @@ public class FireTrap : MonoBehaviour
             targetWarnFill = (loops + 1f) / loopsToTrigger;
         }
         warn.fillAmount = Mathf.Lerp(warn.fillAmount, targetWarnFill, 0.25f);
+        //var targetscale = 
+        rig.gameObject.transform.localScale = Vector3.Lerp(Vector3.one * scale, Vector3.one * maxscale, warn.fillAmount);
         if (loops == loopsToTrigger && !activated)
         {
             activated = true;
@@ -55,6 +63,7 @@ public class FireTrap : MonoBehaviour
     }
     void Shoot()
     {
+        rig.SetTrigger("Activate");
         var n = Instantiate(fireball);
         n.GetComponent<EnemyBullet>().enabled = true;
         n.GetComponent<EnemyBullet>().homingTarget = GameObject.Find("PlayerObj").transform;

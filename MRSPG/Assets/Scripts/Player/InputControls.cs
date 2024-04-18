@@ -259,12 +259,17 @@ public class InputControls : MonoBehaviour
         if (canJump)
         {
             animator.SetTrigger("Jump");
-            velocity.y = Mathf.Sqrt(jump * -2f * gravity);
-            if (dashing) { dashBoost = 1; }
-            playedLand = false;
-            jumpParticles.Play();
+            
             canJump = false;
         }
+    }
+
+    public void ApplyJump()
+    {
+        velocity.y = Mathf.Sqrt(jump * -2f * gravity);
+        if (dashing) { dashBoost = 1; }
+        playedLand = false;
+        jumpParticles.Play();
     }
 
     public void ForceJump()

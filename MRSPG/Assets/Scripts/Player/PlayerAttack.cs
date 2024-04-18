@@ -90,11 +90,13 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator TimeOutAnimation()
     {
-        timeout = 0.75f;
+        timeout = Metronome.inst.GetInterval();
         playerObj.GetComponent<Animator>().SetLayerWeight(1, 1);
         while (timeout > 0)
         {
             timeout -= Time.deltaTime;
+            if (timeout > Metronome.inst.GetInterval()/2)
+                player.GetComponent<InputControls>().velocity = Vector3.zero;
             yield return new WaitForSeconds(0);
         }
         //Debug.Log("player attack animation timed out");
