@@ -259,7 +259,7 @@ public class InputControls : MonoBehaviour
         if (canJump)
         {
             animator.SetTrigger("Jump");
-            
+            ApplyJump();
             canJump = false;
         }
     }
