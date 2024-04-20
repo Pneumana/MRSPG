@@ -1,6 +1,7 @@
 using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,8 @@ public class Metronome : MonoBehaviour
 
     public static Metronome inst;
 
+    TextMeshProUGUI onbeatDebug;
+
     public Vector3 startPos;
 
     [SerializeField] public int framesToSkip;
@@ -43,6 +46,12 @@ public class Metronome : MonoBehaviour
         }
         startPos = transform.position;
         intervalMax = GetInterval();
+        try
+        {
+
+            onbeatDebug = transform.Find("DebugText").GetComponent<TextMeshProUGUI>();
+        }
+        catch { }
     }
 
     private void FixedUpdate()
@@ -79,7 +88,15 @@ public class Metronome : MonoBehaviour
 
 
         GetComponent<AudioSource>().pitch = Time.timeScale;
-        
+        if (onbeatDebug != null)
+        {
+            if (onBeat)
+            {
+                onbeatDebug.text = "On Beat";
+            }
+            else
+                onbeatDebug.text = "OFF Beat";
+        }
     }
 
     IEnumerator AnimateBeats(float _interval)
