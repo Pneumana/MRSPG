@@ -8,16 +8,26 @@ public class ScriptedPlatform : MonoBehaviour, IEnvTriggered
     public Vector3 endPos;
     public float speed;
     bool canMove;
+
+    Vector3 r;
+    Vector3 u;
+    Vector3 f;
+
     private void Start()
     {
         startPos = transform.position;
+
+        r = endPos.x * transform.right;
+        u = endPos.y * transform.up;
+        f = endPos.z * transform.forward;
     }
     private void Update()
     {
-        if (canMove && transform.position!=endPos + startPos)
+        var ruf = (r + u + f);
+        if (canMove && transform.position!= ruf + startPos)
         {
-            var delta = Mathf.Lerp(0.1f, speed, Vector3.Distance(transform.position, endPos + startPos) / Vector3.Distance(startPos, startPos + endPos));
-            transform.position = Vector3.MoveTowards(transform.position, endPos + startPos, delta * Time.deltaTime);
+            var delta = Mathf.Lerp(0.1f, speed, Vector3.Distance(transform.position, ruf + startPos) / Vector3.Distance(startPos, startPos + ruf));
+            transform.position = Vector3.MoveTowards(transform.position, ruf + startPos, delta * Time.deltaTime);
         }
     }
     public void Activated(float delay)
@@ -44,11 +54,16 @@ public class ScriptedPlatform : MonoBehaviour, IEnvTriggered
     }
     private void OnDrawGizmosSelected()
     {
+
+        r = endPos.x * transform.right;
+        u = endPos.y * transform.up;
+        f = endPos.z * transform.forward;
+
         Vector3 n;
         if (startPos == Vector3.zero)
-            n = endPos + transform.position;
+            n = (r + u + f) + transform.position;
         else
-            n = startPos + endPos;
+            n = startPos + (r + u + f);
         Debug.DrawLine(n, transform.position, Color.cyan, Time.deltaTime);
         Debug.DrawLine(n + Vector3.down, n+Vector3.up, Color.blue, Time.deltaTime);
         Debug.DrawLine(n + Vector3.left, n + Vector3.right, Color.blue, Time.deltaTime);
