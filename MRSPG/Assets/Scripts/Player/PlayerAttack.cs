@@ -96,7 +96,7 @@ public class PlayerAttack : MonoBehaviour
         {
             timeout -= Time.deltaTime;
             if (timeout > Metronome.inst.GetInterval()/2)
-                player.GetComponent<InputControls>().velocity = Vector3.zero;
+                player.GetComponent<InputControls>().velocity = new Vector3(0, player.GetComponent<InputControls>().velocity.y, 0);
             yield return new WaitForSeconds(0);
         }
         //Debug.Log("player attack animation timed out");
