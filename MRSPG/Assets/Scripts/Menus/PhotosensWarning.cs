@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
+using UnityEngine.UI;
+using TMPro;
 
 public class PhotosensWarning : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class PhotosensWarning : MonoBehaviour
     public Canvas canvas;
     bool played;
     public static PhotosensWarning inst;
+    [SerializeField] private InputActionReference input;
+    [SerializeField] private TextMeshProUGUI textmesh;
 
     private void Awake()
     {
@@ -25,7 +29,12 @@ public class PhotosensWarning : MonoBehaviour
         }
         canvas.gameObject.SetActive(false);
         controls = new ControllerSupport();
-        DontDestroyOnLoad(transform.root.gameObject);
+        textmesh.text = "Press " + GetBinding() + " to continue.";
+        DontDestroyOnLoad(transform.root.gameObject); 
+        foreach (InputBinding i in input.action.bindings)
+        {
+            Debug.Log(i);
+        }
     }
     private void OnEnable()
     {
@@ -38,6 +47,14 @@ public class PhotosensWarning : MonoBehaviour
         {
             StartCoroutine(SensWarning());
         }
+    }
+
+    private String GetBinding()
+    {
+
+        //InputBinding binding = input.action.bindings.FirstOrDefault();
+        //return binding.ToDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
+        return input.action.GetBindingDisplayString();
     }
 
     IEnumerator SensWarning()
