@@ -12,9 +12,17 @@ public class PhotosensWarning : MonoBehaviour
     [SerializeField] PlayableDirector dissolve;
     public Canvas canvas;
     bool played;
+    public static PhotosensWarning inst;
 
     private void Awake()
     {
+        if (inst == null)
+            inst = this;
+        else
+        {
+            if (inst != this)
+                Destroy(gameObject);
+        }
         canvas.gameObject.SetActive(false);
         controls = new ControllerSupport();
         DontDestroyOnLoad(transform.root.gameObject);
