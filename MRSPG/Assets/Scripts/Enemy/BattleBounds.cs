@@ -59,6 +59,7 @@ public class BattleBounds : MonoBehaviour
 
     private void Update()
     {
+        effectiveRange.GetComponent<MeshRenderer>().material.SetVector("_playerPosition", player.position);
         if(enemies.Count > defeated)
         {
             distance = Vector3.Distance(transform.position, player.position);
