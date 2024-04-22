@@ -79,7 +79,7 @@ public class InputControls : MonoBehaviour
         cam = Camera.main.transform;
         player = GameObject.Find("Player");
         meleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
-        cutsceneLogic = GameObject.Find("Main Camera").GetComponent<CutsceneLogic>();
+        cutsceneLogic = player.GetComponent<CutsceneLogic>();
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();
         if (instance == null)
@@ -102,7 +102,7 @@ public class InputControls : MonoBehaviour
 
         ApplyGravity();
         
-        if(!cutsceneLogic.ActiveCutscene)MovePlayer(movePlayer);
+        if (!cutsceneLogic.ActiveCutscene) MovePlayer(movePlayer);
     }
 
     public void ApplyGravity()

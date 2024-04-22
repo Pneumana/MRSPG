@@ -12,7 +12,7 @@ public class CutsceneLogic : MonoBehaviour
     public bool ActiveCutscene = false;
     void Start()
     {
-        playableDirector = GetComponent<PlayableDirector>();
+        playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>();
     }
     private void Update()
     {
