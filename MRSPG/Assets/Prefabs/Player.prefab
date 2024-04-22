@@ -5410,6 +5410,7 @@ GameObject:
   - component: {fileID: 1387221332289506120}
   - component: {fileID: 4454584165870712108}
   - component: {fileID: 4228697391327384245}
+  - component: {fileID: 7441583141263404549}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -5576,6 +5577,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayboxPos: {x: -71.6, y: -6.98, z: -39.4}
   devtestPos: {x: 0, y: 1.5, z: 0}
+--- !u!114 &7441583141263404549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401360127213229588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18cb79459e5978647bb30e23f8a2578c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActiveCutscene: 0
 --- !u!1 &4466688627090277559
 GameObject:
   m_ObjectHideFlags: 0
