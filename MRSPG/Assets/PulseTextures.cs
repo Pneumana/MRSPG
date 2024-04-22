@@ -14,6 +14,8 @@ public class PulseTextures : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(SettingsDataHolder.inst!=null)
+            eyebleed = SettingsDataHolder.inst.pulseIntensity;
         Refresh();
     }
 

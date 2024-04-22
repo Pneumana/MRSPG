@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 //using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,7 +10,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 using static Cinemachine.CinemachineTargetGroup;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.Rendering.DebugUI;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public class LockOnSystem : MonoBehaviour
@@ -63,6 +66,8 @@ public class LockOnSystem : MonoBehaviour
 
     float swapTargetCD;
 
+    GameObject backpoint;
+
     [SerializeField] Mesh sphere;
     [SerializeField] Material rangeMaterial;
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
@@ -83,6 +88,7 @@ public class LockOnSystem : MonoBehaviour
         {
             lockOnAssist = new GameObject().transform;
             lockOnAssist.gameObject.name = "LockOnAssist";
+            //lockOnAssist.AddComponent<CinemachineTargetGroup>();
         }
         if (rangeFinder != null)
         {
@@ -100,6 +106,9 @@ public class LockOnSystem : MonoBehaviour
             rangeFinder.transform.SetParent(player.transform);
             rangeFinder.SetActive(false);
         }
+
+        backpoint = new GameObject();
+        backpoint.name = "Backpoint";
     }
     public void UpdateEnemyList()
     {
@@ -144,6 +153,8 @@ public class LockOnSystem : MonoBehaviour
             timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
         }
         timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
+
+        Debug.Log(Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.x + " x, " + Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.z  + " z");
 
         if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
         {
@@ -244,8 +255,10 @@ public class LockOnSystem : MonoBehaviour
                 {
                     mag += player.GetComponentInParent<InputControls>().dashSpeed;
                 }
+                var playerCam = GameObject.Find("PlayerCam");
+                var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
 
-                var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+
 
                 if (freeLook != null)
                 {
@@ -258,6 +271,9 @@ public class LockOnSystem : MonoBehaviour
                     freeLook.m_LookAt = lockOnAssist;
                     var start = freeLook.m_XAxis;
                 }
+
+               
+
 
                 //Vector3 dir = lockOnAssist.position - player.transform.position;
                 Vector3 camdir = Camera.main.transform.position - player.transform.position;
@@ -275,24 +291,66 @@ public class LockOnSystem : MonoBehaviour
 
                 Vector3 dir = lockOnAssist.position - player.transform.position;
 
-                
+
+
+                backpoint.transform.position = -dir * 1;
+                var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+
+                //Debug.Log(look.eulerAngles.x);
 
                 dir.y = 0;
                 player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
                 //player.transform.parent.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-                var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-                if (freeLook != null)
-                {
-                    freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
 
+                var d = look.eulerAngles.x;
+
+                if(d < 27 || d >= 355.9958f)
+                {
+                    if(d < 27)
+                    {
+                        //Debug.Log("remapping");
+                        d = Remap(d, -0.005729297f, 27, 0, 0.397372946f);
+                        //remap this value 0 to 0.397372946f
+                    }
+                    else
+                    {
+                        d = Remap(d, 308.6598f, 355.9958f, 0.397372946f, 0.5f);
+                        //remap from 0.397372946 to 0.5
+                    }
+                    //remap from 0 to 0.5;
+                }
+                else
+                {
+                    d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1);
                 }
 
 
+                if (freeLook != null)
+                {
+                    freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
+                    Debug.Log(d + " is the x axis value");
+                    freeLook.m_YAxis.Value = Mathf.Clamp(d, 0.5f, 1);
+                }
 
+                float Remap(float value, float from1, float from2, float to1, float to2)
+                {
+                    var fromAbs = value - from1;
+                    var fromMaxAbs = from2 - from1;
 
+                    var normal = fromAbs / fromMaxAbs;
 
+                    var toMaxAbs = to2 - to1;
+                    var toAbs = toMaxAbs * normal;
+
+                    var to = toAbs + to1;
+
+                    return to;
+                    //return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+                }
+
+                //(value - from1) / (to1 - from1) * (to2 - from2) + from2;
             }
-            
+
             //lockOnAssist.rotation = eul;
             /*freeLook.m_XAxis.Value = lockOnAssist.rotation.eulerAngles.y;
             freeLook.m_YAxis.Value = 1 -  (lockOnAssist.rotation.eulerAngles.x);*/
