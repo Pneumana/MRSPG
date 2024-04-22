@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 public class InputControls : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class InputControls : MonoBehaviour
     public bool canDash = true;
     public bool dashing = false;
     public float dashCooldown;
-    public float dashBoost;
+    //public float dashBoost;
     private float targetAngle;
     public LayerMask enemyLayer;
     [SerializeField] ParticleSystem DashParticle;
@@ -131,7 +132,7 @@ public class InputControls : MonoBehaviour
             velocity.y = -2f;
             animator.SetBool("Falling", false);
             canJump = true;
-            dashBoost = 0;
+            //dashBoost = 0;
             if (!playedLand)
             {
                 groundedParticles.Play();
@@ -151,8 +152,8 @@ public class InputControls : MonoBehaviour
     {
         animator.SetTrigger("Dash");
         float startTime = Time.time;
-        if (type == "Movement") 
-        { 
+        if (type == "Movement")
+        {
             canDash = false;
             dashing = true;
             DashParticle.Play();
@@ -192,21 +193,20 @@ public class InputControls : MonoBehaviour
 
             if (type == "MeleeSlide")
             {
-                if(meleeHitbox.EnemyInRange())
+                if (meleeHitbox.EnemyInRange())
                 {
                     startTime -= 2 * Time.deltaTime;
-                    //break;
                 }
             }
 
             yield return null;
         }
-        if (type == "Movement") 
+        if (type == "Movement")
         {
             DashParticle.Stop();
             targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
             float extensionAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
-            while (dashBoost > 0)
+            /*while (dashBoost > 0)
             {
                 targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + transform.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothedVelocity, smoothAngle);
@@ -216,7 +216,7 @@ public class InputControls : MonoBehaviour
                 dashBoost -= Time.deltaTime * 1.5f;
                 if (Mathf.Abs(extensionAngle - angle) > 15) { break; }
                 yield return null;
-            }
+            }*/
             dashing = false;
         }
     }
@@ -258,6 +258,7 @@ public class InputControls : MonoBehaviour
 #region Actions:
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (cutsceneLogic.ActiveCutscene) { return; }
         if (canJump)
         {
             animator.SetTrigger("Jump");
@@ -269,7 +270,7 @@ public class InputControls : MonoBehaviour
     public void ApplyJump()
     {
         velocity.y = Mathf.Sqrt(jump * -2f * gravity);
-        if (dashing) { dashBoost = 1; }
+        //if (dashing) { dashBoost = 1; }
         playedLand = false;
         jumpParticles.Play();
     }
@@ -285,6 +286,7 @@ public class InputControls : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        if(cutsceneLogic.ActiveCutscene) { return; }
         if(canDash && !dashing)
         {
             StartCoroutine(ApplyDash(movePlayer, dashSpeed, dashTime, true, "Movement"));
