@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rock
-  m_Shader: {fileID: -6465566751694194690, guid: c57ece0684002f1419ef6a56ef51d13f, type: 3}
+  m_Name: DistanceLerp
+  m_Shader: {fileID: -6465566751694194690, guid: 939d25a810b10c749952736b3e070491, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -38,32 +38,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DirtMultiplier: 0
-    - _DirtScale: 0
-    - _Iridescance: 0.15
-    - _LerpSand: 0
-    - _MainNoiseSize: 40
-    - _NormalBias: 0.5
-    - _NormalFadeDistance: 2
-    - _NormalStength: 0.05
+    - _MaxDistance: 20
+    - _MinDistance: 10
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Roughness: 0.77
-    - _SineDistortionIntensity: 0
-    - _SineDistortionScale: 0
-    - _SineScale: 5
-    - _UseSineNormal: 0
-    - _WarpIntensity: 0
-    - _XWarpScale: 10
-    - _YWarpScale: 10
-    m_Colors:
-    - _IridescantOffset: {r: 0.02, g: 0.02, b: 0, a: 0}
-    - _LerpA: {r: 0.7058824, g: 0.41394714, b: 0.10588234, a: 0}
-    - _LerpB: {r: 0.60784316, g: 0.28627452, b: 0.09411766, a: 0}
-    - _NormalFadeMinMax: {r: 3, g: 10, b: 0, a: 0}
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &5941193950819042020
+--- !u!114 &1465385922528283052
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
