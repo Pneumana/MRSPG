@@ -5466,6 +5466,17 @@ Transform:
   - {fileID: 571655590}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &134677352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7441583141263404549, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+  m_PrefabInstance: {fileID: 1336648994}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18cb79459e5978647bb30e23f8a2578c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &136961045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365281274421027978, guid: 096a0239cf6558c4db18b5ace799430a, type: 3}
@@ -49288,6 +49299,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6718817609202145083, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
+      propertyPath: cutsceneLogic
+      value: 
+      objectReference: {fileID: 134677352}
     - target: {fileID: 6840696131838088742, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.60289

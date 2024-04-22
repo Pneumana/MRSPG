@@ -17,6 +17,7 @@ public class Controller : MonoBehaviour
     public PlayerAttack playerAttack;
     public PauseMenu pauseUI;
     public Tutorial Tutorial;
+    public CutsceneLogic cutsceneLogic;
     [HideInInspector] public ControllerSupport controls;
 
     public Vector2 lookInput;
@@ -49,6 +50,7 @@ public class Controller : MonoBehaviour
             controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
             controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
         }
+        controls.Gameplay.Dash.performed += cutsceneLogic.SkipCutscene;
     }
 
     private void OnEnable()

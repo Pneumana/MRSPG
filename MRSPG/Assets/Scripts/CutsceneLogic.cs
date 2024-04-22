@@ -8,30 +8,29 @@ using UnityEngine.Playables;
 public class CutsceneLogic : MonoBehaviour
 {
     private PlayableDirector playableDirector;
-    private ControllerSupport controls;
+    public GameObject playerCam;
     public bool ActiveCutscene = false;
     void Start()
     {
         playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>();
+        playerCam = GameObject.Find("PlayerCam");
     }
     private void Update()
     {
         if (playableDirector.state == PlayState.Playing) 
         {
             if (ActiveCutscene == true) { return; }
-            Debug.LogWarning("Frozen");
             ActiveCutscene = true; 
         }
         else 
         {
             if (ActiveCutscene == false) { return; }
-            Debug.LogWarning("Unfrozen");
             ActiveCutscene = false; 
         }
-        if (controls.Gameplay.Dash.WasPressedThisFrame())
-        {
-            Debug.Log("Cutscene Skipped");
-            playableDirector.Stop();
-        }
+    }
+    public void SkipCutscene(InputAction.CallbackContext context)
+    {
+        playableDirector.Stop();
+        playerCam.GetComponent<Cinemachine.CinemachineFreeLook>().enabled = true;
     }
 }
