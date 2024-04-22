@@ -47,12 +47,12 @@ public class SybilLedgeGrab : MonoBehaviour
             //var handPos = Physics.BoxCast(pos, grabBounds/2, transform.forward, out handGrabbed, transform.rotation, grabBounds.z);
             RaycastHit handHit;
             RaycastHit headCheck;
-            var handPos = Physics.CheckBox(pos, (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
-            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.forward, out handHit, grabBounds.x + grabBounds.z,groundMask);
-            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.up, out headCheck, (grabBounds.y) * 2, groundMask);
+            var handPos = Physics.CheckBox(pos, (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask, QueryTriggerInteraction.Ignore);
+            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.forward, out handHit, grabBounds.x + grabBounds.z,groundMask, QueryTriggerInteraction.Ignore);
+            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.up, out headCheck, (grabBounds.y) * 2, groundMask, QueryTriggerInteraction.Ignore);
 
             //var isAboveValid = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y / 2, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
-            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
+            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask, QueryTriggerInteraction.Ignore);
             //var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
@@ -86,11 +86,11 @@ public class SybilLedgeGrab : MonoBehaviour
                         //check left and right to get normal
                         var r = playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)) + (transform.right * Time.deltaTime * (1001 - tries));
                         var l = playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)) - (transform.right * Time.deltaTime * (1001 - tries));
-                        Physics.Raycast(r, transform.forward, out handHit, grabBounds.x + grabBounds.z, groundMask);
+                        Physics.Raycast(r, transform.forward, out handHit, grabBounds.x + grabBounds.z, groundMask, QueryTriggerInteraction.Ignore);
                         Debug.DrawLine(r, r + transform.forward, Color.cyan, 5);
                         if(handHit.collider == null)
                         {
-                            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)) - (transform.right * Time.deltaTime * (1001 - tries)), transform.forward, out handHit, grabBounds.x + grabBounds.z, groundMask);
+                            Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)) - (transform.right * Time.deltaTime * (1001 - tries)), transform.forward, out handHit, grabBounds.x + grabBounds.z, groundMask, QueryTriggerInteraction.Ignore);
                             Debug.DrawLine(l, l + transform.forward, Color.blue, 5);
                         }
                     }
