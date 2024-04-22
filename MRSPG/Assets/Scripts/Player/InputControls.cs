@@ -68,16 +68,18 @@ public class InputControls : MonoBehaviour
 
     [SerializeField] Animator animator;
 
-    #endregion
-
     public static InputControls instance;
 
+    private CutsceneLogic cutsceneLogic;
+
+    #endregion
 
     private void Start()
     {
         cam = Camera.main.transform;
         player = GameObject.Find("Player");
         meleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
+        cutsceneLogic = GameObject.Find("Main Camera").GetComponent<CutsceneLogic>();
         Cursor.lockState = CursorLockMode.Locked;
         DashParticle.Stop();
         if (instance == null)
@@ -100,7 +102,7 @@ public class InputControls : MonoBehaviour
 
         ApplyGravity();
         
-        MovePlayer(movePlayer);
+        if(!cutsceneLogic.ActiveCutscene)MovePlayer(movePlayer);
     }
 
     public void ApplyGravity()
