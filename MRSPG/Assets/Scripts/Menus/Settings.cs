@@ -109,4 +109,9 @@ public class Settings : MonoBehaviour
             _4xAA.isOn = false;
         }
     }
+
+    public void SetPulseIntensity ( )
+    {
+        SettingsDataHolder.inst.pulseIntensity = FindFirstObjectByType<Slider> ( ).value;
+    }
 }
