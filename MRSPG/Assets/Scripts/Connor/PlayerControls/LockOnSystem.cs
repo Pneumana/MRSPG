@@ -657,8 +657,8 @@ public class LockOnSystem : MonoBehaviour
                 closestEnemy = enemies[i];
             }
         }
-        if(closestTarget!=null)
-            closestTarget.GetComponent<Image>().sprite = lockedSprite;
+        /*if(closestTarget!=null)
+            closestTarget.GetComponent<Image>().sprite = lockedSprite;*/
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
             if (freeAim)
