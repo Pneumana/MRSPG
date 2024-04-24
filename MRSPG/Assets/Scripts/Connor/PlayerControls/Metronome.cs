@@ -33,6 +33,8 @@ public class Metronome : MonoBehaviour
     [Header("Not a direct 1:1 for number of beats displayed")]
     [SerializeField] float beatPopulation;
 
+
+    public float beatPercent;
     private void Awake()
     {
         BeatsPassed = 0;
@@ -98,7 +100,11 @@ public class Metronome : MonoBehaviour
                 onbeatDebug.text = "OFF Beat";
         }
     }
-
+    private void Update()
+    {
+        beatPercent = Mathf.Abs((2 * interval / intervalMax)- 1);
+        onBeat = beatPercent >= 1 - forgivness;
+    }
     IEnumerator AnimateBeats(float _interval)
     {
         _interval *= beatPopulation;
@@ -122,7 +128,7 @@ public class Metronome : MonoBehaviour
         left.GetComponent<RectTransform>().pivot = new Vector2(1, 0.5f);
         left.transform.SetParent(transform);
 
-        onBeat = false;
+        //onBeat = false;
 
         var right = new GameObject();
         right.name = "RightBeat";
@@ -158,7 +164,7 @@ public class Metronome : MonoBehaviour
             if(t > _interval - (_interval * forgivness) && flip == true)
             {
                 flip = false;
-                onBeat = true;
+                //onBeat = true;
                 ls.color = new Color(1, 0, 1, 1);
                 rs.color = new Color(1, 0, 1, 1);
             }
@@ -169,7 +175,7 @@ public class Metronome : MonoBehaviour
         {
             t += Time.deltaTime;
             var percent = t / (_interval * forgivness);
-            onBeat = true;
+            //onBeat = true;
             ls.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
             rs.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
             //right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
@@ -179,7 +185,7 @@ public class Metronome : MonoBehaviour
         } while (t < _interval * forgivness);
         //this forgiveness used to be 0.25f
 
-        onBeat = false;
+        //onBeat = false;
         Destroy(left);
         Destroy(right);
 
@@ -208,7 +214,6 @@ public class Metronome : MonoBehaviour
             Debug.Log(intervalHalfPoint + ": top interval was used");
             onBeat = true;
         }*/
-            
 
         if (onBeat && isplayer)
             GetComponent<Image>().color = new Color(1, 1, 1, 1);
