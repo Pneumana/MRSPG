@@ -21,6 +21,11 @@ public class HealthBar : MonoBehaviour
         Fill = EnemyHealthBar.transform.GetChild(0).GetComponent<Image>();
     }
 
+    private void OnEnable()
+    {
+        enemy._enemy.EnemyHealth = (int)max;
+    }
+
     private void Update()
     {
         current = enemy.health;

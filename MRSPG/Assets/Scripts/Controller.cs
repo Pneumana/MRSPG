@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Playables;
 using UnityEngine.Windows;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -50,7 +51,8 @@ public class Controller : MonoBehaviour
             controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
             controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
         }
-        controls.Gameplay.Dash.performed += cutsceneLogic.SkipCutscene;
+        if (GameObject.Find("Main Camera").GetComponent<PlayableDirector>())
+            controls.Gameplay.Dash.performed += cutsceneLogic.SkipCutscene;
     }
 
     private void OnEnable()

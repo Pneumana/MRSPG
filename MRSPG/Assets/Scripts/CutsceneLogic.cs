@@ -10,22 +10,30 @@ public class CutsceneLogic : MonoBehaviour
     private PlayableDirector playableDirector;
     public GameObject playerCam;
     public bool ActiveCutscene = false;
+    bool SceneHasCutscenes;
     void Start()
     {
-        playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>();
+        if (GameObject.Find("Main Camera").GetComponent<PlayableDirector>())
+        {
+            SceneHasCutscenes = true;
+            playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>(); 
+        }
         playerCam = GameObject.Find("PlayerCam");
     }
     private void Update()
     {
-        if (playableDirector.state == PlayState.Playing) 
+        if(SceneHasCutscenes)
         {
-            if (ActiveCutscene == true) { return; }
-            ActiveCutscene = true; 
-        }
-        else 
-        {
-            if (ActiveCutscene == false) { return; }
-            ActiveCutscene = false; 
+            if (playableDirector.state == PlayState.Playing) 
+            {
+                if (ActiveCutscene == true) { return; }
+                ActiveCutscene = true; 
+            }
+            else 
+            {
+                if (ActiveCutscene == false) { return; }
+                ActiveCutscene = false; 
+            }
         }
     }
     public void SkipCutscene(InputAction.CallbackContext context)
