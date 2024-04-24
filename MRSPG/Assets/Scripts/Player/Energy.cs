@@ -124,8 +124,10 @@ public class Energy : MonoBehaviour
         var index = Mathf.FloorToInt(currentEnergy / 10);
         
         index = Mathf.Clamp(index, 0, cells.Count - 1);
-        cells[index].fillAmount = (currentEnergy - (currentEnergy / 10) / ((index + 1) *10))/50f;
-        Debug.Log("current cell fill amount is " + ((currentEnergy - (currentEnergy / 10) / ((index + 1) * 10)) / 50f));
+
+        float fill = (currentEnergy - (index * 10)) / 10f;
+        cells[index].fillAmount = fill;
+        Debug.Log("current cell fill amount is " + fill);
         for (int i = 0; i < index; i++)
         {
             cells[i].fillAmount = 1;
