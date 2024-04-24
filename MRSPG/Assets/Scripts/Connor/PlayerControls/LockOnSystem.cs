@@ -74,6 +74,8 @@ public class LockOnSystem : MonoBehaviour
     //yep
     public static LockOnSystem LOS;
 
+    Coroutine subtractEnergy;
+
     private void Awake()
     {
         if (LOS == null)
@@ -152,8 +154,10 @@ public class LockOnSystem : MonoBehaviour
             lockon.transform.position = new Vector2(-100, -100);
             Metronome.inst.transform.position = Metronome.inst.startPos;
         }
-        if(!paused)
+        if(!paused || energy.currentEnergy == 0)
+        {
             Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
+        }
         if (cooldown > 0)
         {
             cooldown -= Time.unscaledDeltaTime;
@@ -163,6 +167,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
+
             //timeJuice.GetComponent<Image>().fillAmount = remainingTime / useTime;
         }
         //timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
@@ -402,15 +407,18 @@ public class LockOnSystem : MonoBehaviour
             UpdateTargetUI();
             LookAtTarget();
         }
-        if(remainingTime <= 0)
+        /*if(energy.currentEnergy <= 0)
         {
             Debug.Log("timed out");
+            rangeFinder.SetActive(false);
             cooldown = cooldownTime;
-            remainingTime = useTime;
+            //remainingTime = useTime;
+            if (subtractEnergy != null)
+                StopCoroutine(subtractEnergy);
             targetTime = maxTimeScale;
             HideTargets();
             //targeters.Add(closestTarget);
-        }
+        }*/
         if(lockon != null && trackedEnemy != null)
         {
             lockon.transform.position = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
@@ -470,10 +478,10 @@ public class LockOnSystem : MonoBehaviour
     void InputEventStartSlowDown()
     {
 
-            if (controller.controls.Gameplay.Slowdown.WasPressedThisFrame() || controller.controls.Gameplay.Fire.WasPressedThisFrame() && energy.currentEnergy >= 50)
+            if (controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
             {
             //Debug.Log("start input");
-                remainingTime = useTime;
+                //remainingTime = useTime;
             if(cooldown <= 0)
             {
                 //StopLockOn();
@@ -490,6 +498,10 @@ public class LockOnSystem : MonoBehaviour
             }
 
             }
+        if(controller.controls.Gameplay.Fire.WasPressedThisFrame() && energy.currentEnergy >= 50)
+        {
+            remainingTime = useTime;
+        }
         
     }
 
@@ -554,36 +566,80 @@ public class LockOnSystem : MonoBehaviour
 
         //freeLook.m_LookAt = trackedEnemy.transform;
     }
+    IEnumerator DrainEnergy()
+    {
+        float t = 0;
 
+        while (t < 1)
+        {
+            t += Time.unscaledDeltaTime;
+            if(t > 0.25f)
+            {
+                t = 0;
+                if(energy.currentEnergy > 0)
+                {
+                    energy.LoseEnergy(1);
+                }
+                else
+                {
+                    subtractEnergy = null;
+                    yield break;
+                }
+            }
+            yield return new WaitForSecondsRealtime(0);
+        }
+
+        yield return null;
+    }
     void InputEventStaySlowDown()
     {
         if(cooldown > 0)
         {
             return;
         }
-        //ran while the slowdown is held
-            if (controller.controls.Gameplay.Slowdown.IsPressed() && remainingTime > 0 || controller.controls.Gameplay.Fire.IsPressed() && remainingTime > 0 && energy.currentEnergy >= 50)
+        //GUN IS FUCKY WITH THE SUBTRACT ENERGY SYSTEM
+        if (controller.controls.Gameplay.Slowdown.IsPressed())
         {
-                if (remainingTime >= 0)
-                    remainingTime -= Time.unscaledDeltaTime;
-                targetTime = minTimeScale;
+            if(subtractEnergy == null && energy.currentEnergy > 0)
+            {
+                subtractEnergy = StartCoroutine(DrainEnergy());
+            }
+                /*if (remainingTime >= 0)
+                    remainingTime -= Time.unscaledDeltaTime;*/
+                if(energy.currentEnergy > 0)
+                    targetTime = minTimeScale;
+                else
+                    targetTime = maxTimeScale;
                 UpdateTargetUI();
             }
             else
             {
-                targetTime = maxTimeScale;
-            }
-
+            targetTime = maxTimeScale;
+            if (subtractEnergy != null)
+                    StopCoroutine(subtractEnergy);
+        }
+        if(controller.controls.Gameplay.Fire.IsPressed() && remainingTime > 0 && energy.currentEnergy >= 50)
+        {
+            if (remainingTime >= 0)
+                remainingTime -= Time.unscaledDeltaTime;
+                targetTime = minTimeScale;
+        }
     }
     //Specifically ran for the time slowdown ending
     public void InputEventEndSlowDown(bool dontSwapPositions = false)
     {
         
-            if (controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && remainingTime > 0 && cooldown <= 0)
+            if (controller.controls.Gameplay.Slowdown.WasReleasedThisFrame() && cooldown <= 0)
             {
-                //Debug.Log("end input");
-                //if (!dontSwapPositions)
-                    SwapPositions();
+            //Debug.Log("end input");
+            //if (!dontSwapPositions)
+            if (subtractEnergy != null)
+            {
+                StopCoroutine(subtractEnergy);
+                subtractEnergy = null;
+            }
+                    
+                SwapPositions();
                 cooldown = cooldownTime;
                 remainingTime = useTime;
                 targetTime = maxTimeScale;

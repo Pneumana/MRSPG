@@ -132,7 +132,17 @@ public class Energy : MonoBehaviour
         {
             cells[i].fillAmount = 1;
         }
-
+        if(currentEnergy == 0)
+        {
+            for (int i = 0; i < cells.Count; i++)
+            {
+                cells[i].fillAmount = 0;
+            }
+        }
+        /*for (int x = end; end < cells.Count; end++)
+        {
+            cells[x].fillAmount = 0;
+        }*/
         //_energyImg.sprite = _energySprite[_energySprite.Length - (1 + Mathf.FloorToInt(currentEnergy/5f))];
 
         
