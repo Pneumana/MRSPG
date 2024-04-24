@@ -21,16 +21,18 @@ public class PhotosensWarning : MonoBehaviour
     private void Awake()
     {
         if (inst == null)
+        {
             inst = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+        }
         else
         {
             if (inst != this)
-                Destroy(gameObject);
+                Destroy(canvas.gameObject);
         }
-        canvas.gameObject.SetActive(false);
         controls = new ControllerSupport();
         textmesh.text = "Press " + GetBinding() + " to continue.";
-        DontDestroyOnLoad(transform.root.gameObject); 
+        
         foreach (InputBinding i in input.action.bindings)
         {
             Debug.Log(i);
