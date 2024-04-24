@@ -157,17 +157,17 @@ public class LockOnSystem : MonoBehaviour
         if (cooldown > 0)
         {
             cooldown -= Time.unscaledDeltaTime;
-            timeJuice.localScale = new Vector2(1 -(cooldown / cooldownTime), 1);
+            timeJuice.GetComponent<Image>().fillAmount = 1 -(cooldown / cooldownTime);
             if(remainingTime!=useTime)
                 remainingTime = useTime;
         }
         else
         {
-            timeJuice.localScale = new Vector2(remainingTime / useTime, 1);
+            //timeJuice.GetComponent<Image>().fillAmount = remainingTime / useTime;
         }
-        timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
+        //timeJuice.GetComponent<Image>().color = Color.Lerp(new Color(1f, 0f, 0), new Color(0f, 1f, 0), timeJuice.localScale.x);
 
-        Debug.Log(Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.x + " x, " + Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.z  + " z");
+        //Debug.Log(Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.x + " x, " + Quaternion.LookRotation((Camera.main.transform.position - player.transform.position).normalized, Vector3.up).eulerAngles.z  + " z");
 
         if (controller.controls.Gameplay.LookAtTarget.WasPressedThisFrame())
         {
@@ -354,7 +354,7 @@ public class LockOnSystem : MonoBehaviour
                 if (freeLook != null)
                 {
                     freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
-                    Debug.Log(d + " is the x axis value");
+                    //Debug.Log(d + " is the x axis value");
                     freeLook.m_YAxis.Value = Mathf.Clamp(d, 0.5f, 1);
                 }
 

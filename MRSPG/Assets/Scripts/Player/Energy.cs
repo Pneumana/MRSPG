@@ -16,18 +16,39 @@ public class Energy : MonoBehaviour
     [SerializeField]
     Sprite [ ] _energySprite;
 
+    List<Image> cells = new List<Image>();
+
     #endregion
 
     private void Awake ( )
     {
         //Gets all Values needed for the start of the game
         currentEnergy = _maxEnergy;
+
+        foreach(Transform child in _energyImg.transform.Find("Cells").GetComponentInChildren<Transform>())
+        {
+            if (child.GetComponent<Image>()!=null)
+            {
+                cells.Add(child.GetComponent<Image>());
+            }
+        }
+        Debug.Log("found " + cells.Count + " energy cells");
         UIUpdateEnergy();
+
+
     }
 
     private void Update ( )
     {
         UIUpdateEnergy ( );
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            GainEnergy(1);
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            GainEnergy(-1);
+        }
     }
 
     public void LoseEnergy (int amount )
@@ -99,7 +120,18 @@ public class Energy : MonoBehaviour
         //there was a nullreference error from _gunRdy and _teleportRdy so i just made it use this to change the sprite rather that the if else checks
         //because i *really* didnt want to comment out each reference to _gunRdy and _teleportRdy
         // - Connor
-        _energyImg.sprite = _energySprite[_energySprite.Length - (1 + Mathf.FloorToInt(currentEnergy/5f))];
+
+        var index = Mathf.FloorToInt(currentEnergy / 10);
+        
+        index = Mathf.Clamp(index, 0, cells.Count - 1);
+        cells[index].fillAmount = (currentEnergy - (currentEnergy / 10) / ((index + 1) *10))/50f;
+        Debug.Log("current cell fill amount is " + ((currentEnergy - (currentEnergy / 10) / ((index + 1) * 10)) / 50f));
+        for (int i = 0; i < index; i++)
+        {
+            cells[i].fillAmount = 1;
+        }
+
+        //_energyImg.sprite = _energySprite[_energySprite.Length - (1 + Mathf.FloorToInt(currentEnergy/5f))];
 
         
 

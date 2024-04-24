@@ -10,7 +10,7 @@ public class SettingsDataHolder : MonoBehaviour
 
     private void Awake()
     {
-        if (inst != null)
+        if (inst == null)
         {
             inst = this;
             DontDestroyOnLoad(inst);
