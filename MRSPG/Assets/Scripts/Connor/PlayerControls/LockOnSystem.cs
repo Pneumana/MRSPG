@@ -72,7 +72,20 @@ public class LockOnSystem : MonoBehaviour
     [SerializeField] Material rangeMaterial;
     //Separate the closestTarget object from the whole loop thing. same thing with closestEnemy
     //yep
+    public static LockOnSystem LOS;
 
+    private void Awake()
+    {
+        if (LOS == null)
+        {
+            LOS = this;
+        }
+        else
+        {
+            if (LOS != this)
+                Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
@@ -166,12 +179,24 @@ public class LockOnSystem : MonoBehaviour
                 UpdateTargetUI();
                 //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
                 //eul = Quaternion.LookRotation(dirRot);
-                freeAim = false;
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
-                var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-                lockOnAssist.position = player.transform.position + Camera.main.transform.forward;
-                if(freeLook!=null)
-                    freeLook.m_LookAt = lockOnAssist;
+                var enemyScreenPos = lockon.transform.position;
+                if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height )
+                {
+                    StopLockOn();
+                }
+                else
+                {
+                    freeAim = false;
+                    GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+                    var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+                    //lockOnAssist.position = player.transform.position + Camera.main.transform.forward;
+                    if (freeLook != null)
+                        freeLook.m_LookAt = lockOnAssist;
+
+                    var dir = player.transform.position - trackedEnemy.transform.position;
+                    lockOnAssist.position = player.transform.position - dir;
+                }
+                
             }
             else
             {
@@ -214,7 +239,8 @@ public class LockOnSystem : MonoBehaviour
             {
                 GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
                 var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-                lockOnAssist.position = player.transform.position + player.transform.forward;
+                var dir = player.transform.position - trackedEnemy.transform.position;
+                lockOnAssist.position = player.transform.position + dir;
                 if (freeLook != null)
                     freeLook.m_LookAt = lockOnAssist;
 

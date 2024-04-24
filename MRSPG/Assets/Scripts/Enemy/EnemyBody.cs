@@ -110,7 +110,7 @@ public class EnemyBody : MonoBehaviour
         }
         disablePathfinding = true;
         gameObject.SetActive(false);
-
+        LockOnSystem.LOS.UpdateEnemyList();
         //Destroy(gameObject);
     }
     private void Update()
