@@ -23,7 +23,7 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        enemy._enemy.EnemyHealth = (int)max;
+        enemy.health = (int)max;
     }
 
     private void Update()

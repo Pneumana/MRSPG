@@ -93,6 +93,7 @@ public class EnemyBody : MonoBehaviour
     }
     void Die()
     {
+        Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
         /*Debug.Log("The enemy has died");

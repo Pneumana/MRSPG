@@ -31,7 +31,7 @@ public class PhotosensWarning : MonoBehaviour
                 Destroy(canvas.gameObject);
         }
         controls = new ControllerSupport();
-        textmesh.text = "Press " + GetBinding() + " to continue.";
+        textmesh.text = GetBinding();
         
         foreach (InputBinding i in input.action.bindings)
         {
@@ -56,7 +56,7 @@ public class PhotosensWarning : MonoBehaviour
 
         //InputBinding binding = input.action.bindings.FirstOrDefault();
         //return binding.ToDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
-        return input.action.GetBindingDisplayString();
+        return input.action.GetBindingDisplayString(InputBinding.MaskByGroup("Gamepad"));
     }
 
     IEnumerator SensWarning()

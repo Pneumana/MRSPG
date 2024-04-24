@@ -127,7 +127,7 @@ public class Energy : MonoBehaviour
 
         float fill = (currentEnergy - (index * 10)) / 10f;
         cells[index].fillAmount = fill;
-        Debug.Log("current cell fill amount is " + fill);
+        //Debug.Log("current cell fill amount is " + fill);
         for (int i = 0; i < index; i++)
         {
             cells[i].fillAmount = 1;
