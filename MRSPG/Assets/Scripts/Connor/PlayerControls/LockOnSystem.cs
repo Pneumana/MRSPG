@@ -129,24 +129,43 @@ public class LockOnSystem : MonoBehaviour
     {
         enemies.Clear ();
         enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        var removelist = new List<GameObject>();
+        foreach(GameObject enemy in enemies)
+        {
+            if (!enemy.activeInHierarchy)
+                removelist.Add(enemy);
+        }
+        foreach(GameObject go in removelist)
+        {
+            enemies.Remove(go);
+        }
         ui = GameObject.Find("TargetingUI").transform;
     }
     private void Update()
     {
         if(swapTargetCD>0)
             swapTargetCD-=Time.deltaTime;
-        if (trackedEnemy != null)
+        if (trackedEnemy!=null )
         {
-            var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
-            lockon.transform.position = trackedScreenPos;
-            if (!freeAim)
+            if (trackedEnemy.activeInHierarchy)
             {
-                Metronome.inst.transform.position = trackedScreenPos;
-                lockon.color = new Color(1, 1, 1, 1);
+                var trackedScreenPos = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
+                lockon.transform.position = trackedScreenPos;
+                if (!freeAim)
+                {
+                    Metronome.inst.transform.position = trackedScreenPos;
+                    lockon.color = new Color(1, 1, 1, 1);
+                }
+                else
+                {
+                
+                }
+
             }
             else
             {
-                
+                lockon.transform.position = new Vector2(-100, -100);
+                Metronome.inst.transform.position = Metronome.inst.startPos;
             }
         }
         else
@@ -178,42 +197,18 @@ public class LockOnSystem : MonoBehaviour
         {
             if (freeAim)
             {
-                //StartLockOn
-                HideTargets();
-                CreateTargeters();
-                UpdateTargetUI();
-                //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
-                //eul = Quaternion.LookRotation(dirRot);
-                var enemyScreenPos = lockon.transform.position;
-                if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height )
-                {
-                    StopLockOn();
-                }
-                else
-                {
-                    freeAim = false;
-                    GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
-                    var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-                    //lockOnAssist.position = player.transform.position + Camera.main.transform.forward;
-                    if (freeLook != null)
-                        freeLook.m_LookAt = lockOnAssist;
-
-                    var dir = player.transform.position - trackedEnemy.transform.position;
-                    lockOnAssist.position = player.transform.position - dir;
-                }
+                StartLockOn();
                 
             }
             else
             {
-                Metronome.inst.transform.position = Metronome.inst.startPos;
-                lockon.color = new Color(1, 1, 1, 0);
+                
                 StopLockOn();
                 //HideTargets();
                 /*                if(!controller.controls.Gameplay.Slowdown.WasPressedThisFrame())
                                     StopLockOn();*/
-                player.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                freeAim = true;
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+                
+                
             }
         }
         /*        if (!freeAim)
@@ -222,38 +217,19 @@ public class LockOnSystem : MonoBehaviour
                 Debug.DrawLine(player.transform.position, player.transform.position + dirRot, Color.black);
                 eul = Quaternion.LookRotation(dirRot);
                 }*/
+        if (trackedEnemy != null)
+        {
+            if (!trackedEnemy.activeInHierarchy)
+            {
+                RefindTracked();
+            }
+        }
         if (trackedEnemy == null)
         {
             //Debug.Log("tracked enemy is null");
-            HideTargets();
-            CreateTargeters();
-            bool swap = false;
-
-
-            //used to get a new target if the one the player is locked on to dies
-            if (!freeAim)
-            {
-                freeAim=true;
-                swap = true;
-            }
+            RefindTracked();
             
-                UpdateTargetUI();
-            if (swap)
-                freeAim = false;
-            if (!freeAim)
-            {
-                GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
-                var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
-                var dir = player.transform.position - trackedEnemy.transform.position;
-                lockOnAssist.position = player.transform.position + dir;
-                if (freeLook != null)
-                    freeLook.m_LookAt = lockOnAssist;
-
-            }
-            else
-            {
-                HideTargets();
-            }
+            
 
             //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
             //eul = Quaternion.LookRotation(dirRot);
@@ -267,118 +243,129 @@ public class LockOnSystem : MonoBehaviour
             //dir.y = 0; // keep the direction strictly horizontal
             //Quaternion rot = Quaternion.LookRotation(dirRot, Vector3.up);
             // slerp to the desired rotation over time
-            if (trackedEnemy != null)
+            if (trackedEnemy != null )
             {
-                var midpoint = (trackedEnemy.transform.position + player.transform.position) / 2;
-
-                var a = player.transform.position;
-                a.y = 0;
-                var b = trackedEnemy.transform.position;
-                b.y = 0;
-
-
-                var dist = Vector3.Distance(a, b);
-                var influence = Mathf.Clamp01(dist / 5);
-
-                var playerSpeed = player.GetComponentInParent<InputControls>().velocity;
-                var mag = playerSpeed.magnitude;
-                if (player.GetComponentInParent<InputControls>().dashing)
+                if (trackedEnemy.activeInHierarchy)
                 {
-                    mag += player.GetComponentInParent<InputControls>().dashSpeed;
-                }
-                var playerCam = GameObject.Find("PlayerCam");
-                var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
+
+                    var midpoint = (trackedEnemy.transform.position + player.transform.position) / 2;
+
+                    var a = player.transform.position;
+                    a.y = 0;
+                    var b = trackedEnemy.transform.position;
+                    b.y = 0;
 
 
+                    var dist = Vector3.Distance(a, b);
+                    var influence = Mathf.Clamp01(dist / 5);
 
-                if (freeLook != null)
-                {
-                    if (dist < 5)
+                    var playerSpeed = player.GetComponentInParent<InputControls>().velocity;
+                    var mag = playerSpeed.magnitude;
+                    if (player.GetComponentInParent<InputControls>().dashing)
                     {
-                        lockOnAssist.position = Vector3.MoveTowards(lockOnAssist.position, trackedEnemy.transform.position, (20 + Mathf.Abs(mag)) * Time.deltaTime);
+                        mag += player.GetComponentInParent<InputControls>().dashSpeed;
                     }
-                    else
-                        lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 + Mathf.Abs(mag)) * Time.deltaTime);
-                    freeLook.m_LookAt = lockOnAssist;
-                    var start = freeLook.m_XAxis;
-                }
+                    var playerCam = GameObject.Find("PlayerCam");
+                    var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
+
+
+
+                    if (freeLook != null)
+                    {
+                        if (dist < 5)
+                        {
+                            lockOnAssist.position = Vector3.MoveTowards(lockOnAssist.position, trackedEnemy.transform.position, (20 + Mathf.Abs(mag)) * Time.deltaTime);
+                        }
+                        else
+                            lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 + Mathf.Abs(mag)) * Time.deltaTime);
+                        freeLook.m_LookAt = lockOnAssist;
+                        var start = freeLook.m_XAxis;
+                    }
 
                
 
 
-                //Vector3 dir = lockOnAssist.position - player.transform.position;
-                Vector3 camdir = Camera.main.transform.position - player.transform.position;
-                //dir.y = 0; // keep the direction strictly horizontal
+                    //Vector3 dir = lockOnAssist.position - player.transform.position;
+                    Vector3 camdir = Camera.main.transform.position - player.transform.position;
+                    //dir.y = 0; // keep the direction strictly horizontal
 
-                //Debug.DrawLine(player.transform.position, player.transform.position + (dir * 4), Color.white, Time.deltaTime);
-                var quat = Quaternion.identity;
-                //var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-                var cameraRot = Quaternion.LookRotation(-camdir.normalized, Vector3.up);
+                    //Debug.DrawLine(player.transform.position, player.transform.position + (dir * 4), Color.white, Time.deltaTime);
+                    var quat = Quaternion.identity;
+                    //var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                    var cameraRot = Quaternion.LookRotation(-camdir.normalized, Vector3.up);
 
-                //quat = Quaternion.Slerp(cameraRot, look, 5 * Time.deltaTime);
+                    //quat = Quaternion.Slerp(cameraRot, look, 5 * Time.deltaTime);
 
-                //freeLook.m_XAxis.Value = quat.eulerAngles.y;
-
-
-                Vector3 dir = lockOnAssist.position - player.transform.position;
+                    //freeLook.m_XAxis.Value = quat.eulerAngles.y;
 
 
+                    Vector3 dir = lockOnAssist.position - player.transform.position;
 
-                backpoint.transform.position = -dir * 1;
-                var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
 
-                //Debug.Log(look.eulerAngles.x);
 
-                dir.y = 0;
-                player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
-                //player.transform.parent.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                    backpoint.transform.position = -dir * 1;
+                    var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
 
-                var d = look.eulerAngles.x;
+                    //Debug.Log(look.eulerAngles.x);
 
-                if(d < 27 || d >= 355.9958f)
-                {
-                    if(d < 27)
+                    dir.y = 0;
+                    player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                    //player.transform.parent.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+
+                    var d = look.eulerAngles.x;
+
+                    if(d < 27 || d >= 355.9958f)
                     {
-                        //Debug.Log("remapping");
-                        d = Remap(d, -0.005729297f, 27, 0, 0.397372946f);
-                        //remap this value 0 to 0.397372946f
+                        if(d < 27)
+                        {
+                            //Debug.Log("remapping");
+                            d = Remap(d, -0.005729297f, 27, 0, 0.397372946f);
+                            //remap this value 0 to 0.397372946f
+                        }
+                        else
+                        {
+                            d = Remap(d, 308.6598f, 355.9958f, 0.397372946f, 0.5f);
+                            //remap from 0.397372946 to 0.5
+                        }
+                        //remap from 0 to 0.5;
                     }
                     else
                     {
-                        d = Remap(d, 308.6598f, 355.9958f, 0.397372946f, 0.5f);
-                        //remap from 0.397372946 to 0.5
+                        d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1);
                     }
-                    //remap from 0 to 0.5;
+
+
+                    if (freeLook != null)
+                    {
+                        freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
+                        //Debug.Log(d + " is the x axis value");
+                        freeLook.m_YAxis.Value = Mathf.Clamp(d, 0.5f, 1);
+                    }
+
+                    float Remap(float value, float from1, float from2, float to1, float to2)
+                    {
+                        var fromAbs = value - from1;
+                        var fromMaxAbs = from2 - from1;
+
+                        var normal = fromAbs / fromMaxAbs;
+
+                        var toMaxAbs = to2 - to1;
+                        var toAbs = toMaxAbs * normal;
+
+                        var to = toAbs + to1;
+
+                        return to;
+                        //return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+                    }
+                    if(Vector3.Distance(player.transform.position,trackedEnemy.transform.position) >= range)
+                    {
+                        StopLockOn();
+                    }
                 }
                 else
                 {
-                    d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1);
+                    RefindTracked();
                 }
-
-
-                if (freeLook != null)
-                {
-                    freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
-                    //Debug.Log(d + " is the x axis value");
-                    freeLook.m_YAxis.Value = Mathf.Clamp(d, 0.5f, 1);
-                }
-
-                float Remap(float value, float from1, float from2, float to1, float to2)
-                {
-                    var fromAbs = value - from1;
-                    var fromMaxAbs = from2 - from1;
-
-                    var normal = fromAbs / fromMaxAbs;
-
-                    var toMaxAbs = to2 - to1;
-                    var toAbs = toMaxAbs * normal;
-
-                    var to = toAbs + to1;
-
-                    return to;
-                    //return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-                }
-
                 //(value - from1) / (to1 - from1) * (to2 - from2) + from2;
             }
 
@@ -389,7 +376,7 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            
+            RefindTracked();
         }
 
         InputEventStartSlowDown();
@@ -419,22 +406,26 @@ public class LockOnSystem : MonoBehaviour
             HideTargets();
             //targeters.Add(closestTarget);
         }*/
-        if(lockon != null && trackedEnemy != null)
+        if(lockon != null && trackedEnemy != null  )
         {
-            lockon.transform.position = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
-            var view = Camera.main.WorldToViewportPoint(trackedEnemy.transform.position);
-            bool displayTarget = false;
+            if (trackedEnemy.activeInHierarchy)
+            {
+                lockon.transform.position = Camera.main.WorldToScreenPoint(trackedEnemy.transform.position);
+                var view = Camera.main.WorldToViewportPoint(trackedEnemy.transform.position);
+                bool displayTarget = false;
 
-                    if (view.z >= 0)
-                    {
-                        displayTarget = true;
-                    }
-                    else
-                    {
-                        displayTarget = false;
-                    }
-            if(lockon.GetComponent<Image>().enabled!=displayTarget)
-                lockon.GetComponent<Image>().enabled = displayTarget;
+                        if (view.z >= 0)
+                        {
+                            displayTarget = true;
+                        }
+                        else
+                        {
+                            displayTarget = false;
+                        }
+                if(lockon.GetComponent<Image>().enabled!=displayTarget)
+                    lockon.GetComponent<Image>().enabled = displayTarget;
+
+            }
         }
 
 
@@ -783,7 +774,7 @@ public class LockOnSystem : MonoBehaviour
         
     }
 
-    void HideTargets()
+    public void HideTargets()
     {
         foreach (GameObject targeter in targeters)
         {
@@ -794,7 +785,17 @@ public class LockOnSystem : MonoBehaviour
 
     public void StopLockOn(bool overridePrev = false)
     {
+        Metronome.inst.transform.position = Metronome.inst.startPos;
+        lockon.color = new Color(1, 1, 1, 0);
 
+        var cam = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+
+        var x = cam.m_XAxis.Value;
+        var y = cam.m_YAxis.Value;
+
+        var rot = Camera.main.transform.rotation;
+        var pos = Camera.main.transform.position;
+        player.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
 
         //hides all targeters and lets the camera be controlled as normal.
@@ -802,9 +803,77 @@ public class LockOnSystem : MonoBehaviour
         HideTargets();
         targetTime = maxTimeScale;
         freeAim = true;
-        rangeFinder.SetActive(false);
-        GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().m_LookAt = player.transform;
+        //rangeFinder.SetActive(false);
+        cam.m_LookAt = player.transform;
+
+
+
+        cam.m_XAxis.Value = x;
+        cam.m_YAxis.Value = y;
+
         GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
+        //cam.ForceCameraPosition(pos, rot);
         //GameObject.Find("PlayerCam").GetComponent<CinemachineCameraOffset>().m_Offset = Vector3.zero;
     }
+
+    public void StartLockOn()
+    {
+        //StartLockOn
+        HideTargets();
+        CreateTargeters();
+        UpdateTargetUI();
+        //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
+        //eul = Quaternion.LookRotation(dirRot);
+        var enemyScreenPos = lockon.transform.position;
+        if (enemyScreenPos.x > Screen.width || enemyScreenPos.x < 0 || enemyScreenPos.y < 0 || enemyScreenPos.y > Screen.height)
+        {
+            StopLockOn();
+        }
+        else
+        {
+            freeAim = false;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+            //lockOnAssist.position = player.transform.position + Camera.main.transform.forward;
+            if (freeLook != null)
+                freeLook.m_LookAt = lockOnAssist;
+
+            var dir = player.transform.position - trackedEnemy.transform.position;
+            lockOnAssist.position = player.transform.position - dir;
+        }
+    }
+
+    void RefindTracked()
+    {
+        HideTargets();
+        CreateTargeters();
+        bool swap = false;
+
+
+        //used to get a new target if the one the player is locked on to dies
+        if (!freeAim)
+        {
+            freeAim = true;
+            swap = true;
+        }
+
+        UpdateTargetUI();
+        if (swap)
+            freeAim = false;
+        if (!freeAim)
+        {
+            GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = false;
+            var freeLook = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
+            var dir = player.transform.position - trackedEnemy.transform.position;
+            lockOnAssist.position = player.transform.position + dir;
+            if (freeLook != null)
+                freeLook.m_LookAt = lockOnAssist;
+
+        }
+        else
+        {
+            HideTargets();
+        }
+    }
+
 }
