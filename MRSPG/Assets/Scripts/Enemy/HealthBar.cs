@@ -38,18 +38,17 @@ public class HealthBar : MonoBehaviour
     {
         running = true;
         float amount = Fill.fillAmount;
-        float time = 0f;
-        while (time < 1f)
+        float time = 0;
+        while (time < 1)
         {
             time += Time.deltaTime;
-            Fill.fillAmount = Mathf.Lerp(amount, target, (time / 1f));
+            Fill.fillAmount = Mathf.Lerp(amount, target, time);
             yield return null;
         }
         running = false;
     }
     public void Refresh()
     {
-        Debug.Log("refresging healthbar");
-        current = enemy._enemy.EnemyHealth;
+        Fill.fillAmount = enemy._enemy.EnemyHealth;
     }
 }
