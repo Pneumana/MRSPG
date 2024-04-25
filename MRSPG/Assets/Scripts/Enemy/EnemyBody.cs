@@ -179,7 +179,7 @@ public class EnemyBody : MonoBehaviour
             {
                 //Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
                 //Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
-
+                if (hit.collider.gameObject.CompareTag("Enemy")) { return; }
                 ModifyHealth(5);
                 rb.velocity = Vector3.zero;
                 Vector3 point = hit.point;
