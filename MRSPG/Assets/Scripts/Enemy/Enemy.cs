@@ -402,7 +402,6 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Shoot(int Damage)
     {
-
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
@@ -410,7 +409,7 @@ public class Enemy : MonoBehaviour
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
         bullet.transform.forward = distance;
         Vector3 PositionOnBeat = _enemy.PlayerObject.transform.position;
-        while (bullet.transform.position != PositionOnBeat)
+        while (bullet != null && bullet.transform.position != PositionOnBeat)
         {
             bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, PositionOnBeat, 35f * Time.fixedDeltaTime);
             if (Physics.CheckSphere(bullet.transform.position, 0.1f, Player))
