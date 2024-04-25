@@ -115,7 +115,7 @@ public class Health : MonoBehaviour
         if ( currentHealth == 0 )
         {
             _healthImg.sprite = _healthSprite [ 5 ];
-            Die();
+            StartCoroutine(Die());
         }
     }
 

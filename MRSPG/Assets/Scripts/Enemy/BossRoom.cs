@@ -19,6 +19,7 @@ public class BossRoom : MonoBehaviour
 
     private void Start()
     {
+        if (BossHealthBar == null) { BossHealthBar = new GameObject("Placeholder"); Debug.LogError("Temporary fix for null reference"); }
         max = enemy._enemy.EnemyHealth;
         if (BossHealthBar.activeSelf) { BossHealthBar.SetActive(false); }
     }
