@@ -11,8 +11,6 @@ public class MeleeHitbox : MonoBehaviour
     private InputControls inputControls;
     private Energy energy;
     public Vector3 HitboxSize;
-
-    public List<EnemyBody> hurtList = new List<EnemyBody>();
     #endregion
 
     void Start()
@@ -24,7 +22,6 @@ public class MeleeHitbox : MonoBehaviour
     }
     public void MeleeAttack(int meleeCombo)
     {
-        
         Collider[] Hit = Physics.OverlapBox(transform.position, HitboxSize, transform.rotation);
         foreach (Collider collider in Hit)
         {
@@ -52,10 +49,6 @@ public class MeleeHitbox : MonoBehaviour
                 if (metronome.IsOnBeat() && enemy._enemy.type != EnemyType.Heavy) { enemy.Stagger(); }
             }
         }
-
-        //Added by connor
-        hurtList.Clear();
-
     }
     private void OnDrawGizmos()
     {
