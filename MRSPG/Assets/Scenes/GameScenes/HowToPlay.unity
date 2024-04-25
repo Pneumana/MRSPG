@@ -674,6 +674,7 @@ GameObject:
   - component: {fileID: 980492441}
   - component: {fileID: 980492443}
   - component: {fileID: 980492442}
+  - component: {fileID: 980492444}
   m_Layer: 5
   m_Name: MainMenuButtonTxt
   m_TagString: Untagged
@@ -738,6 +739,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980492440}
   m_CullTransparentMesh: 1
+--- !u!114 &980492444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980492440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1102461088
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,7 +1822,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f31804d61accb0347b7b3efa912e9adf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca37b09cd7a6d65428464fc0f7d37adc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

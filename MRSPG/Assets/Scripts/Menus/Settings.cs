@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 
 public class Settings : MonoBehaviour
@@ -22,7 +20,7 @@ public class Settings : MonoBehaviour
 
     private void Start ( )
     {
-        GetResolutions();
+        GetResolutions ( );
     }
 
     void GetResolutions ( )
