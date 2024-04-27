@@ -226,36 +226,20 @@ public class LockOnSystem : MonoBehaviour
         }
         if (trackedEnemy == null)
         {
-            //Debug.Log("tracked enemy is null");
             RefindTracked();
-            
-            
-
-            //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
-            //eul = Quaternion.LookRotation(dirRot);
-            //HideTargets();
         }
         if (!freeAim)
         {
-
-            //Vector3 dirRot = trackedEnemy.transform.position - (player.transform.position);
-            //dirRot.y = 0;
-            //dir.y = 0; // keep the direction strictly horizontal
-            //Quaternion rot = Quaternion.LookRotation(dirRot, Vector3.up);
-            // slerp to the desired rotation over time
             if (trackedEnemy != null )
             {
                 if (trackedEnemy.activeInHierarchy)
                 {
 
                     var midpoint = (trackedEnemy.transform.position + player.transform.position) / 2;
-
                     var a = player.transform.position;
                     a.y = 0;
                     var b = trackedEnemy.transform.position;
                     b.y = 0;
-
-
                     var dist = Vector3.Distance(a, b);
                     var influence = Mathf.Clamp01(dist / 5);
 
@@ -267,9 +251,6 @@ public class LockOnSystem : MonoBehaviour
                     }
                     var playerCam = GameObject.Find("PlayerCam");
                     var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
-
-
-
                     if (freeLook != null)
                     {
                         if (dist < 5)
@@ -282,66 +263,59 @@ public class LockOnSystem : MonoBehaviour
                         var start = freeLook.m_XAxis;
                     }
 
-               
-
-
-                    //Vector3 dir = lockOnAssist.position - player.transform.position;
+                    //get the direction that the camera is facing
                     Vector3 camdir = Camera.main.transform.position - player.transform.position;
-                    //dir.y = 0; // keep the direction strictly horizontal
-
-                    //Debug.DrawLine(player.transform.position, player.transform.position + (dir * 4), Color.white, Time.deltaTime);
-                    var quat = Quaternion.identity;
-                    //var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                    //convert look direction to quaternion
                     var cameraRot = Quaternion.LookRotation(-camdir.normalized, Vector3.up);
 
-                    //quat = Quaternion.Slerp(cameraRot, look, 5 * Time.deltaTime);
-
-                    //freeLook.m_XAxis.Value = quat.eulerAngles.y;
-
-
+                    //direction that is "behind" the player if they are looking at the lock on assist
                     Vector3 dir = lockOnAssist.position - player.transform.position;
 
 
 
                     backpoint.transform.position = -dir * 1;
                     var look = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-
-                    //Debug.Log(look.eulerAngles.x);
-
+                    //keep dir horizontal
                     dir.y = 0;
+                    //make the player look at the lock on assist
                     player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
-                    //player.transform.parent.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
+                    
 
+                    //really gross conversion of angle to the stupid 0 to 1 thing that the free look camera uses
                     var d = look.eulerAngles.x;
+                    var sample = look.eulerAngles.x;
 
                     if(d < 27 || d >= 355.9958f)
                     {
                         if(d < 27)
                         {
-                            //Debug.Log("remapping");
-                            d = Remap(d, -0.005729297f, 27, 0, 0.397372946f);
+                            Debug.Log("remap less than 27");
+                            d = Remap(d, -0.005729297f, 27, 0.4f, 0);
                             //remap this value 0 to 0.397372946f
                         }
                         else
                         {
-                            d = Remap(d, 308.6598f, 355.9958f, 0.397372946f, 0.5f);
+                            Debug.Log("remap greater than 27");
+                            d = Remap(d, 308.6598f, 355.9958f, 0.5f, 0.4f);
                             //remap from 0.397372946 to 0.5
                         }
                         //remap from 0 to 0.5;
                     }
                     else
                     {
-                        d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1);
+                        Debug.Log("remap 300 range");
+                        d = Remap(d, 308.6598f, 355.9958f , 1f, 0.5f);
                     }
-
-
+                    Debug.DrawLine(player.transform.position, lockOnAssist.transform.position, Color.magenta);
+                    //make the camera look in a direction
                     if (freeLook != null)
                     {
                         freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
-                        //Debug.Log(d + " is the x axis value");
-                        freeLook.m_YAxis.Value = Mathf.Clamp(d, 0.5f, 1);
+                        //d = Mathf.Clamp(d, 0, 1);
+                        Debug.Log(d + " is the Y axis value, true angle is " + sample);
+                        freeLook.m_YAxis.Value = d;
                     }
-
+                    //remap function
                     float Remap(float value, float from1, float from2, float to1, float to2)
                     {
                         var fromAbs = value - from1;
@@ -357,9 +331,11 @@ public class LockOnSystem : MonoBehaviour
                         return to;
                         //return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
                     }
+                    //if the target is too far away, break the lock on
                     if(Vector3.Distance(player.transform.position,trackedEnemy.transform.position) >= range)
                     {
                         StopLockOn();
+                        StartLockOn();
                     }
                 }
                 else

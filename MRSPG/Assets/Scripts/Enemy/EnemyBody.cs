@@ -111,11 +111,10 @@ public class EnemyBody : MonoBehaviour
         }
         disablePathfinding = true;
         gameObject.SetActive(false);
-        LockOnSystem.LOS.UpdateEnemyList();
+        //LockOnSystem.LOS.UpdateEnemyList();
 
-        /*LockOnSystem.LOS.StopLockOn();
-        LockOnSystem.LOS.freeAim = true;
-        LockOnSystem.LOS.StartLockOn();*/
+        LockOnSystem.LOS.StopLockOn();
+        LockOnSystem.LOS.StartLockOn();
 
         //Destroy(gameObject);
     }
