@@ -13,6 +13,7 @@ public class Settings : MonoBehaviour
     [SerializeField] Toggle _2xAA;
     [SerializeField] Toggle _4xAA;
     [SerializeField] Toggle _8xAA;
+    [SerializeField] Toggle _fullscreenToggle;
 
     Resolution [ ] _resolutions;
 
@@ -21,6 +22,8 @@ public class Settings : MonoBehaviour
     private void Start ( )
     {
         GetResolutions ( );
+
+        _fullscreenToggle.isOn = Screen.fullScreen;
     }
 
     void GetResolutions ( )
@@ -43,7 +46,6 @@ public class Settings : MonoBehaviour
                 currentResolutionIndex = i;
             }
         }
-
         _resDropdown.AddOptions ( options );
         _resDropdown.value = currentResolutionIndex;
         _resDropdown.RefreshShownValue ( );
@@ -55,7 +57,7 @@ public class Settings : MonoBehaviour
         Screen.SetResolution ( resolution.width , resolution.height , Screen.fullScreen );
     }
 
-    public void SetFullScreen ( bool isFullscreen )
+    public void SetFullScreen (bool isFullscreen )
     {
         Screen.fullScreen = isFullscreen;
     }
@@ -64,7 +66,7 @@ public class Settings : MonoBehaviour
     {
         QualitySettings.antiAliasing = 1;
 
-        if ( _noAA == true )
+        if ( _noAA.isOn == true )
         {
             _2xAA.isOn = false;
             _4xAA.isOn = false;
@@ -76,7 +78,7 @@ public class Settings : MonoBehaviour
     {
         QualitySettings.antiAliasing = 2;
 
-        if (_2xAA==true)
+        if ( _2xAA.isOn == true )
         {
             _noAA.isOn = false;
             _4xAA.isOn = false;
@@ -88,7 +90,7 @@ public class Settings : MonoBehaviour
     {
         QualitySettings.antiAliasing = 4;
 
-        if ( _4xAA == true )
+        if ( _4xAA.isOn == true )
         {
             _noAA.isOn = false;
             _2xAA.isOn = false;
@@ -100,16 +102,11 @@ public class Settings : MonoBehaviour
     {
         QualitySettings.antiAliasing = 8;
 
-        if ( _8xAA == true )
+        if ( _8xAA.isOn == true )
         {
             _noAA.isOn = false;
             _2xAA.isOn = false;
             _4xAA.isOn = false;
         }
-    }
-
-    public void SetPulseIntensity ( )
-    {
-        SettingsDataHolder.inst.pulseIntensity = FindFirstObjectByType<Slider> ( ).value;
     }
 }

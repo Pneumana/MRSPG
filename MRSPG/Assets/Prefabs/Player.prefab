@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 3339457487518685660}
+    m_SelectOnUp: {fileID: 52088465102122250}
+    m_SelectOnDown: {fileID: 7243327532328202870}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -1464,9 +1464,9 @@ MonoBehaviour:
   _howToMenu: {fileID: 8036640835143200632}
   _creditsMenu: {fileID: 5449997853703125166}
   _pauseContinue: {fileID: 24007137663231138}
-  _settingsContinue: {fileID: 0}
-  _howToContinue: {fileID: 0}
-  _creditsContinue: {fileID: 0}
+  _settingsContinue: {fileID: 3681028675072404617}
+  _howToContinue: {fileID: 3172070545692882452}
+  _creditsContinue: {fileID: 739478781339481398}
   lockOn: {fileID: 8293312996449909595}
   control: {fileID: 6718817609202145083}
   lvlMusic: {fileID: 1761970962408638334}
@@ -1488,6 +1488,7 @@ MonoBehaviour:
   _2xAA: {fileID: 1053123551295369731}
   _4xAA: {fileID: 8994869952853642768}
   _8xAA: {fileID: 7248396708574740926}
+  _fullscreenToggle: {fileID: 3339457487518685660}
 --- !u!1 &567850866985334979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,7 +1837,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 7243327532328202870}
     m_SelectOnDown: {fileID: 3791171259552623143}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -3675,7 +3676,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1053123551295369731}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 52088465102122250}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -5653,7 +5654,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 5605981244323816508}
     m_SelectOnDown: {fileID: 3339457487518685660}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -6081,7 +6082,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3924681802702019758}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08578809, y: 0.7018835, z: -0.08578808, w: 0.7018835}
+  m_LocalRotation: {x: 0.08578809, y: 0.70188344, z: -0.08578808, w: 0.70188355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6623,7 +6624,7 @@ MonoBehaviour:
   jumpParticles: {fileID: 7598536331975042734}
   movespeedMultiplier: 1
   CombatTimer: 10
-  CombatSlowdown: 0.75
+  CombatMultiplier: 0.75
   animator: {fileID: 2994795941080886472}
 --- !u!114 &-6202000842600906584
 MonoBehaviour:
@@ -6881,7 +6882,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4633848690488371148}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0985408, y: 0.70020694, z: -0.098540805, w: 0.70020694}
+  m_LocalRotation: {x: 0.098540805, y: 0.7002069, z: -0.0985408, w: 0.700207}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14288,7 +14289,7 @@ Transform:
   m_GameObject: {fileID: 6434614012780926220}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.602892, y: 3.73444, z: -2.277769}
+  m_LocalPosition: {x: -8.602892, y: 3.73444, z: -2.2777696}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
