@@ -55,14 +55,14 @@ public class AxeTrap : MonoBehaviour
             activated = true;
             loops = 0;
             //activate
-            StartCoroutine(Activate(maxRotation));
+            StartCoroutine(Activate(transform.rotation.eulerAngles.z + maxRotation));
         }
         if(loops == loopsToStop && activated)
         {
             activated = false;
             loops = 0;
             //activate
-            StartCoroutine(Activate(minRotation));
+            StartCoroutine(Activate(transform.rotation.eulerAngles.z + minRotation));
         }
     }
     IEnumerator Activate(float input)
@@ -76,10 +76,10 @@ public class AxeTrap : MonoBehaviour
         do
         {
             t += Time.deltaTime;
-            Debug.Log((t / bpm) * 5);
+            //Debug.Log((t / bpm) * 5);
             var lerp = Mathf.Lerp(currentZ, input, (t / bpm) * 5);
             //lerp = Mathf.Clamp(lerp, 0f, 1f);
-            Debug.Log((t / bpm) * 5 + " clamped to " + lerp);
+            //Debug.Log((t / bpm) * 5 + " clamped to " + lerp);
             pivot.transform.rotation = Quaternion.Slerp(currentRot, targetRot, (t / bpm) * 5);
             chain.SetPosition(1, axehead.position);
             yield return new WaitForSeconds(0);

@@ -41,7 +41,9 @@ public class EnemyBody : MonoBehaviour
     public enum DamageTypes
     {
         Basic,
-        Explosive
+        Explosive,
+        Trap,
+        Impact
     }
 
     // Start is called before the first frame update
@@ -142,7 +144,7 @@ public class EnemyBody : MonoBehaviour
                     Debug.Log("floor splat");
 
                 //take fall damage
-                ModifyHealth(1);
+                ModifyHealth(1, DamageTypes.Impact);
                     EnablePathfinding();
                     if(me != null)
                         me.enabled = true;
@@ -184,7 +186,7 @@ public class EnemyBody : MonoBehaviour
                 //Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
                 //Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
                 if (hit.collider.gameObject.CompareTag("Enemy")) { return; }
-                ModifyHealth(5);
+                ModifyHealth(5, DamageTypes.Impact);
                 rb.velocity = Vector3.zero;
                 Vector3 point = hit.point;
                 point.y += 0.1f;

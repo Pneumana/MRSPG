@@ -13,7 +13,7 @@ public class DamageVolume : MonoBehaviour
         }
         if (other.gameObject.GetComponent<EnemyBody>() != null)
         {
-            other.gameObject.GetComponent<EnemyBody>().ModifyHealth(1);
+            other.gameObject.GetComponent<EnemyBody>().ModifyHealth(1, EnemyBody.DamageTypes.Trap);
         }
     }
 }
