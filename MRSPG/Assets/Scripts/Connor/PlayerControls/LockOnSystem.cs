@@ -296,7 +296,7 @@ public class LockOnSystem : MonoBehaviour
                         else
                         {
                             Debug.Log("remap greater than 27");
-                            d = Remap(d, 308.6598f, 355.9958f, 0.5f, 0.4f);
+                            d = Remap(d, 308.6598f, 355.9958f, 0.4f, 0.5f);
                             //remap from 0.397372946 to 0.5
                         }
                         //remap from 0 to 0.5;
