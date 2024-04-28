@@ -2330,7 +2330,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HitboxSize: {x: 1.7, y: 1.3, z: 1}
-  hurtList: []
 --- !u!1 &1170256302349756144
 GameObject:
   m_ObjectHideFlags: 0
@@ -6082,7 +6081,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3924681802702019758}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08578809, y: 0.70188344, z: -0.08578808, w: 0.70188355}
+  m_LocalRotation: {x: 0.08578809, y: 0.7018835, z: -0.08578808, w: 0.7018835}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6622,6 +6621,9 @@ MonoBehaviour:
   doGravity: 1
   groundedParticles: {fileID: 1680898397791898271}
   jumpParticles: {fileID: 7598536331975042734}
+  movespeedMultiplier: 1
+  CombatTimer: 10
+  CombatSlowdown: 0.75
   animator: {fileID: 2994795941080886472}
 --- !u!114 &-6202000842600906584
 MonoBehaviour:
@@ -6879,7 +6881,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4633848690488371148}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.098540805, y: 0.7002069, z: -0.0985408, w: 0.700207}
+  m_LocalRotation: {x: 0.0985408, y: 0.70020694, z: -0.098540805, w: 0.70020694}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14286,7 +14288,7 @@ Transform:
   m_GameObject: {fileID: 6434614012780926220}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.602892, y: 3.73444, z: -2.2777696}
+  m_LocalPosition: {x: -8.602892, y: 3.73444, z: -2.277769}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20592,6 +20594,7 @@ MonoBehaviour:
   startPos: {x: 0, y: 0, z: 0}
   framesToSkip: 0
   beatPopulation: 2
+  beatPercent: 0
 --- !u!82 &1761970962408638334
 AudioSource:
   m_ObjectHideFlags: 0

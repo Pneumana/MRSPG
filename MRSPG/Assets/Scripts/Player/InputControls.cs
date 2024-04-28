@@ -67,6 +67,12 @@ public class InputControls : MonoBehaviour
     bool playedJump;
     int noGroundFrames;
 
+    Coroutine combatSlowLoop;
+
+    public float movespeedMultiplier = 1;
+    public float CombatTimer = 10;
+    public float CombatMultiplier = 0.75f;
+
     [SerializeField] Animator animator;
 
     public static InputControls instance;
@@ -167,11 +173,11 @@ public class InputControls : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
                 Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-                controller.Move(targetDirection.normalized * speed * Time.deltaTime);
+                controller.Move(targetDirection.normalized * speed * movespeedMultiplier * Time.deltaTime);
             }
             else
             {
-                controller.Move(direction.normalized * speed * Time.deltaTime);
+                controller.Move(direction.normalized * speed * movespeedMultiplier * Time.deltaTime);
             }
 
             if (type == "Movement")
@@ -233,7 +239,7 @@ public class InputControls : MonoBehaviour
 
         velocity.y += gravity * gravityMultiplier * Time.deltaTime;
         if (controller.enabled)
-            controller.Move(velocity * Time.deltaTime);
+            controller.Move(velocity * Time.deltaTime * movespeedMultiplier);
 
         if (movePlayer.magnitude >= 0.1f)
         {
@@ -246,7 +252,7 @@ public class InputControls : MonoBehaviour
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward * playerInput.magnitude;
             if(controller.enabled)
-                controller.Move(moveDirection * Time.deltaTime * speed);
+                controller.Move(moveDirection * Time.deltaTime * speed * movespeedMultiplier);
         }
         else
         {
@@ -299,5 +305,28 @@ public class InputControls : MonoBehaviour
     {
         Gizmos.DrawWireSphere(groundCheck.position, 0.4f);
         Gizmos.DrawWireSphere(playerObj.position, 2.5f);
+    }
+
+    public void CombatMovementSlow()
+    {
+        if (combatSlowLoop == null)
+        {
+            combatSlowLoop = StartCoroutine(CombatSlowLoop());
+        }
+        else
+        {
+            StopCoroutine(combatSlowLoop);
+            combatSlowLoop = StartCoroutine(CombatSlowLoop());
+        }
+    }
+    IEnumerator CombatSlowLoop()
+    {
+        movespeedMultiplier = CombatMultiplier;
+
+        yield return new WaitForSeconds(CombatTimer);
+
+        movespeedMultiplier = 1;
+
+        yield return null;
     }
 }
