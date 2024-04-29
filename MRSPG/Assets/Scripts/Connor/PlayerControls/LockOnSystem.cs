@@ -433,6 +433,7 @@ public class LockOnSystem : MonoBehaviour
         player.transform.position = targetedPos;
         characterController.enabled = true;
         closestEnemy.transform.position = playerStartPos;
+        //Sounds.instance.PlaySFX ( "Teleport" );
 
         try
         {

@@ -353,6 +353,7 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Charge(int beats)
     {
+        //Sounds.instance.PlaySFX ( "Enemy Charge" );
         this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
         if (!playerInRange)
         {
@@ -376,6 +377,7 @@ public class Enemy : MonoBehaviour
         if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         }
     }
     private void HeavyAttack(int Damage)
@@ -386,6 +388,7 @@ public class Enemy : MonoBehaviour
         if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         }
     }
     private IEnumerator Load(int beats)
@@ -405,6 +408,7 @@ public class Enemy : MonoBehaviour
         LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
+        //Sounds.instance.PlaySFX ( "Shoot" );
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
         bullet.transform.forward = distance;
@@ -417,6 +421,7 @@ public class Enemy : MonoBehaviour
                 if(_enemy.PlayerSettings.GetComponent<InputControls>().canDash)
                 {
                     _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+                    //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
                     Debug.Log("The bullet hit the player");
                     Destroy(bullet);
                     break;
@@ -446,6 +451,7 @@ public class Enemy : MonoBehaviour
         if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            //Sounds.instance.PlaySFX ( "Boss Hit Marker" );
         }
     }
     private IEnumerator EndLag(int beats)
