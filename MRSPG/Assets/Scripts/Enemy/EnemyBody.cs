@@ -301,7 +301,7 @@ public class EnemyBody : MonoBehaviour
     {
         transform.position = startPosition;
         health = _enemy.EnemyHealth;
-
+        EnablePathfinding();
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);

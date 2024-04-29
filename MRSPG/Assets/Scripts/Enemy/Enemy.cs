@@ -64,6 +64,7 @@ public class Enemy : MonoBehaviour
 
     LayerMask GroundMask;
     private Metronome Metronome;
+    private TargetManager targetManager;
     GameObject Flare;
 
     #endregion
@@ -188,6 +189,7 @@ public class Enemy : MonoBehaviour
     {
         //Use the SetEnemyData(EnemySetting _enemy) function to use the correct variables.
         playerObj = GameObject.Find("PlayerObj");
+        targetManager = playerObj.GetComponent<TargetManager>();
         Warning = transform.Find("EnemyCanvas").transform.Find("Warning").gameObject;
         Warning.SetActive(false);
         body = GetComponent<EnemyBody>();
@@ -327,6 +329,11 @@ public class Enemy : MonoBehaviour
                     body.me.destination = _enemy.PlayerObject.transform.position;
                 }
             }
+        }
+
+        if (Vector3.Distance(transform.position, playerObj.transform.position) > targetManager.gizmosize)
+        {
+            GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
         }
     }
 
