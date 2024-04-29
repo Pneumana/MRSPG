@@ -21,6 +21,7 @@ public class PlayerAttack : MonoBehaviour
     private GameObject player;
     private GameObject playerObj;
     float timeout;
+    Coroutine endAnim;
     #endregion
     void Start()
     {
@@ -35,14 +36,22 @@ public class PlayerAttack : MonoBehaviour
     }
     public void Attack(InputAction.CallbackContext context) //Starts melee attack and updates melee combo
     {
-        StopAllCoroutines();
-        playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
-        StartCoroutine(TimeOutAnimation());
+        if (endAnim != null)
+        {
+        StopCoroutine(endAnim);
+            endAnim = null;
+        }
+        //playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
+        if(endAnim==null)
+            endAnim = StartCoroutine(TimeOutAnimation());
 
 
+        playerObj.GetComponent<Animator>().SetLayerWeight(1, 1);
         if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; } //anti button spam
         if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
+            if(MeleeCombo!=1)
+                Debug.LogWarning("reset combo count " + MeleeCombo + " to 1");
             MeleeCombo = 1;
             HealCombo = true;
         }
@@ -62,6 +71,8 @@ public class PlayerAttack : MonoBehaviour
         {
             EnemyDir = player.transform.forward;
         }
+        playerObj.GetComponent<Animator>().SetInteger("AttackChain", MeleeCombo);
+        Debug.LogWarning("processing melee combo " + MeleeCombo);
         switch (MeleeCombo)
         {
             case 1:
@@ -82,6 +93,7 @@ public class PlayerAttack : MonoBehaviour
                 }
                 break;
         }
+        
         //StartCoroutine(TimeOutAnimation());
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
@@ -101,10 +113,10 @@ public class PlayerAttack : MonoBehaviour
         }
         //Debug.Log("player attack animation timed out");
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
-        playerObj.GetComponent<Animator>().SetInteger("AttackChain", 0);
+        
         //MeleeSide = 2;
 
-        float a = 1;
+        float a = Metronome.inst.GetInterval();
         while (a > 0)
         {
             a -= Time.deltaTime;

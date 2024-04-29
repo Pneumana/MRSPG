@@ -17,17 +17,16 @@ public class TargetManager : MonoBehaviour
 
     void Update()
     {
-        CheckForEnemies(transform.position, gizmosize);
-        closestEnemy = GetClosestEnemy(enemiesInRange);
         if (CheckForEnemies(transform.position, gizmosize))
         {
+            closestEnemy = GetClosestEnemy(enemiesInRange);
             foreach (GameObject enemy in enemiesInRange)
             {
                 if (enemy != closestEnemy)
                 {
                     try
                     {
-                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
+                        enemy.GetComponent<NavMeshAgent>().speed = enemy.GetComponent<Enemy>()._enemy.NavMeshSlowedSpeed;
                         //Debug.Log("Slowed: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
                     }
                     catch { /*Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component");*/ }
@@ -37,7 +36,7 @@ public class TargetManager : MonoBehaviour
                 {
                     try
                     {
-                        closestEnemy.GetComponent<NavMeshAgent>().speed = closestEnemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
+                        enemy.GetComponent<NavMeshAgent>().speed = enemy.GetComponent<Enemy>()._enemy.NavMeshSpeed;
                         //Debug.Log("Regular: " + closestEnemy.GetComponent<NavMeshAgent>().speed);
                     }
                     catch { /*Debug.Log(closestEnemy.name + " doesn't have a NavMeshAgent component");*/ }
@@ -59,39 +58,32 @@ public class TargetManager : MonoBehaviour
 
     GameObject GetClosestEnemy(List<GameObject> enemies)
     {
-        GameObject bestTarget = null;
-        float closestDistanceSqr = Mathf.Infinity;
-        Vector3 currentPosition = transform.position;
-        foreach (GameObject potentialTarget in enemies)
+        GameObject Closest = null;
+        float closestDist = Mathf.Infinity;
+        if (enemies.Count == 0) { return null; }
+        foreach (GameObject currentTest in enemies)
         {
-            if (potentialTarget != null)
+            float distToTarget = Vector3.Distance(currentTest.transform.position, transform.position);
+            if (distToTarget < closestDist)
             {
-                Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
-                float dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistanceSqr)
-                {
-                    closestDistanceSqr = dSqrToTarget;
-                    bestTarget = potentialTarget;
-                }
+                closestDist = distToTarget;
+                Closest = currentTest;
             }
         }
-
-        return bestTarget;
+        return Closest;
     }
     public bool CheckForEnemies(Vector3 center, float radius)
     {
+        enemiesInRange.Clear();
         Collider[] collider = Physics.OverlapSphere(center, radius);
         foreach (var obj in collider)
         {
-            if (obj.tag == "Enemy")
+            if (obj.CompareTag("Enemy"))
             {
-                if (!enemiesInRange.Contains(obj.gameObject))
-                {
-                    enemiesInRange.Add(obj.gameObject);
-                }
-                return true;
+                enemiesInRange.Add(obj.gameObject);
             }
         }
-        return false;
+        if (enemiesInRange.Count > 0) { return true; }
+        else { return false; }
     }
 }
