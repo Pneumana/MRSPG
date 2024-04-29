@@ -381,11 +381,16 @@ public class Enemy : MonoBehaviour
     }
     private void LightAttack(int Damage)
     {
-        if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        foreach (DamageVolume dv in transform.GetComponentsInChildren<DamageVolume>(false))
+        {
+            dv.damage = Damage;
+            dv.Clear();
+        }
+        /*if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
             //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
-        }
+        }*/
     }
     private void HeavyAttack(int Damage)
     {
