@@ -47,9 +47,9 @@ public class Controller : MonoBehaviour
         if (pauseUI != null) { lockOnSystem.paused = true; }
         if (Tutorial != null)
         {
-            controls.FreezeActions.TutorialConfirm.started += Tutorial.BeginHoldAnim;
+            //controls.FreezeActions.TutorialConfirm.started += Tutorial.BeginHoldAnim;
             controls.FreezeActions.TutorialConfirm.performed += Tutorial.Resume;
-            controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
+            //controls.FreezeActions.TutorialConfirm.canceled += Tutorial.BeginCancelledAnim;
         }
         if (GameObject.Find("Main Camera").GetComponent<PlayableDirector>())
             controls.Gameplay.Dash.performed += cutsceneLogic.SkipCutscene;

@@ -64,19 +64,19 @@ public class Tutorial : MonoBehaviour
         cam.enabled = false;
         Controller.inst.controls.Gameplay.Disable();
         Controller.inst.controls.FreezeActions.Enable();
-        Cursor.visible = false;
+        //Cursor.visible = false;
         player.speed = stopped;
     }
     public void Resume(InputAction.CallbackContext context)
     {
-        Hold.fillAmount = 0f;
+        //Hold.fillAmount = 0f;
 
         cam.enabled = true;
         Controller.inst.controls.Gameplay.Enable();
         Controller.inst.controls.FreezeActions.Disable();
 
         TutorialScreen.SetActive(false);
-        Cursor.visible = true;
+        //Cursor.visible = true;
         player.speed = firstSpeed;
 
         if (point.disableAction)

@@ -386,7 +386,7 @@ public partial class @ControllerSupport: IInputActionCollection2, IDisposable
                     ""id"": ""356c6454-1ed7-45fc-9077-dd2ea6dc0f9d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=1)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
