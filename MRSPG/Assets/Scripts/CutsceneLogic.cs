@@ -11,12 +11,15 @@ public class CutsceneLogic : MonoBehaviour
     public GameObject playerCam;
     public bool ActiveCutscene = false;
     bool SceneHasCutscenes;
+
+    [SerializeField] GameObject UIpopUp;
     void Start()
     {
         if (GameObject.Find("Main Camera").GetComponent<PlayableDirector>())
         {
             SceneHasCutscenes = true;
-            playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>(); 
+            playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>();
+            UIpopUp.SetActive(true);
         }
         playerCam = GameObject.Find("PlayerCam");
     }
@@ -32,13 +35,15 @@ public class CutsceneLogic : MonoBehaviour
             else 
             {
                 if (ActiveCutscene == false) { return; }
-                ActiveCutscene = false; 
+                ActiveCutscene = false;
+                UIpopUp.SetActive(false);
             }
         }
     }
     public void SkipCutscene(InputAction.CallbackContext context)
     {
         playableDirector.Stop();
+        UIpopUp.SetActive(false);
         playerCam.GetComponent<Cinemachine.CinemachineFreeLook>().enabled = true;
     }
 }
