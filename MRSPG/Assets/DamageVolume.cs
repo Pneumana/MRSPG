@@ -73,7 +73,12 @@ public class DamageVolume : MonoBehaviour
     }
     public void Clear()
     {
-        Debug.Log("cleared", gameObject);
+        //Debug.Log("cleared", gameObject);
         hurtList.Clear();
+    }
+
+    private void OnEnable()
+    {
+        Clear();
     }
 }

@@ -333,7 +333,8 @@ public class Enemy : MonoBehaviour
 
         if (Vector3.Distance(transform.position, playerObj.transform.position) > targetManager.gizmosize)
         {
-            GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
+            if(GetComponent<NavMeshAgent>()!=null)
+                GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
         }
     }
 
@@ -397,11 +398,16 @@ public class Enemy : MonoBehaviour
 
         if (Animations != null)
             Animations.SetBool("Charge", false);
-        if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
+        foreach (DamageVolume dv in transform.GetComponentsInChildren<DamageVolume>(false))
+        {
+            dv.damage = Damage;
+            dv.Clear();
+        }
+        /*if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
             //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
-        }
+        }*/
     }
     private IEnumerator Load(int beats)
     {
@@ -454,7 +460,7 @@ public class Enemy : MonoBehaviour
             else if (Physics.CheckSphere(bullet.transform.position, 0.1f)) Destroy(bullet);
             yield return null;
         }
-        Animations.SetBool("Attack", false);
+        
         Destroy(bullet);
     }
     private void SpinAttack(int Damage)
@@ -496,12 +502,12 @@ public class Enemy : MonoBehaviour
                             break;
                         case Attack.Light:
                             if (Animations != null)
-                                Animations.SetBool("Attack", true);
+                                Animations.SetTrigger("Attack");
                             if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
                             break;
                         case Attack.Heavy:
                             if (Animations != null)
-                                Animations.SetBool("Attack", true);
+                                Animations.SetTrigger("Attack");
                             if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
                             break;
                         case Attack.Load:
@@ -511,7 +517,7 @@ public class Enemy : MonoBehaviour
                             break;
                         case Attack.Shoot:
                             if (Animations != null)
-                                Animations.SetBool("Attack", true);
+                                Animations.SetTrigger("Attack");
                             if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                             break;
                         case Attack.Spin:
@@ -525,7 +531,7 @@ public class Enemy : MonoBehaviour
                     if (Animations != null)
                     {
                         Animations.SetBool("Charge", false);
-                        Animations.SetBool("Attack", false);
+                        //Animations.SetBool("Attack", false);
                     }
                 }
             }
