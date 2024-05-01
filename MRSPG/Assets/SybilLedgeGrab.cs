@@ -55,7 +55,7 @@ public class SybilLedgeGrab : MonoBehaviour
             Physics.Raycast(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), transform.up, out headCheck, (grabBounds.y) * 2, groundMask, QueryTriggerInteraction.Ignore);
 
             //var isAboveValid = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y / 2, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask);
-            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y + plusFallspeed.y, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask, QueryTriggerInteraction.Ignore);
+            var abovePos = Physics.CheckBox(pos + new Vector3(0, grabBounds.y - plusFallspeed.y, 0), (grabBounds + plusFallspeed) / 2, transform.rotation, groundMask, QueryTriggerInteraction.Ignore);
             //var abovePos = Physics.BoxCast(pos + new Vector3(0, grabBounds.y, 0), grabBounds/2, transform.forward, transform.rotation, grabBounds.z);
             if (handPos && !abovePos && !grabbed)
             {
@@ -66,7 +66,7 @@ public class SybilLedgeGrab : MonoBehaviour
                 var start = transform.position + grabPosition + (grabForward * transform.forward);
                 var closeLowerLeft = new Vector3(grabBounds.x, -grabBounds.y, -grabBounds.z);
                 var closeLowerRight = new Vector3(-grabBounds.x, -grabBounds.y, -grabBounds.z);
-                //Debug.DrawLine(start + closeLowerLeft, start + closeLowerRight, Color.green, 10);
+                Debug.DrawLine(start + closeLowerLeft, start + closeLowerRight, Color.green, 10);
                 var hand = handHit.point;
                 if (hand == Vector3.zero)
                     hand = (playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2))) + transform.forward * (grabBounds.x + grabBounds.z);
