@@ -100,19 +100,21 @@ public class EnemyBody : MonoBehaviour
         Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
+        var energy = GameObject.FindFirstObjectByType<Energy>();
+        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10, transform.position); }
         /*Debug.Log("The enemy has died");
-        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10); }
-        else { energy.GainEnergy(5); }*/
+        */
 
-/*        foreach (EnemyAbsenceTrigger trigger in triggerList)
-        {
-            trigger.UpdateEnemyList(this);
-        }*/
+        /*        foreach (EnemyAbsenceTrigger trigger in triggerList)
+                {
+                    trigger.UpdateEnemyList(this);
+                }*/
 
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
+
         disablePathfinding = true;
         gameObject.SetActive(false);
         //LockOnSystem.LOS.UpdateEnemyList();
