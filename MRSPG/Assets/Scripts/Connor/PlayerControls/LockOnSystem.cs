@@ -141,11 +141,10 @@ public class LockOnSystem : MonoBehaviour
         }
         ui = GameObject.Find("TargetingUI").transform;
     }
-    private void Update()
+
+    private void FixedUpdate()
     {
-        if(swapTargetCD>0)
-            swapTargetCD-=Time.deltaTime;
-        if (trackedEnemy!=null )
+        if (trackedEnemy != null)
         {
             if (trackedEnemy.activeInHierarchy)
             {
@@ -158,21 +157,28 @@ public class LockOnSystem : MonoBehaviour
                 }
                 else
                 {
-                
+
                 }
 
             }
             else
             {
                 lockon.transform.position = new Vector2(-100, -100);
-                Metronome.inst.transform.position = Metronome.inst.startPos;
+                Metronome.inst.transform.localPosition = Metronome.inst.startPos;
             }
         }
         else
         {
             lockon.transform.position = new Vector2(-100, -100);
-            Metronome.inst.transform.position = Metronome.inst.startPos;
+            Metronome.inst.transform.localPosition = Metronome.inst.startPos;
         }
+    }
+
+    private void Update()
+    {
+        if(swapTargetCD>0)
+            swapTargetCD-=Time.deltaTime;
+        
         if(!paused || energy.currentEnergy == 0)
         {
             Time.timeScale = Mathf.Lerp(Time.timeScale, targetTime, Time.unscaledDeltaTime * scaleSpeed);
@@ -224,7 +230,7 @@ public class LockOnSystem : MonoBehaviour
                 RefindTracked();
             }
         }
-        if (trackedEnemy == null)
+        else
         {
             RefindTracked();
         }
@@ -358,6 +364,7 @@ public class LockOnSystem : MonoBehaviour
                 }
                 else
                 {
+                    
                     RefindTracked();
                 }
                 //(value - from1) / (to1 - from1) * (to2 - from2) + from2;
@@ -370,17 +377,18 @@ public class LockOnSystem : MonoBehaviour
         }
         else
         {
-            RefindTracked();
+            
+            //RefindTracked();
         }
 
         InputEventStartSlowDown();
         InputEventStaySlowDown();
         
-        if (closestTarget != null)
+        /*if (closestTarget != null)
         {
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
             closestTarget.GetComponent<Image>().color = Color.clear;
-        }
+        }*/
         
         InputEventEndSlowDown();
         if (!freeAim)
@@ -699,8 +707,11 @@ public class LockOnSystem : MonoBehaviour
                 closestEnemy = enemies[i];
             }
         }
-        /*if(closestTarget!=null)
-            closestTarget.GetComponent<Image>().sprite = lockedSprite;*/
+        if (closestTarget != null)
+        {
+            closestTarget.GetComponent<Image>().sprite = lockedSprite;
+        }
+
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
             if (freeAim)
@@ -780,7 +791,7 @@ public class LockOnSystem : MonoBehaviour
 
     public void StopLockOn(bool overridePrev = false)
     {
-        Metronome.inst.transform.position = Metronome.inst.startPos;
+        Metronome.inst.transform.localPosition = Metronome.inst.startPos;
         lockon.color = new Color(1, 1, 1, 0);
 
         var cam = GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>();
@@ -840,6 +851,7 @@ public class LockOnSystem : MonoBehaviour
 
     void RefindTracked()
     {
+        Debug.Log("refinding a tracked enemy");
         HideTargets();
         CreateTargeters();
         bool swap = false;
