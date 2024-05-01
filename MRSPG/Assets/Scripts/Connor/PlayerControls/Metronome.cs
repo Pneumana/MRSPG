@@ -165,8 +165,8 @@ public class Metronome : MonoBehaviour
             {
                 flip = false;
                 //onBeat = true;
-                ls.color = new Color(1, 0, 1, 1);
-                rs.color = new Color(1, 0, 1, 1);
+                //ls.color = new Color(1, 0, 1, 1);
+                //rs.color = new Color(1, 0, 1, 1);
             }
             yield return new WaitForSeconds(0);
         } while (t < _interval);
@@ -176,8 +176,8 @@ public class Metronome : MonoBehaviour
             t += Time.deltaTime;
             var percent = t / (_interval * forgivness);
             //onBeat = true;
-            ls.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
-            rs.color = new Color(1, 0, 1, 1 - Mathf.Clamp01(percent));
+            ls.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
+            rs.color = new Color(1, 1, 1, 1 - Mathf.Clamp01(percent));
             //right.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
             //left.GetComponent<RectTransform>().sizeDelta = new Vector2(x * canvas.scaleFactor, y * canvas.scaleFactor);
 

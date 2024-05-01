@@ -124,6 +124,7 @@ public class LockOnSystem : MonoBehaviour
 
         backpoint = new GameObject();
         backpoint.name = "Backpoint";
+        enemyTracker.GetComponent<Image>().color = Color.clear;
     }
     public void UpdateEnemyList()
     {
@@ -328,7 +329,7 @@ public class LockOnSystem : MonoBehaviour
                     else
                     {
                         Debug.Log("remap 300 range");
-                        d = Remap(d, 308.6598f, 355.9958f , 1f, 0.5f);
+                        d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1f);
                     }
                     Debug.DrawLine(player.transform.position, lockOnAssist.transform.position, Color.magenta);
                     //make the camera look in a direction

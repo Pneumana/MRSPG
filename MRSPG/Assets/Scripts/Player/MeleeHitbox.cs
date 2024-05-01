@@ -25,7 +25,7 @@ public class MeleeHitbox : MonoBehaviour
         Collider[] Hit = Physics.OverlapBox(transform.position, HitboxSize, transform.rotation);
         foreach (Collider collider in Hit)
         {
-            if (collider.gameObject.TryGetComponent<EnemyBody>(out var enemyBody) && collider.gameObject.TryGetComponent<Enemy>(out var enemy)) //checks if target collider is from an enemy, also gets target's scripts
+            if (collider.gameObject.TryGetComponent<EnemyBody>(out var enemyBody)) //checks if target collider is from an enemy, also gets target's scripts
             {
                 playerAttack.DealtDamage = true;
                 switch (meleeCombo)
@@ -47,7 +47,10 @@ public class MeleeHitbox : MonoBehaviour
                         break;
                 }
                 InputControls.instance.CombatMovementSlow();
-                if (metronome.IsOnBeat() && enemy._enemy.type != EnemyType.Heavy) { enemy.Stagger(); }
+                if(collider.gameObject.TryGetComponent<Enemy>(out var enemy))
+                {
+                    if (metronome.IsOnBeat() && enemy._enemy.type != EnemyType.Heavy) { enemy.Stagger(); }
+                }
             }
         }
     }
