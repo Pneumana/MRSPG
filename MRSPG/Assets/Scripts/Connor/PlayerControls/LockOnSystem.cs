@@ -251,14 +251,32 @@ public class LockOnSystem : MonoBehaviour
                     }
                     var playerCam = GameObject.Find("PlayerCam");
                     var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
+                    var dir = trackedEnemy.transform.position - player.transform.position;
+
+                    if(Mathf.Abs(trackedEnemy.transform.position.x - player.transform.position.x) < 0.25f && Mathf.Abs(trackedEnemy.transform.position.z - player.transform.position.z) < 0.25f)
+                    {
+                        //player is basically on top of the entity and the dir should not be updated;
+                        //dir = lockOnAssist.transform.forward;
+                        Debug.LogWarning(Mathf.Abs(trackedEnemy.transform.position.x - player.transform.position.x) + "x or " + Mathf.Abs(trackedEnemy.transform.position.z - player.transform.position.z) + "z is below 0.25 which means the player is over the enemy");
+                        StopLockOn();
+                        return;
+                    }
+                    else
+                    {
+                        //lockOnAssist.transform.forward = dir;
+                    }
                     if (freeLook != null)
                     {
                         if (dist < 5)
                         {
-                            lockOnAssist.position = Vector3.MoveTowards(lockOnAssist.position, trackedEnemy.transform.position, (20 + Mathf.Abs(mag)) * Time.deltaTime);
+                            
+                            lockOnAssist.position = Vector3.MoveTowards(lockOnAssist.position, trackedEnemy.transform.position -dir, (20 + Mathf.Abs(mag)) * Time.deltaTime);
                         }
                         else
+                        {
+
                             lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 + Mathf.Abs(mag)) * Time.deltaTime);
+                        }
                         freeLook.m_LookAt = lockOnAssist;
                         var start = freeLook.m_XAxis;
                     }
@@ -269,7 +287,7 @@ public class LockOnSystem : MonoBehaviour
                     var cameraRot = Quaternion.LookRotation(-camdir.normalized, Vector3.up);
 
                     //direction that is "behind" the player if they are looking at the lock on assist
-                    Vector3 dir = lockOnAssist.position - player.transform.position;
+                    //Vector3 dir = lockOnAssist.position - player.transform.position;
 
 
 
