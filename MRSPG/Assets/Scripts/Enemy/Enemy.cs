@@ -418,18 +418,36 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Load(int beats)
     {
-            if (Animations != null)
-                Animations.SetBool("Charge", false);
+        Debug.Log(gameObject.name + " loading");
+            /*if (Animations != null)
+                Animations.SetBool("Charge", true);*/
         Flare.SetActive(true);
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
-        yield return new WaitForSeconds(Metronome.GetInterval());
+        //yield return new WaitForSeconds(Metronome.GetInterval());
+        yield return null;
     }
+
+    public void LaunchProjectile()
+    {
+        
+        GameObject bullet = Instantiate(ranged_enemy.Bullet);
+        bullet.transform.position = Gun.position;
+        bullet.transform.forward = playerObj.transform.position - Gun.position;
+        bullet.GetComponent<EnemyBullet>().enabled = true;
+        bullet.GetComponent<EnemyBullet>().homingTarget = playerObj.transform;
+    }
+
     private IEnumerator Shoot(int Damage)
     {
-        LayerMask Player = LayerMask.GetMask("Player");
+        Debug.Log("shoot");
+        Animations.SetBool("Charge", false);
+        Animations.Update(Time.deltaTime);
+
+        /*LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
+        Debug.Log("created bullet", bullet);
         //Sounds.instance.PlaySFX ( "Shoot" );
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
@@ -465,7 +483,8 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         
-        Destroy(bullet);
+        Destroy(bullet);*/
+        yield return null;
     }
     private void SpinAttack(int Damage)
     {
