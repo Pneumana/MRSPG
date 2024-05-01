@@ -12,14 +12,19 @@ public class CutsceneLogic : MonoBehaviour
     public bool ActiveCutscene = false;
     bool SceneHasCutscenes;
 
-    [SerializeField] GameObject UIpopUp;
+    [SerializeField] GameObject Skip;
+    [SerializeField] GameObject[] UIpopUps;
     void Start()
     {
         if (GameObject.Find("Main Camera").GetComponent<PlayableDirector>())
         {
             SceneHasCutscenes = true;
             playableDirector = GameObject.Find("Main Camera").GetComponent<PlayableDirector>();
-            UIpopUp.SetActive(true);
+            foreach(GameObject obj in UIpopUps)
+            {
+                obj.SetActive(false);
+            }
+            Skip.SetActive(true);
         }
         playerCam = GameObject.Find("PlayerCam");
     }
@@ -36,14 +41,22 @@ public class CutsceneLogic : MonoBehaviour
             {
                 if (ActiveCutscene == false) { return; }
                 ActiveCutscene = false;
-                UIpopUp.SetActive(false);
+                Skip.SetActive(false);
+                foreach (GameObject obj in UIpopUps)
+                {
+                    obj.SetActive(true);
+                }
             }
         }
     }
     public void SkipCutscene(InputAction.CallbackContext context)
     {
         playableDirector.Stop();
-        UIpopUp.SetActive(false);
+        Skip.SetActive(false);
+        foreach (GameObject obj in UIpopUps)
+        {
+            obj.SetActive(true);
+        }
         playerCam.GetComponent<Cinemachine.CinemachineFreeLook>().enabled = true;
     }
 }
