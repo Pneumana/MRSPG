@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (endAnim != null)
         {
-        StopCoroutine(endAnim);
+            StopCoroutine(endAnim);
             endAnim = null;
         }
         if(endAnim==null)
@@ -47,6 +48,9 @@ public class PlayerAttack : MonoBehaviour
 
         playerObj.GetComponent<Animator>().SetLayerWeight(1, 1);
         if (RecentAttack == metronome.BeatsPassed) { MeleeCombo = 1; HealCombo = true; return; } //anti button spam
+
+        playerObj.GetComponent<Animator>().SetTrigger("Attacking");
+
         if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
             if(MeleeCombo!=1)
@@ -59,6 +63,9 @@ public class PlayerAttack : MonoBehaviour
             MeleeCombo++;
             if (!Metronome.inst.IsOnBeat()) { HealCombo = false; }
         }
+
+
+
         if (lockOnSystem.trackedEnemy != null && !lockOnSystem.freeAim)
         {
             //points towards locked on enemy for melee
@@ -72,6 +79,12 @@ public class PlayerAttack : MonoBehaviour
         }
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", MeleeCombo);
         Debug.LogWarning("processing melee combo " + MeleeCombo);
+
+        if (MeleeCombo == 1)
+        {
+            playerObj.GetComponent<Animator>().Play("SwingA", 1, 0);
+        }
+
         switch (MeleeCombo)
         {
             case 1:
@@ -107,13 +120,16 @@ public class PlayerAttack : MonoBehaviour
                 player.GetComponent<InputControls>().velocity = new Vector3(0, player.GetComponent<InputControls>().velocity.y, 0);*/
             yield return new WaitForSeconds(0);
         }
-        playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
         
-        float a = Metronome.inst.GetInterval();
-        while (a > 0)
+        
+        float a = 0;
+        while (a < Metronome.inst.GetInterval())
         {
-            a -= Time.deltaTime;
-            playerObj.GetComponent<Animator>().SetLayerWeight(1, a);
+            a += Time.deltaTime;
+            float zeroToOne = a / Metronome.inst.GetInterval();
+            zeroToOne = Mathf.Clamp01(zeroToOne);
+            playerObj.GetComponent<Animator>().SetLayerWeight(1, 1 - zeroToOne);
+            Debug.LogWarning("attack animation layer fade " + zeroToOne);
             yield return new WaitForSeconds(0);
         }
 

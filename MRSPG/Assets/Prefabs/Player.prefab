@@ -6759,11 +6759,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabPosition: {x: 0, y: 1.04, z: 0}
-  grabBounds: {x: 0.55, y: 0.3, z: 0.15}
+  grabBounds: {x: 0.55, y: 0.3, z: 0.35}
   groundMask:
     serializedVersion: 2
     m_Bits: 2177
-  grabForward: 0.45
+  grabForward: 0.25
   currentState: 
   normal: {x: 0, y: 0, z: 0}
   ledgeJumpStr: 15
@@ -6880,7 +6880,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3924681802702019758}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.034935877, y: -0.0008720797, z: 0.000030485493, w: 0.9993892}
+  m_LocalRotation: {x: 0.034935877, y: -0.0008721273, z: 0.000030487157, w: 0.9993892}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7818,7 +7818,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4633848690488371148}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.034935877, y: -0.0008720797, z: 0.000030485493, w: 0.9993892}
+  m_LocalRotation: {x: 0.034935877, y: -0.0008721273, z: 0.000030487157, w: 0.9993892}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -19760,25 +19760,19 @@ MonoBehaviour:
   removeEventTick: 2
   eventAddedTimeStamp: []
   comboTier:
-  - Meh
-  - Mid
-  - Something
-  - Cool
-  - Gaming?!
+  - 
+  - Okay
+  - Good
+  - Great!
   - Awesome!
-  - Wowzers!
-  - Epic Swag Sauce!
-  pointsPerTier: 320000006400000096000000c8000000fa0000002c0100005e01000090010000
+  pointsPerTier: 1e0000003c0000005a0000007800000096000000
   tierColors:
   - {r: 0.1981132, g: 0.15792987, b: 0.15792987, a: 1}
   - {r: 0.31132078, g: 0.19775748, b: 0.19530974, a: 1}
   - {r: 0.4716981, g: 0.24893914, b: 0.18912424, a: 1}
   - {r: 0.8113208, g: 0.2870864, b: 0.17221434, a: 1}
   - {r: 1, g: 0.419516, b: 0, a: 1}
-  - {r: 1, g: 0.61922556, b: 0, a: 1}
-  - {r: 1, g: 0.8207309, b: 0, a: 1}
-  - {r: 0.9960483, g: 1, b: 0.3443396, a: 1}
-  currentPoints: 100
+  currentPoints: 0
   currentTier: 0
   startedTimestamp: 0
 --- !u!1 &6405318009898678594
@@ -27375,14 +27369,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7322238094277183848}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -31, y: -0.32500005, z: 30.25}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7813947444633938184}
   m_Father: {fileID: 5523894098679805411}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &8125506926768762054
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -27398,7 +27392,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -28323,66 +28317,8 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    m_BurstCount: 1
-    m_Bursts:
-    - serializedVersion: 2
-      time: 0
-      countCurve:
-        serializedVersion: 2
-        minMaxState: 0
-        scalar: 1
-        minScalar: 1
-        maxCurve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        minCurve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-      cycleCount: 1
-      repeatInterval: 0.1
-      probability: 1
+    m_BurstCount: 0
+    m_Bursts: []
   SizeModule:
     enabled: 1
     curve:
@@ -32647,7 +32583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7844397274664835185}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0013899368, y: -0.00087262876, z: -0.0000012129004, w: 0.9999987}
+  m_LocalRotation: {x: -0.0013899368, y: -0.00087264186, z: -0.0000012129187, w: 0.9999987}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
