@@ -85,10 +85,22 @@ public class Energy : MonoBehaviour
     }
     /// <summary>
     /// standard: 10/5, ranged:10,5, heavy: 20/10
+    /// 
+    /// 
+    /// The position is used to play particle effects at that world position. there's a vaccum that is a child of the player obj to suck up the particles
     /// </summary>
-    public void GainEnergy(int energy) 
+    /// 
+    public void GainEnergy(int energy, Vector3? position = null) 
     {
-        currentEnergy += energy;
+        currentEnergy += energy + ComboManager.inst.currentTier;
+
+        if (position != null)
+        {
+            var fx = GameObject.Find("EnergyOrbs");
+            fx.transform.position = (Vector3)position;
+            fx.GetComponent<ParticleSystem>().Emit(energy);
+        }
+
         currentEnergy = Mathf.Clamp(currentEnergy, 0, _maxEnergy);
 /*        if (currentEnergy > 50)
         {

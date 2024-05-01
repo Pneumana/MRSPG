@@ -35,15 +35,15 @@ public class MeleeHitbox : MonoBehaviour
                         break;
                     case 1:
                         enemyBody.ModifyHealth(1);
-                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(1); }
+                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(1, enemyBody.transform.position); }
                         break;
                     case 2:
                         enemyBody.ModifyHealth(1);
-                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(2); }
+                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(2, enemyBody.transform.position); }
                         break;
                     case 3:
                         enemyBody.ModifyHealth(2);
-                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(5); }
+                        if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(5, enemyBody.transform.position); }
                         break;
                 }
                 InputControls.instance.CombatMovementSlow();
