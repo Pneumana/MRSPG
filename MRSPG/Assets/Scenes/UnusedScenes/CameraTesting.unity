@@ -1511,7 +1511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3092286542025360231, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3668016280016945854, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
       propertyPath: health
@@ -1524,6 +1524,10 @@ PrefabInstance:
     - target: {fileID: 6259879801344291348, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
       propertyPath: m_Acceleration
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259879801344291348, guid: 42015541619b3ab4cacb03e7e08167a2, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12187,6 +12191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7869b9011adc6948a8e93d4c76dc9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaler: 1
 --- !u!1001 &733345703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16219,6 +16224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7869b9011adc6948a8e93d4c76dc9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaler: 1
 --- !u!1 &1177778402
 GameObject:
   m_ObjectHideFlags: 0
@@ -23618,7 +23624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2119238718
 Transform:
   m_ObjectHideFlags: 0
@@ -23901,6 +23907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7869b9011adc6948a8e93d4c76dc9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaler: 1
 --- !u!4 &5523894097786609772 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5523894098679805411, guid: de6373b86a0f46540be33ec0f5837d9a, type: 3}

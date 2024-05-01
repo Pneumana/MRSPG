@@ -117,7 +117,14 @@ public class Enemy : MonoBehaviour
     //A sphere collider to detect when the player is in a specific range and an enemy collider to slow other enemies.
     private bool CheckForPlayer(Vector3 center, float radius, Collider plr)
     {
-        Collider[] collider = Physics.OverlapSphere(center, radius);
+        ;
+
+        if (Vector3.Distance(center, plr.gameObject.transform.position) <= radius)
+            return true;
+        else
+            return false;
+
+        /*Collider[] collider = Physics.OverlapSphere(center, radius);
         foreach (var obj in collider)
         {
             if (obj == plr)
@@ -125,7 +132,7 @@ public class Enemy : MonoBehaviour
                 return true;
             }
         }
-        return false;
+        return false;*/
     }
 
     private bool CheckForEnemies(Vector3 center, float radius)

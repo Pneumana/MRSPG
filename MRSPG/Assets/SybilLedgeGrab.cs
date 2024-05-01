@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
+using UnityEngine.UIElements;
 
 public class SybilLedgeGrab : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class SybilLedgeGrab : MonoBehaviour
     [SerializeField] float grabForward;
 
     [SerializeField] string currentState;
+    public Vector3 normal;
 
     bool grabbed;
 
@@ -29,6 +31,7 @@ public class SybilLedgeGrab : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+            
         if (InputControls.instance.isGrounded)
         {
             DropLedge();
@@ -69,7 +72,7 @@ public class SybilLedgeGrab : MonoBehaviour
                     hand = (playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2))) + transform.forward * (grabBounds.x + grabBounds.z);
                 Debug.DrawLine(playerUp + (Vector3.down * (grabBounds.y + plusFallspeed.y / 2)), hand, Color.blue, 10);
                 if(handHit.collider!=null)
-                    transform.parent.forward = -handHit.normal;
+                    transform.parent.forward = GrabDir(-handHit.normal);
                 else
                 {
                     var tries = 1000;
@@ -96,7 +99,8 @@ public class SybilLedgeGrab : MonoBehaviour
                     }
                     if (handHit.collider != null)
                     {
-                        transform.parent.forward = -handHit.normal;
+                        
+                        transform.parent.forward = GrabDir(-handHit.normal);
                     }
                 }
                 DrawBoxLines(pos, pos + transform.forward * grabBounds.z, grabBounds, Color.green);
@@ -166,6 +170,15 @@ public class SybilLedgeGrab : MonoBehaviour
 
 
     }
+
+    Vector3 GrabDir(Vector3 normal)
+    {
+        var dir = transform.parent.position - (transform.parent.position - normal);
+        dir = dir.normalized;
+        dir.y = 0;
+        return dir;
+    }
+
     void DropLedge()
     {
         //Debug.Log("dropping ledge");
