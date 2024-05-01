@@ -466,6 +466,7 @@ public class LockOnSystem : MonoBehaviour
             closestEnemy.GetComponent<NavMeshAgent>().enabled = true;
         }
         catch { }
+        StopLockOn();
     }
 
 
