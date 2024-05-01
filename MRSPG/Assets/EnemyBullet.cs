@@ -95,7 +95,7 @@ public class EnemyBullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
-        //Debug.Log("enemybullet hit " + collision.gameObject.name, gameObject);
+        Debug.Log("enemybullet hit " + collision.gameObject.name, collision.gameObject);
         Debug.DrawLine(transform.position, transform.position + transform.forward, Color.red, 10);
         if (collision.gameObject.name == "PlayerObj")
         {
