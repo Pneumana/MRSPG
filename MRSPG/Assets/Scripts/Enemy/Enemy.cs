@@ -418,11 +418,8 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Load(int beats)
     {
-        if (!ShootingRange)
-        {
             if (Animations != null)
                 Animations.SetBool("Charge", false);
-        }
         Flare.SetActive(true);
         PauseBeat = Metronome.BeatsPassed;
         //yield return new WaitUntil(() => PauseBeat >= Metronome.BeatsPassed + beats);
