@@ -29,6 +29,7 @@ public class Energy : MonoBehaviour
         {
             if (child.GetComponent<Image>()!=null)
             {
+                child.GetComponent<Image>().material.SetFloat("_BPMInterval", ((float)Metronome.inst.BPM / 60));
                 cells.Add(child.GetComponent<Image>());
             }
         }
@@ -40,14 +41,16 @@ public class Energy : MonoBehaviour
 
     private void Update ( )
     {
-        UIUpdateEnergy ( );
+        
         if (Input.GetKey(KeyCode.RightArrow))
         {
             GainEnergy(1);
+            UIUpdateEnergy();
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             GainEnergy(-1);
+            UIUpdateEnergy();
         }
     }
 
@@ -132,7 +135,20 @@ public class Energy : MonoBehaviour
         //there was a nullreference error from _gunRdy and _teleportRdy so i just made it use this to change the sprite rather that the if else checks
         //because i *really* didnt want to comment out each reference to _gunRdy and _teleportRdy
         // - Connor
-
+        if(currentEnergy == _maxEnergy)
+        {
+            foreach(Image img in cells)
+            {
+                img.material.SetInt("_FullyCharged", 1);
+            }
+        }
+        else
+        {
+            foreach (Image img in cells)
+            {
+                img.material.SetInt("_FullyCharged", 0);
+            }
+        }
         var index = Mathf.FloorToInt(currentEnergy / 10);
         
         index = Mathf.Clamp(index, 0, cells.Count - 1);
