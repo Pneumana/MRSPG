@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
 
     public void Tutorial ( )
     {
-        SceneManager.LoadScene ( "EVILTutorial" );
+        SceneManager.LoadScene ( "Tutorial" );
     }
 
     public void Settings ( )
