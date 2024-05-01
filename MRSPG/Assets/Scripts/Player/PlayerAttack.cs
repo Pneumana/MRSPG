@@ -98,12 +98,13 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator TimeOutAnimation()
     {
         timeout = Metronome.inst.GetInterval();
+        if (MeleeCombo == 3) timeout *= 0.25f;
         playerObj.GetComponent<Animator>().SetLayerWeight(1, 1);
         while (timeout > 0)
         {
             timeout -= Time.deltaTime;
-            if (timeout > Metronome.inst.GetInterval()/2)
-                player.GetComponent<InputControls>().velocity = new Vector3(0, player.GetComponent<InputControls>().velocity.y, 0);
+            /*if (timeout > Metronome.inst.GetInterval()/2)
+                player.GetComponent<InputControls>().velocity = new Vector3(0, player.GetComponent<InputControls>().velocity.y, 0);*/
             yield return new WaitForSeconds(0);
         }
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
