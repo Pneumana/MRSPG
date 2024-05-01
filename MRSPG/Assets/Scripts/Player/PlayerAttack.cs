@@ -41,7 +41,6 @@ public class PlayerAttack : MonoBehaviour
         StopCoroutine(endAnim);
             endAnim = null;
         }
-        //playerObj.GetComponent<Animator>().SetInteger("AttackChain", playerObj.GetComponent<Animator>().GetInteger("AttackChain") + 1);
         if(endAnim==null)
             endAnim = StartCoroutine(TimeOutAnimation());
 
@@ -77,15 +76,12 @@ public class PlayerAttack : MonoBehaviour
         {
             case 1:
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 20, 0.15f, false, "MeleeSlide")); }
-                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 +((MeleeSide + 1)% 2));
                 break;
             case 2:
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 20, 0.15f, false, "MeleeSlide")); }
-                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 1 + ((MeleeSide + 1) % 2));
                 break;
             case 3:
                 if (/*!EnemyInRange() && */inputControls.canDash) { StartCoroutine(inputControls.ApplyDash(EnemyDir, 40, 0.05f, false, "MeleeSlide")); }
-                //playerObj.GetComponent<Animator>().SetInteger("AttackChain", 3);
                 if (HealCombo)
                 {
                     Health health = player.GetComponent<Health>();
@@ -94,7 +90,6 @@ public class PlayerAttack : MonoBehaviour
                 break;
         }
         
-        //StartCoroutine(TimeOutAnimation());
         DealtDamage = false;
         RecentAttack = metronome.BeatsPassed;
         meleeHitbox.MeleeAttack(MeleeCombo);
@@ -111,11 +106,8 @@ public class PlayerAttack : MonoBehaviour
                 player.GetComponent<InputControls>().velocity = new Vector3(0, player.GetComponent<InputControls>().velocity.y, 0);
             yield return new WaitForSeconds(0);
         }
-        //Debug.Log("player attack animation timed out");
         playerObj.GetComponent<Animator>().SetTrigger("AttackTimeout");
         
-        //MeleeSide = 2;
-
         float a = Metronome.inst.GetInterval();
         while (a > 0)
         {
