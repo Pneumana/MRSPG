@@ -55,7 +55,7 @@ public class Gun : MonoBehaviour
         
         //NEED THIS LINE!
         //forces the animator to be on frame 0 of the shooting anim otherwise the sword's tip will shoot the shot just anywhere.
-        animator.Update(Time.deltaTime);
+        
 
 
 
@@ -68,6 +68,7 @@ public class Gun : MonoBehaviour
         if (targeting.trackedEnemy != null && energy.currentEnergy == 50)
         {
             animator.SetTrigger("Shooting");
+            animator.Update(Time.deltaTime);
             Debug.Log ( "shooting at " + targeting.trackedEnemy.name , targeting.trackedEnemy );
             bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
             //Sounds.instance.PlaySFX ( "Shoot" );
