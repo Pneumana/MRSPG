@@ -13,7 +13,6 @@ public class Settings : MonoBehaviour
     [SerializeField] Toggle _2xAA;
     [SerializeField] Toggle _4xAA;
     [SerializeField] Toggle _8xAA;
-    [SerializeField] Toggle _fullscreenToggle;
 
     Resolution [ ] _resolutions;
 
@@ -22,8 +21,6 @@ public class Settings : MonoBehaviour
     private void Start ( )
     {
         GetResolutions ( );
-
-        _fullscreenToggle.isOn = Screen.fullScreen;
     }
 
     void GetResolutions ( )
