@@ -143,7 +143,7 @@ public class LockOnSystem : MonoBehaviour
         ui = GameObject.Find("TargetingUI").transform;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (trackedEnemy != null)
         {
@@ -258,9 +258,14 @@ public class LockOnSystem : MonoBehaviour
                     }
                     var playerCam = GameObject.Find("PlayerCam");
                     var freeLook = playerCam.GetComponent<CinemachineFreeLook>();
+
+                    var assistDir = lockOnAssist.transform.position - player.transform.position;
+                    var distanceScaler = Mathf.Clamp((dist / 5) - 0.5f, 0, 1);
+
                     var dir = trackedEnemy.transform.position - player.transform.position;
 
-                    if(Mathf.Abs(trackedEnemy.transform.position.x - player.transform.position.x) < 0.25f && Mathf.Abs(trackedEnemy.transform.position.z - player.transform.position.z) < 0.25f)
+                    //Debug.Log("horizontal dampening should be " + distanceScaler);
+                    if (Mathf.Abs(trackedEnemy.transform.position.x - player.transform.position.x) < 0.25f && Mathf.Abs(trackedEnemy.transform.position.z - player.transform.position.z) < 0.25f)
                     {
                         //player is basically on top of the entity and the dir should not be updated;
                         //dir = lockOnAssist.transform.forward;
@@ -276,13 +281,16 @@ public class LockOnSystem : MonoBehaviour
                     {
                         if (dist < 5)
                         {
-                            
-                            lockOnAssist.position = Vector3.MoveTowards(lockOnAssist.position, trackedEnemy.transform.position -dir, (20 + Mathf.Abs(mag)) * Time.deltaTime);
+                            //lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, player.transform.position + (dir * 0.1f), distanceScaler);
+                            Debug.Log("start using assistDir");
+                            lockOnAssist.position = player.transform.position + (player.transform.forward * 0.1f);
+                            //lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, ((5 + Mathf.Abs(mag)) * Time.deltaTime));
                         }
                         else
                         {
 
-                            lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, (5 + Mathf.Abs(mag)) * Time.deltaTime);
+                            lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, ((5 + Mathf.Abs(mag)) * Time.deltaTime));
+                            player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
                         }
                         freeLook.m_LookAt = lockOnAssist;
                         var start = freeLook.m_XAxis;
@@ -303,7 +311,7 @@ public class LockOnSystem : MonoBehaviour
                     //keep dir horizontal
                     dir.y = 0;
                     //make the player look at the lock on assist
-                    player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                   
                     
 
                     //really gross conversion of angle to the stupid 0 to 1 thing that the free look camera uses
@@ -331,10 +339,12 @@ public class LockOnSystem : MonoBehaviour
                         Debug.Log("remap 300 range");
                         d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1f);
                     }
-                    Debug.DrawLine(player.transform.position, lockOnAssist.transform.position, Color.magenta);
+                    Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.magenta);
                     //make the camera look in a direction
                     if (freeLook != null)
                     {
+                        //if (dist > 1)
+                        //var lerp = Mathf.Lerp(freeLook.m_XAxis.Value, freeLook.m_XAxis.Value, distanceScaler);
                         freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
                         //d = Mathf.Clamp(d, 0, 1);
                         Debug.Log(d + " is the Y axis value, true angle is " + sample);
