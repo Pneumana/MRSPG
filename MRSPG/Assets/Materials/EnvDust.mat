@@ -21,38 +21,29 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: EnvDust
-  m_Shader: {fileID: -6465566751694194690, guid: 490093e46d33bd24cadcf9807621c5e2, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
+  m_Shader: {fileID: -6465566751694194690, guid: 937f53a235a321e4ca13457ae093cbc7, type: 3}
+  m_Parent: {fileID: 2100000, guid: ca4dd3798636de847bd1fa7732003ef4, type: 2}
+  m_ModifiedSerializedProperties: 2
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    RenderType: Opaque
+  disabledShaderPasses:
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Size: 0.25
+    - _BPMIntensity: 0
+    - _BPMInterval: 1
     m_Colors:
+    - _BaseColor: {r: 0.1202737, g: 0.3679245, b: 0.06768423, a: 0}
     - _Color: {r: 0.7735849, g: 0.1496084, b: 0.1496084, a: 0}
-    - _Color_1: {r: 0.745283, g: 0.3249844, b: 0.1019491, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
