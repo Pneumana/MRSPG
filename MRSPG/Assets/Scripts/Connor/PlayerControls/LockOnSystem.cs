@@ -57,6 +57,8 @@ public class LockOnSystem : MonoBehaviour
 
     public Controller controller;
 
+    Quaternion noTweaking;
+
     Energy energy;
     public Quaternion eul;
 
@@ -279,18 +281,25 @@ public class LockOnSystem : MonoBehaviour
                     }
                     if (freeLook != null)
                     {
-                        if (dist < 5)
+                        if (dist < 2)
                         {
                             //lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, player.transform.position + (dir * 0.1f), distanceScaler);
                             Debug.Log("start using assistDir");
-                            lockOnAssist.position = player.transform.position + (player.transform.forward * 0.1f);
-                            //lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, ((5 + Mathf.Abs(mag)) * Time.deltaTime));
+                            //lockOnAssist.position = player.transform.position + (player.transform.forward * 0.1f);
+                            var end = new Vector3(player.transform.position.x + player.transform.forward.x * 0.1f, midpoint.y, player.transform.position.z + player.transform.forward.z * 0.1f);
+                            var camDir = Camera.main.transform.forward;
+                            camDir.y = 0;
+                            player.transform.rotation = Quaternion.LookRotation(camDir, Vector3.up);
+                            lockOnAssist.position = end;
+
                         }
                         else
                         {
 
                             lockOnAssist.position = Vector3.Lerp(lockOnAssist.position, midpoint, ((5 + Mathf.Abs(mag)) * Time.deltaTime));
                             player.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                            noTweaking = player.transform.rotation;
+                            
                         }
                         freeLook.m_LookAt = lockOnAssist;
                         var start = freeLook.m_XAxis;

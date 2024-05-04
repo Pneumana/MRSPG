@@ -14,6 +14,9 @@ public class EnemyBody : MonoBehaviour
     public EnemySetting _enemy;
     public int health;
     private int maxHealth;
+
+    DeathPlane dp;
+
     [SerializeField] float dashImpact = 3;
 
     public bool grounded;
@@ -43,7 +46,8 @@ public class EnemyBody : MonoBehaviour
         Basic,
         Explosive,
         Trap,
-        Impact
+        Impact,
+        DeathPlane
     }
 
     // Start is called before the first frame update
@@ -58,6 +62,8 @@ public class EnemyBody : MonoBehaviour
         if(_enemy!=null)
             SetEnemyData(_enemy);
         startPosition = transform.position;
+
+        dp = FindFirstObjectByType<DeathPlane>();
     }
     void SetEnemyData(EnemySetting _enemy)
     {
@@ -84,7 +90,7 @@ public class EnemyBody : MonoBehaviour
 
         if(health <= 0)
         {
-            Die();
+            Die(type);
         }
 
     }
@@ -95,13 +101,22 @@ public class EnemyBody : MonoBehaviour
         if (this.GetComponent<Animator>() != null)
             this.GetComponent<Animator>().SetBool("TakeDamage", false);
     }
-    void Die()
+    void Die(DamageTypes type)
     {
         Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
         var energy = GameObject.FindFirstObjectByType<Energy>();
         if (Metronome.inst.IsOnBeat()) { energy.GainEnergy(10, transform.position); }
+
+        switch (type)
+        {
+            case DamageTypes.Basic: ComboManager.inst.AddEvent("Sliced", 7); break;
+            case DamageTypes.Explosive: ComboManager.inst.AddEvent("Exploded", 7); break;
+            case DamageTypes.Trap: ComboManager.inst.AddEvent("Tricked", 8); break;
+            case DamageTypes.Impact: ComboManager.inst.AddEvent("Splattered", 5); break;
+            case DamageTypes.DeathPlane: ComboManager.inst.AddEvent("Cliffed", 3); break;
+        }
         /*Debug.Log("The enemy has died");
         */
 
@@ -154,7 +169,7 @@ public class EnemyBody : MonoBehaviour
                     Debug.Log("floor splat");
 
                 //take fall damage
-                ModifyHealth(1, DamageTypes.Impact);
+                    ModifyHealth(1, DamageTypes.Impact);
                     EnablePathfinding();
                     if(me != null)
                         me.enabled = true;
@@ -180,11 +195,11 @@ public class EnemyBody : MonoBehaviour
 
 
         }
-        if (health <= 0)
+        if(dp!=null)
         {
-            Die();
+            if (transform.position.y < dp.yStart)
+                Die(DamageTypes.DeathPlane);
         }
-            
 
         if (pushedBack)
         {
@@ -197,6 +212,7 @@ public class EnemyBody : MonoBehaviour
                 //Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
                 if (hit.collider.gameObject.CompareTag("Enemy")) { return; }
                 ModifyHealth(5, DamageTypes.Impact);
+                DoWallDamage = false;
                 rb.velocity = Vector3.zero;
                 Vector3 point = hit.point;
                 point.y += 0.1f;
@@ -219,6 +235,7 @@ public class EnemyBody : MonoBehaviour
                     }
                 }
                 pushedBack = false;
+                rb.mass = 50;
                 //Debug.Log("should be recovering");
             }
         }
@@ -252,17 +269,10 @@ public class EnemyBody : MonoBehaviour
             Debug.Log("Painted decal");
         }
     }*/
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (collider.gameObject.tag == "DeathPanel")
-        {
-            Die();
-        }
-    }
 
     public void HitByPlayerDash(Transform player)
     {
-        //Debug.Log(gameObject.name + " pushed by player");
+        //Debug.Log(gameObject.name + " pushed by player", gameObject);
         //var dir = player.position - transform.position;
         if (InputControls.instance.dashTime > 0)
         {
@@ -278,21 +288,21 @@ public class EnemyBody : MonoBehaviour
     }
     public void Shoved(Vector3 dir, string source, ForceMode mode = ForceMode.Impulse)
     {
-        if (!pushedBack)
+        if (pushedBack)
         {
-
+            return;
+        }
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.mass = _enemy.knockbackMass;
+            rb.velocity = dir;
         }
         pushedBack = true;
-        if(rb!=null)
-            rb.isKinematic = false;
         DoWallDamage = (source == "Dash");
         if (source == "Dash") {
-            if (rb != null)
-                rb.AddForce(dir, mode); 
-        }
-        else if (rb != null)
-        {       
-            rb.velocity = dir;
+            /*if (rb != null)
+                rb.AddForce(dir, mode); */
         }
     }
 

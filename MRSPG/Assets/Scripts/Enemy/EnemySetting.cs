@@ -43,9 +43,13 @@ public class EnemySetting : ScriptableObject
 
     [Header("Enemy Variables")]
     public int EnemyHealth;
+
     public float groundRadius;
     public float NavMeshSpeed;
     public float NavMeshSlowedSpeed;
+
+    [Header("Rigidbody mass when the enemy is being knocked back")]
+    public float knockbackMass;
 
     [Header("Attack Variables")]
     public int Damage;
