@@ -40,14 +40,14 @@ public class Enemy : MonoBehaviour
     Vector3 targetPos;
     Vector3 lookatvector;
     public bool DisableAttack;
-    bool CanAttack = true;
+    [HideInInspector]public bool CanAttack = true;
     bool IsStaggered = false;
     int PauseBeat;
     bool isGrounded;
     Transform Gun;
     ParticleSystem ChargeParticle;
 
-    Animator Animations;
+    [HideInInspector]public Animator Animations;
 
 
     [Header("Warning Pop Up")]
@@ -278,6 +278,7 @@ public class Enemy : MonoBehaviour
             }
             if (aggro && Metronome.IsOnBeat() && CanAttack)
             {
+                //Debug.Log("ranged enemy start attack");
                 StartCoroutine(StartAttack(_enemy.pattern));
             }
         }
@@ -505,6 +506,7 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator StartAttack(Attack[] pattern)
     {
+        Debug.Log("start attack", gameObject);
         if(!DisableAttack)
         {
             CanAttack = false;

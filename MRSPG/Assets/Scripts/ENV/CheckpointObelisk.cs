@@ -53,7 +53,7 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     public void RespawnReset()
     {
         Debug.Log("respawn reset");
-        foreach(GameObject go in encountersAhead)
+        /*foreach(GameObject go in encountersAhead)
         {
             Debug.Log(go.name + " is resetting");
             go.SetActive(true);
@@ -69,6 +69,6 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
                 enemy.GetComponent<EnemyBody>().Respawn();
 
             }
-        }
+        }*/
     }
 }

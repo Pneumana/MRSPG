@@ -59,6 +59,27 @@ public class BattleBounds : MonoBehaviour
         //SavedEnemies = enemies;
     }
 
+    public void RespawnAll()
+    {
+        if(defeated != enemies.Count)
+        {
+            StopAllCoroutines();
+            inBattle = false;
+            defeated = 0;
+            foreach (GameObject enemy in enemies)
+            {
+                enemy.SetActive(true);
+                enemy.GetComponent<EnemyBody>().Respawn();
+
+            }
+        }
+        else
+        {
+            Debug.Log(gameObject.name + " was defeated, it cannot respawn its enemies");
+            //bounds was defeated
+        }
+    }
+
     private void Update()
     {
         effectiveRange.GetComponent<MeshRenderer>().material.SetVector("_playerPosition", player.position);

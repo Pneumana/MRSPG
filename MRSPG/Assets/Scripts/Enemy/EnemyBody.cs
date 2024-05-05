@@ -325,12 +325,18 @@ public class EnemyBody : MonoBehaviour
     {
         transform.position = startPosition;
         health = _enemy.EnemyHealth;
+        gameObject.SetActive(true);
         EnablePathfinding();
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
             trigger.UpdateEnemyList(this);
         }
-
+        if(GetComponent<Enemy>()!=null)
+        {
+            GetComponent<Enemy>().Animations.Play("Base Layer.Idle", 0, 0f);
+            GetComponent<Enemy>().CanAttack = true;
+            //reset variables here
+        }
         ModifyHealth(0);
         if (GetComponent<HealthBar>() != null)
             GetComponent<HealthBar>().Refresh();
@@ -340,6 +346,7 @@ public class EnemyBody : MonoBehaviour
 
     private void OnDestroy()
     {
-       
+        if(Application.isPlaying)
+            Debug.Log("<color=red>ENEMY</color> " + gameObject.name.ToUpper() + " <color=red>WAS DESTROYED!</color>");
     }
 }
