@@ -68,6 +68,10 @@ public class EnemyBody : MonoBehaviour
     void SetEnemyData(EnemySetting _enemy)
     {
         health = _enemy.EnemyHealth;
+        if(health >= 1 && _enemy.type != EnemyType.Crystal)
+        {
+            EnemyTracker.inst.ActiveEnemiesInScene.Add(this.gameObject);
+        }
     }
 
     public void ModifyHealth(int mod, DamageTypes type = DamageTypes.Basic)
@@ -103,6 +107,7 @@ public class EnemyBody : MonoBehaviour
     }
     void Die(DamageTypes type)
     {
+        EnemyTracker.inst.ActiveEnemiesInScene.Remove(this.gameObject);
         Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
@@ -220,7 +225,8 @@ public class EnemyBody : MonoBehaviour
                 if (GameObject.Find("DecalPainter") != null)
                 {
                     DecalPainter painter = GameObject.Find("DecalPainter").GetComponent<DecalPainter>();
-                    StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
+                    if(gameObject.activeSelf)
+                        StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
                 }
             }
             if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
@@ -328,6 +334,8 @@ public class EnemyBody : MonoBehaviour
         ModifyHealth(0);
         if (GetComponent<HealthBar>() != null)
             GetComponent<HealthBar>().Refresh();
+
+        EnemyTracker.inst.ActiveEnemiesInScene.Add(this.gameObject);
     }
 
     private void OnDestroy()

@@ -15,7 +15,8 @@ public enum EnemyType
     Heavy, //2
     Ranged, //3
     Boss, // 4
-    You // 5
+    You, // 5
+    Crystal // 6
 };
 public enum Attack
 {

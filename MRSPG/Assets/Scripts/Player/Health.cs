@@ -9,7 +9,7 @@ public class Health : MonoBehaviour
 {
     #region variables
 
-    int _maxHealth = 5;
+    [HideInInspector] public int _maxHealth = 5;
     public int currentHealth;
 
     [SerializeField]

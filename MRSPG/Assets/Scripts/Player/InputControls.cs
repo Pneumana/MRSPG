@@ -63,6 +63,8 @@ public class InputControls : MonoBehaviour
     [SerializeField] ParticleSystem groundedParticles;
     [SerializeField] ParticleSystem jumpParticles;
 
+    GameObject[] Bounds;
+
     bool playedLand;
     bool playedJump;
     int noGroundFrames;
@@ -83,6 +85,7 @@ public class InputControls : MonoBehaviour
 
     private void Start()
     {
+        Bounds = GameObject.FindGameObjectsWithTag("Boundary");
         cam = Camera.main.transform;
         player = GameObject.Find("Player");
         meleeHitbox = GameObject.Find("MeleeHitbox").GetComponent<MeleeHitbox>();
@@ -110,6 +113,18 @@ public class InputControls : MonoBehaviour
         ApplyGravity();
         
         if (!cutsceneLogic.ActiveCutscene) MovePlayer(movePlayer);
+        foreach(GameObject obj in Bounds)
+        {
+            if(obj.GetComponent<BattleBounds>().distance < obj.GetComponent<BattleBounds>().boundSize)
+            {
+                obj.GetComponent<BattleBounds>().PlayerWithinBoundary = true;
+                StopCoroutine(obj.GetComponent<BattleBounds>().DrainHP());
+            }
+            else
+            {
+                obj.GetComponent<BattleBounds>().PlayerWithinBoundary = false;
+            }
+        }
     }
 
     public void ApplyGravity()
