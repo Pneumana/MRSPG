@@ -20,7 +20,10 @@ public class EnemyTracker : MonoBehaviour
                 Destroy(gameObject);
         }
         portal.SetActive(false);
-        anim.enabled = false;
+        if (anim != null)
+        {
+            anim.enabled = false;
+        }
     }
 
 
