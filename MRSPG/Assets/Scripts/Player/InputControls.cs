@@ -171,10 +171,12 @@ public class InputControls : MonoBehaviour
 
     public IEnumerator ApplyDash(Vector3 direction, float speed, float time, bool liveUpdate, string type)
     {
+
         animator.SetTrigger("Dash");
         float startTime = Time.time;
         if (type == "Movement")
         {
+            
             canDash = false;
             dashing = true;
             DashParticle.Play();
@@ -311,7 +313,8 @@ public class InputControls : MonoBehaviour
         if(cutsceneLogic.ActiveCutscene) { return; }
         if(canDash && !dashing)
         {
-            StartCoroutine(ApplyDash(movePlayer, dashSpeed, dashTime, true, "Movement"));
+            if (playerInput != Vector2.zero) { StartCoroutine(ApplyDash(movePlayer, dashSpeed, dashTime, true, "Movement")); }
+            else { StartCoroutine(ApplyDash(transform.forward, dashSpeed, dashTime, false, "Movement")); }
             StartCoroutine(Waiter(dashCooldown));
         }
     }

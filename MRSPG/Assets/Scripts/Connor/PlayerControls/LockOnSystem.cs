@@ -175,6 +175,7 @@ public class LockOnSystem : MonoBehaviour
             lockon.transform.position = new Vector2(-100, -100);
             Metronome.inst.transform.localPosition = Metronome.inst.startPos;
         }
+        //Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
     }
 
     private void Update()
@@ -327,26 +328,17 @@ public class LockOnSystem : MonoBehaviour
                     var d = look.eulerAngles.x;
                     var sample = look.eulerAngles.x;
 
-                    if(d < 27 || d >= 355.9958f)
+                    if(d > 300)
                     {
-                        if(d < 27)
-                        {
+
                             Debug.Log("remap less than 27");
-                            d = Remap(d, -0.005729297f, 27, 0.4f, 0);
+                            d = Remap(d, 359.1992f, 311.4044f, 0.44f, 0);
                             //remap this value 0 to 0.397372946f
-                        }
-                        else
-                        {
-                            Debug.Log("remap greater than 27");
-                            d = Remap(d, 308.6598f, 355.9958f, 0.4f, 0.5f);
-                            //remap from 0.397372946 to 0.5
-                        }
-                        //remap from 0 to 0.5;
                     }
                     else
                     {
-                        Debug.Log("remap 300 range");
-                        d = Remap(d, 308.6598f, 355.9958f , 0.5f, 1f);
+                        //Debug.Log("remap 300 range");
+                        d = Remap(d, 0.01344982f, 51.3402f , 0.45f, 1f);
                     }
                     Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.magenta);
                     //make the camera look in a direction
@@ -872,7 +864,7 @@ public class LockOnSystem : MonoBehaviour
 
     void RefindTracked()
     {
-        Debug.Log("refinding a tracked enemy");
+        //Debug.Log("refinding a tracked enemy");
         HideTargets();
         CreateTargeters();
         bool swap = false;

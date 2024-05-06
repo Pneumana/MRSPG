@@ -226,8 +226,8 @@ public class Enemy : MonoBehaviour
         }
         if (CheckForPlayer(transform.position, _enemy.FollowRange, _enemy.PlayerObject.GetComponent<Collider>()) || aggro)
         {
-            if (body.me != null && body.me.enabled)
-                body.me.destination = _enemy.PlayerObject.transform.position;
+            /*if (body.me != null && body.me.enabled)
+                body.me.destination = _enemy.PlayerObject.transform.position;*/
             aggro = true;
         }
     }
@@ -326,16 +326,17 @@ public class Enemy : MonoBehaviour
 
         if (aggro)
         {
-            if (body.me != null && body.me.enabled)
-            {
-                //if(body.me.isPathStale)
 
                 var distToTarget = Vector3.Distance(transform.position, body.me.pathEndPosition);
                 var playerDistFromEnd = Vector3.Distance(transform.position, body.me.pathEndPosition);
                 if (distToTarget <= 1.0f || playerDistFromEnd >= 1 || body.me.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
                 {
-                    body.me.destination = _enemy.PlayerObject.transform.position;
+                    if(!body.disablePathfinding && body.me.enabled)
+                        body.me.destination = _enemy.PlayerObject.transform.position;
                 }
+            if (body.me != null && body.me.enabled)
+            {
+                //if(body.me.isPathStale)
             }
         }
 
@@ -370,7 +371,8 @@ public class Enemy : MonoBehaviour
     private IEnumerator Charge(int beats)
     {
         //Sounds.instance.PlaySFX ( "Enemy Charge" );
-        this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
+        body.disablePathfinding = true;
+        //this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSlowedSpeed;
         if (!playerInRange)
         {
             this.GetComponent<NavMeshAgent>().speed = _enemy.NavMeshSpeed;
@@ -400,6 +402,10 @@ public class Enemy : MonoBehaviour
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
             //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         }*/
+    }
+    void DoneAttacking()
+    {
+        body.disablePathfinding = false;
     }
     private void HeavyAttack(int Damage)
     {
@@ -560,6 +566,7 @@ public class Enemy : MonoBehaviour
                     }
                 }
             }
+            DoneAttacking();
             CanAttack = true;
 
         }
