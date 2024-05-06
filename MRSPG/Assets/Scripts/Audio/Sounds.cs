@@ -7,7 +7,7 @@ public class Sounds : MonoBehaviour
     #region
     public static Sounds instance;
 
-    public AudioClip sfx_hitMarker, sfx_onBeat, sfx_teleport, sfx_shoot, sfx_dash, sfx_enemyHit, sfx_enemyCharge, sfx_bossHit;
+    public AudioClip sfx_hitMarker, sfx_onBeat, sfx_teleport, sfx_shoot, sfx_dash, sfx_enemyHit, sfx_enemyCharge, sfx_bossHit, sfx_enemyShoot;
     public GameObject soundObject;
     public GameObject soundLoop;
 
@@ -45,6 +45,9 @@ public class Sounds : MonoBehaviour
                 break;
             case "Boss Hit Marker":
                 SoundObjectCreation ( sfx_bossHit );
+                break;
+            case "Enemy Shoot":
+                SoundObjectCreation ( sfx_enemyShoot );
                 break;
             default:
                 break;

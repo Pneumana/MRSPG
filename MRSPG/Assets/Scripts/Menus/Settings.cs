@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 
 public class Settings : MonoBehaviour
@@ -13,6 +14,7 @@ public class Settings : MonoBehaviour
     [SerializeField] Toggle _2xAA;
     [SerializeField] Toggle _4xAA;
     [SerializeField] Toggle _8xAA;
+    [SerializeField] AudioMixer _gameMixer;
 
     Resolution [ ] _resolutions;
 
@@ -105,5 +107,15 @@ public class Settings : MonoBehaviour
             _2xAA.isOn = false;
             _4xAA.isOn = false;
         }
+    }
+
+    public void SFXControl (float sfxvolume )
+    {
+        _gameMixer.SetFloat ( "SFX Volume" , sfxvolume );
+    }
+
+    public void MusicControl(float musicVolume )
+    {
+        _gameMixer.SetFloat ( "Music Volume" , musicVolume );
     }
 }

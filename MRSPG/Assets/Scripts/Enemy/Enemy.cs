@@ -443,13 +443,13 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("shoot");
         Animations.SetBool("Charge", false);
-        Animations.Update(Time.deltaTime);
+        Animations.Update(Time.deltaTime); 
+        //Sounds.instance.PlaySFX ( "Enemy Shoot" );
 
         /*LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
-        Debug.Log("created bullet", bullet);
-        //Sounds.instance.PlaySFX ( "Shoot" );
+        Debug.Log("created bullet", bullet);       
         bool HitPlayer = Physics.CheckSphere(bullet.transform.position, 0.1f, Player);
         Vector3 distance = _enemy.PlayerObject.transform.position - bullet.transform.position;
         bullet.transform.forward = distance;
