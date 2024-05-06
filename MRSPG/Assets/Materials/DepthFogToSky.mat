@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-24785090002567515
+--- !u!114 &-1769816812999205464
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TechLinesAlpha
-  m_Shader: {fileID: -6465566751694194690, guid: be6e385de8640404d971115bfe14d29a, type: 3}
+  m_Name: DepthFogToSky
+  m_Shader: {fileID: -6465566751694194690, guid: b920f94183412d343b3713379b8b11c0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -51,11 +51,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BPMIntensity: 0.06
-    - _BPMInterval: 1.7
+    - _Distance: 15
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Tiliing: {r: 1, g: 1, b: 0, a: 0}
+    - _DeepWater: {r: 0.09985761, g: 0.2442184, b: 0.6415094, a: 0}
+    - _ShallowWater: {r: 0.09411766, g: 0.003921569, b: 0.078431375, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
