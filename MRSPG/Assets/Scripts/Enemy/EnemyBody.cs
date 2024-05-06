@@ -70,7 +70,7 @@ public class EnemyBody : MonoBehaviour
         health = _enemy.EnemyHealth;
         if(health >= 1 && _enemy.type != EnemyType.Crystal)
         {
-            EnemyTracker.inst.ActiveEnemiesInScene.Add(this.gameObject);
+            EnemyTracker.inst.ActiveEnemiesInScene.Add(gameObject);
         }
     }
 
@@ -107,7 +107,7 @@ public class EnemyBody : MonoBehaviour
     }
     void Die(DamageTypes type)
     {
-        EnemyTracker.inst.ActiveEnemiesInScene.Remove(this.gameObject);
+        EnemyTracker.inst.ActiveEnemiesInScene.Remove(gameObject);
         Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
@@ -132,7 +132,7 @@ public class EnemyBody : MonoBehaviour
 
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
-            trigger.UpdateEnemyList(this);
+            trigger.UpdateEnemyList(this, true);
         }
 
         disablePathfinding = true;
@@ -329,7 +329,7 @@ public class EnemyBody : MonoBehaviour
         EnablePathfinding();
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
-            trigger.UpdateEnemyList(this);
+            trigger.UpdateEnemyList(this, false);
         }
         if(GetComponent<Enemy>()!=null)
         {
@@ -341,7 +341,10 @@ public class EnemyBody : MonoBehaviour
         if (GetComponent<HealthBar>() != null)
             GetComponent<HealthBar>().Refresh();
 
-        EnemyTracker.inst.ActiveEnemiesInScene.Add(this.gameObject);
+        if (!EnemyTracker.inst.ActiveEnemiesInScene.Contains(gameObject))
+        {
+            EnemyTracker.inst.ActiveEnemiesInScene.Add(gameObject);
+        }
     }
 
     private void OnDestroy()

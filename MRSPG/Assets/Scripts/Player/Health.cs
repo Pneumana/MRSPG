@@ -145,6 +145,7 @@ public class Health : MonoBehaviour
         {
             Debug.Log("no checkpoint to respawn the player at!");
         }
+        LockOnSystem.LOS.StopLockOn();
         currentHealth = 5;
         UIUpdateHealth();
         yield return null;
