@@ -9,6 +9,7 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     GameObject player;
     AnimateObelisk anim;
     Health health;
+    bool activated;
 
     public List<GameObject> encountersAhead = new List<GameObject>();
 
@@ -36,6 +37,9 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
 
     public void Activated(float delay)
     {
+        if (activated)
+            return;
+        activated = true;
         Debug.Log("triggered");
         player.GetComponent<Health>().currentCheckpoint = this;
         if (anim != null)

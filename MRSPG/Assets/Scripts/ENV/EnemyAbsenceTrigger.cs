@@ -21,13 +21,13 @@ public class EnemyAbsenceTrigger : MonoBehaviour
         
     }
 
-    public void UpdateEnemyList(EnemyBody removed)
+    public void UpdateEnemyList(EnemyBody removed, bool dead)
     {
-        if (enemies.Contains(removed))
+        if (enemies.Contains(removed) && dead)
         {
             enemies.Remove(removed);
         }
-        else
+        else if(!dead && !enemies.Contains(removed))
         {
             enemies.Add(removed);
         }

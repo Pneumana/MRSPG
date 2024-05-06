@@ -132,7 +132,7 @@ public class EnemyBody : MonoBehaviour
 
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
-            trigger.UpdateEnemyList(this);
+            trigger.UpdateEnemyList(this, true);
         }
 
         disablePathfinding = true;
@@ -329,7 +329,7 @@ public class EnemyBody : MonoBehaviour
         EnablePathfinding();
         foreach (EnemyAbsenceTrigger trigger in triggerList)
         {
-            trigger.UpdateEnemyList(this);
+            trigger.UpdateEnemyList(this, false);
         }
         if(GetComponent<Enemy>()!=null)
         {
