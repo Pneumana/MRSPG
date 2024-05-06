@@ -15,7 +15,8 @@ public enum EnemyType
     Heavy, //2
     Ranged, //3
     Boss, // 4
-    You // 5
+    You, // 5
+    Crystal // 6
 };
 public enum Attack
 {
@@ -43,9 +44,13 @@ public class EnemySetting : ScriptableObject
 
     [Header("Enemy Variables")]
     public int EnemyHealth;
+
     public float groundRadius;
     public float NavMeshSpeed;
     public float NavMeshSlowedSpeed;
+
+    [Header("Rigidbody mass when the enemy is being knocked back")]
+    public float knockbackMass;
 
     [Header("Attack Variables")]
     public int Damage;

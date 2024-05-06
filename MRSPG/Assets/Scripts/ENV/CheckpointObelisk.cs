@@ -8,6 +8,7 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     public Vector3 spawnPosition;
     GameObject player;
     AnimateObelisk anim;
+    Health health;
 
     public List<GameObject> encountersAhead = new List<GameObject>();
 
@@ -15,6 +16,7 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
     void Start()
     {
         player = GameObject.Find("Player");
+        health = player.GetComponent<Health>();
         RaycastHit hit;
         if(Physics.Raycast(transform.position+ transform.forward * 2, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
@@ -39,12 +41,19 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
         if (anim != null)
             anim.StartCoroutine("AnimateWakeUp");
         //StartCoroutine(MoveLoop(delay));
+
+        //Called lose health but it adds 1 health to the player here
+        if(health.currentHealth < health._maxHealth)
+        {
+            health.LoseHealth(-1);
+            StartCoroutine(health.HealHUD());
+        }
     }
 
     public void RespawnReset()
     {
         Debug.Log("respawn reset");
-        foreach(GameObject go in encountersAhead)
+        /*foreach(GameObject go in encountersAhead)
         {
             Debug.Log(go.name + " is resetting");
             go.SetActive(true);
@@ -60,6 +69,6 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
                 enemy.GetComponent<EnemyBody>().Respawn();
 
             }
-        }
+        }*/
     }
 }

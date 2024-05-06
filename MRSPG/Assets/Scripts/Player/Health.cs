@@ -9,7 +9,7 @@ public class Health : MonoBehaviour
 {
     #region variables
 
-    int _maxHealth = 5;
+    [HideInInspector] public int _maxHealth = 5;
     public int currentHealth;
 
     [SerializeField]
@@ -132,7 +132,10 @@ public class Health : MonoBehaviour
             input.controller.enabled = false;
             obj.transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
             input.controller.enabled = true;
-
+            foreach(BattleBounds bb in FindObjectsByType<BattleBounds>(FindObjectsSortMode.None))
+            {
+                bb.RespawnAll();
+            }
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = obj.transform;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = obj.transform;

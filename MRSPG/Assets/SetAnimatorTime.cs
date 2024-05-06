@@ -6,8 +6,16 @@ public class SetAnimatorTime : MonoBehaviour
 {
     // Start is called before the first frame update
     public int scaler = 1;
+    void OnEnable()
+    {
+        SetSpeed();
+    }
     void Start()
     {
-        GetComponent<Animator>().SetFloat("IntervalSpeed",(Metronome.inst.BPM/ 60) * scaler);
+        SetSpeed();
+    }
+    void SetSpeed()
+    {
+        GetComponent<Animator>().SetFloat("IntervalSpeed", (Metronome.inst.BPM / 60) * scaler);
     }
 }

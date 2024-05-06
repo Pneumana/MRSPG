@@ -7,6 +7,7 @@ public class HealthBar : MonoBehaviour
 {
     public EnemyBody enemy;
     [HideInInspector] public Image EnemyHealthBar;
+    [HideInInspector] public Image Trailer;
     [HideInInspector] public Image Fill;
     public Gradient gradient;
     private float max;
@@ -18,7 +19,8 @@ public class HealthBar : MonoBehaviour
     {
         max = enemy._enemy.EnemyHealth;
         EnemyHealthBar = transform.Find("EnemyCanvas").transform.Find("HealthBorder").GetComponent<Image>();
-        Fill = EnemyHealthBar.transform.GetChild(0).GetComponent<Image>();
+        Fill = EnemyHealthBar.transform.GetChild(1).GetComponent<Image>();
+        Trailer = EnemyHealthBar.transform.GetChild(0).GetComponent<Image>();
     }
 
     private void OnEnable()
@@ -31,8 +33,12 @@ public class HealthBar : MonoBehaviour
         current = enemy.health;
         EnemyHealthBar.transform.forward = Camera.main.transform.forward;
         target = current / max;
-        if(!running) StartCoroutine(LoseHealthAnim());
-        Fill.color = gradient.Evaluate(1f- Fill.fillAmount);
+
+        Fill.fillAmount = target;
+        if (Trailer.fillAmount > Fill.fillAmount)
+            Trailer.fillAmount = Fill.fillAmount;
+        if (!running) StartCoroutine(LoseHealthAnim());
+        //Fill.color = gradient.Evaluate(1f- Fill.fillAmount);
     }
     IEnumerator LoseHealthAnim()
     {
@@ -41,14 +47,16 @@ public class HealthBar : MonoBehaviour
         float time = 0;
         while (time < 1)
         {
-            time += Time.deltaTime;
-            Fill.fillAmount = Mathf.Lerp(amount, target, time);
+            time += Time.deltaTime * 4;
+            Trailer.fillAmount = Mathf.Lerp(amount, target, time);
             yield return null;
         }
         running = false;
     }
     public void Refresh()
     {
+        StopAllCoroutines();
+        running = false;
         Fill.fillAmount = enemy._enemy.EnemyHealth;
     }
 }

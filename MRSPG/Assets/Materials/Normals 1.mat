@@ -8,51 +8,30 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Normals 1
-  m_Shader: {fileID: -6465566751694194690, guid: 726dcb1acd39fb1439da7f3ea222407c, type: 3}
-  m_Parent: {fileID: 0}
+  m_Shader: {fileID: -6465566751694194690, guid: 937f53a235a321e4ca13457ae093cbc7, type: 3}
+  m_Parent: {fileID: 2100000, guid: ca4dd3798636de847bd1fa7732003ef4, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _X:
-        m_Texture: {fileID: 2800000, guid: 7839d075e0120f04ab56e9ba09832753, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Y:
-        m_Texture: {fileID: 2800000, guid: 6e3c5b4a5b0528640aeaeaaadba15971, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Z:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    m_Colors: []
+    - _BPMIntensity: 0
+    - _BPMInterval: 1
+    m_Colors:
+    - _BaseColor: {r: 0.1202737, g: 0.3679245, b: 0.06768423, a: 0}
+    - _Color: {r: 0.0518868, g: 0.9003617, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7676162623125812518

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleBounds : MonoBehaviour
@@ -8,10 +9,8 @@ public class BattleBounds : MonoBehaviour
     [Tooltip("The yellow circle is the size of the boundary")]
     public float boundSize;
     [Tooltip("Add the enemies within the boundary")]
-    public List<EnemyBody> SavedEnemies;
     public List<GameObject> enemies = new List<GameObject>();
-    [SerializeField]
-    Transform effectiveRange;
+    [SerializeField] Transform effectiveRange;
 
     [SerializeField]
     ParticleSystem damageBuildup, damageBurst;
@@ -23,16 +22,19 @@ public class BattleBounds : MonoBehaviour
 
     public int defeated;
 
+    [Header("Set Main Boundary")]
+    public bool PlayerWithinBoundary;
+
     private void Awake()
     {
         if (player == null)
             player = GameObject.Find("PlayerObj").transform;
         foreach(Enemy enemy in GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
-            Debug.Log("compairing dist from " + enemy.gameObject.name + " to " + name + " (" + Vector3.Distance(enemy.gameObject.transform.position, transform.position) + ")");
+            //Debug.Log("compairing dist from " + enemy.gameObject.name + " to " + name + " (" + Vector3.Distance(enemy.gameObject.transform.position, transform.position) + ")");
             if(Vector3.Distance(enemy.gameObject.transform.position, transform.position) <= boundSize)
             {
-                Debug.Log("this is an acceptable distance");
+                //Debug.Log("this is an acceptable distance");
                 var body = enemy.gameObject.GetComponent<EnemyBody>();
                 if (body!=null)
                 {
@@ -40,11 +42,11 @@ public class BattleBounds : MonoBehaviour
                     {
                         body.bounds = this;
                         enemies.Add(body.gameObject);
-                    }
+                    }/*
                     else
                     {
                         Debug.Log( enemy.gameObject.name + " was already claimed by " + body.bounds.name);
-                    }
+                    }*/
                 }
             }
             else
@@ -55,6 +57,27 @@ public class BattleBounds : MonoBehaviour
         targetManager = GameObject.FindAnyObjectByType<TargetManager>();
         effectiveRange.localScale = new Vector3(boundSize * 2, boundSize * 2, boundSize * 2);
         //SavedEnemies = enemies;
+    }
+
+    public void RespawnAll()
+    {
+        if(defeated != enemies.Count)
+        {
+            StopAllCoroutines();
+            inBattle = false;
+            defeated = 0;
+            foreach (GameObject enemy in enemies)
+            {
+                enemy.SetActive(true);
+                enemy.GetComponent<EnemyBody>().Respawn();
+
+            }
+        }
+        else
+        {
+            Debug.Log(gameObject.name + " was defeated, it cannot respawn its enemies");
+            //bounds was defeated
+        }
     }
 
     private void Update()
@@ -68,17 +91,25 @@ public class BattleBounds : MonoBehaviour
                 inBattle = true;
                 foreach(GameObject enemy in enemies)
                 {
-                    if(!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
+                    if (enemy != null)
+                    {
+                        if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
                             enemy.GetComponent<Enemy>().aggro = true;
+                    }
                 }
                 targetManager.battlebounds = this;
                 damageBuildup.Stop();
             }
-            if(inBattle && distance > boundSize)
+            if(inBattle && distance > boundSize && !PlayerWithinBoundary)
             {
+                damageBuildup.gameObject.SetActive(true);
                 damageBuildup.transform.position = player.transform.position;
+            }else if(inBattle || PlayerWithinBoundary)
+            {
+                damageBuildup.gameObject.SetActive(false);
+                StopCoroutine(DrainHP());
             }
-            if(inBattle && !running && distance > boundSize)
+            if(inBattle && !running && distance > boundSize && !PlayerWithinBoundary)
             {
                 if(targetManager.battlebounds == this)
                 {
@@ -97,18 +128,26 @@ public class BattleBounds : MonoBehaviour
         }*/
     }
 
-    IEnumerator DrainHP()
+    public IEnumerator DrainHP()
     {
         running = true;
         damageBuildup.Play();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         if(distance > boundSize)
         {
-            damageBurst.transform.position = player.transform.position + Vector3.down;
-            damageBurst.Play();
-            player.parent.GetComponent<Health>().LoseHealth(1);
+            if (PlayerWithinBoundary)
+            {
+                yield break;
+            }
+            else
+            {
+                damageBurst.transform.position = player.transform.position + Vector3.down;
+                damageBurst.Play();
+                player.parent.GetComponent<Health>().LoseHealth(1);
+            }
             //play hurt particles on player
         }
+        yield return new WaitForSeconds(.5f);
         running = false;
     }
 
