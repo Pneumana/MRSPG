@@ -338,7 +338,6 @@ public class EnemyBody : MonoBehaviour
             GetComponent<Enemy>().CanAttack = true;
             //reset variables here
         }
-        ModifyHealth(0);
         if (GetComponent<HealthBar>() != null)
             GetComponent<HealthBar>().Refresh();
 
