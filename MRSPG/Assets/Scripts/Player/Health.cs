@@ -130,6 +130,16 @@ public class Health : MonoBehaviour
             currentCheckpoint.GetComponent<CheckpointObelisk>().RespawnReset();
             input.velocity = Vector3.zero;
             input.controller.enabled = false;
+
+
+            var temp = -currentCheckpoint.transform.parent.GetChild(0).transform.forward;
+            temp.y = 0;
+            var look = Quaternion.LookRotation(temp, Vector3.up);
+            obj.transform.forward = temp;
+            Debug.Log("Dead: changing camera angle to " + look.eulerAngles.y);
+            GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().m_XAxis.Value = look.eulerAngles.y - 180;
+            GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().m_YAxis.Value = 0.5f;
+
             obj.transform.position = currentCheckpoint.spawnPosition + Vector3.up * 1.5f;
             input.controller.enabled = true;
             foreach(BattleBounds bb in FindObjectsByType<BattleBounds>(FindObjectsSortMode.None))
@@ -138,6 +148,8 @@ public class Health : MonoBehaviour
             }
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = obj.transform;
+            
+
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().Follow = obj.transform;
             input.doMovement = true;
         }
