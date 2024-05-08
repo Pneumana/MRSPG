@@ -3,18 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using TMPro;
+using System;
 
 
 public class Settings : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] Dropdown _resDropdown;
+    [SerializeField] TMP_Dropdown _resDropdown;
+    [SerializeField] TMP_Dropdown _antiAliasing; 
+    [SerializeField] AudioMixer _gameMixer;
+    [SerializeField] Slider _sfxSlider;
+    [SerializeField] Slider _musicSlider;
+    [SerializeField] Toggle _fullscreenToggle;
+
+    public float sfxVolumeValue, musicVolumeValue;
+    public int antiAliasingValue, resolutionValue = 0;
+    public bool fullscreen;
+
+    /*
     [SerializeField] Toggle _noAA;
     [SerializeField] Toggle _2xAA;
     [SerializeField] Toggle _4xAA;
     [SerializeField] Toggle _8xAA;
-    [SerializeField] AudioMixer _gameMixer;
+    */
 
     Resolution [ ] _resolutions;
 
@@ -22,6 +35,11 @@ public class Settings : MonoBehaviour
 
     private void Start ( )
     {
+        _sfxSlider.value = PlayerPrefs.GetFloat ( "SFX Volume" );
+        _musicSlider.value = PlayerPrefs.GetFloat ( "Music Volume" );
+        _antiAliasing.value = PlayerPrefs.GetInt ( "Anti Aliasing" );
+        _fullscreenToggle.isOn = PlayerPrefs.GetInt ( "Fullscreen" ) > 0;
+        _resDropdown.value = PlayerPrefs.GetInt ( "Resolution" );
         GetResolutions ( );
     }
 
@@ -33,8 +51,6 @@ public class Settings : MonoBehaviour
 
         List<string> options = new List<string> ( );
 
-        int currentResolutionIndex = 0;
-
         for ( int i = 0 ; i < _resolutions.Length ; i++ )
         {
             string option = _resolutions [ i ].width + "x" + _resolutions [ i ].height;
@@ -42,40 +58,52 @@ public class Settings : MonoBehaviour
 
             if ( _resolutions [ i ].width == Screen.currentResolution.width && _resolutions [ i ].height == Screen.currentResolution.height )
             {
-                currentResolutionIndex = i;
+                resolutionValue = i;
             }
         }
         _resDropdown.AddOptions ( options );
-        _resDropdown.value = currentResolutionIndex;
+        _resDropdown.value = resolutionValue;
         _resDropdown.RefreshShownValue ( );
     }
 
     public void SetRes (int resolutionIndex )
     {
-        Resolution resolution= _resolutions [ resolutionIndex ];
+        resolutionValue = resolutionIndex;
+    }
+
+    public void SaveSettings ( )
+    {
+        _gameMixer.SetFloat ( "SFX Volume" , sfxVolumeValue );
+        PlayerPrefs.SetFloat ( "SFX Volume" , sfxVolumeValue );
+
+        _gameMixer.SetFloat ( "Music Volume, " , musicVolumeValue );
+        PlayerPrefs.SetFloat ( "Music Volume" , musicVolumeValue );
+
+        QualitySettings.antiAliasing = antiAliasingValue;
+        PlayerPrefs.SetInt ( "Anti Aliasing" , antiAliasingValue );
+
+        Screen.fullScreen = fullscreen;
+        PlayerPrefs.SetInt ( "Fullscreen" , fullscreen ? 1 : 0 );
+
+        Resolution resolution = _resolutions [ resolutionValue ];
         Screen.SetResolution ( resolution.width , resolution.height , Screen.fullScreen );
+        PlayerPrefs.SetInt ( "Resolution" , resolutionValue );
     }
 
-    public void SetFullScreen (bool isFullscreen )
+    public void SetFullScreen ( bool isFullscreen )
     {
-        Screen.fullScreen = isFullscreen;
+        fullscreen = isFullscreen;
     }
 
-    public void SetAntiAliasingNone ( )
+    public void SetAntiAliasing ( int qualityIndex )
     {
-        QualitySettings.antiAliasing = 1;
-
-        if ( _noAA.isOn == true )
-        {
-            _2xAA.isOn = false;
-            _4xAA.isOn = false;
-            _8xAA.isOn = false;
-        }
+        antiAliasingValue = qualityIndex;
     }
 
-    public void SetAntiAliasingTwo ( )
+    /*
+    public void SetAntiAliasingTwo (int qualityIndex )
     {
-        QualitySettings.antiAliasing = 2;
+        QualitySettings.antiAliasing = qualityIndex;
 
         if ( _2xAA.isOn == true )
         {
@@ -85,9 +113,9 @@ public class Settings : MonoBehaviour
         }
     }
 
-    public void SetAntiAliasingFour ( )
+    public void SetAntiAliasingFour (int qualityIndex )
     {
-        QualitySettings.antiAliasing = 4;
+        QualitySettings.antiAliasing = qualityIndex;
 
         if ( _4xAA.isOn == true )
         {
@@ -97,9 +125,9 @@ public class Settings : MonoBehaviour
         }
     }
 
-    public void SetAntiAliasingEight ( )
+    public void SetAntiAliasingEight (int qualityIndex )
     {
-        QualitySettings.antiAliasing = 8;
+        QualitySettings.antiAliasing = qualityIndex;
 
         if ( _8xAA.isOn == true )
         {
@@ -108,14 +136,17 @@ public class Settings : MonoBehaviour
             _4xAA.isOn = false;
         }
     }
+    */
 
-    public void SFXControl (float sfxvolume )
+    public void SFXControl ( float sfxvolume )
     {
-        _gameMixer.SetFloat ( "SFX Volume" , sfxvolume );
+        sfxVolumeValue = sfxvolume;
     }
 
-    public void MusicControl(float musicVolume )
+    public void MusicControl ( float musicVolume )
     {
-        _gameMixer.SetFloat ( "Music Volume" , musicVolume );
+        musicVolumeValue = musicVolume;
     }
+
+   
 }
