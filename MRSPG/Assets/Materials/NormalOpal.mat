@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Obelisk
-  m_Shader: {fileID: -6465566751694194690, guid: e65267b1395ae34489f56fa8d8fafa03, type: 3}
+  m_Name: NormalOpal
+  m_Shader: {fileID: -6465566751694194690, guid: 726dcb1acd39fb1439da7f3ea222407c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,7 +24,15 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Mask:
+    - _X:
+        m_Texture: {fileID: 2800000, guid: 7839d075e0120f04ab56e9ba09832753, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Y:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Z:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -42,18 +50,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BPMInterval: 1.7
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _glowPower: 6
     m_Colors:
-    - _Brick: {r: 0.1504539, g: 0.1644596, b: 0.2169811, a: 0}
-    - _GlowColor: {r: 1, g: 0, b: 0.3287683, a: 0}
-    - _Mortar: {r: 0.04454432, g: 0.09967172, b: 0.1226415, a: 0}
-    - _Vector2: {r: 4, g: 5, b: 0, a: 0}
+    - _Color: {r: 0.00747597, g: 0.021107802, b: 0.0754717, a: 0}
+    - _Color_1: {r: 0.1647213, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3706080637116945031
+--- !u!114 &7995828893397101429
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
