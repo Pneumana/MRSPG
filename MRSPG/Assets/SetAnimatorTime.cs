@@ -6,10 +6,10 @@ public class SetAnimatorTime : MonoBehaviour
 {
     // Start is called before the first frame update
     public int scaler = 1;
-    void OnEnable()
+    /*void OnEnable()
     {
         SetSpeed();
-    }
+    }*/
     void Start()
     {
         SetSpeed();
