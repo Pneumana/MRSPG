@@ -15,7 +15,7 @@ public class Metronome : MonoBehaviour
     public float interval;
     public float intervalMax;
 
-    [SerializeField]float intervalHalfPoint;
+    //[SerializeField]float intervalHalfPoint;
     [SerializeField] float forgivness;
 
     [SerializeField] Sprite beatIcon;
@@ -32,7 +32,6 @@ public class Metronome : MonoBehaviour
     [SerializeField] public int framesToSkip;
     [Header("Not a direct 1:1 for number of beats displayed")]
     [SerializeField] float beatPopulation;
-
 
     public float beatPercent;
     private void Awake()
@@ -60,12 +59,16 @@ public class Metronome : MonoBehaviour
     {
         GetComponent<Image>().color = new Color(1,1,1, Mathf.MoveTowards(GetComponent<Image>().color.a, 0, Time.deltaTime * 5));
 
+        if ((interval + Time.deltaTime) >= intervalMax)
+        {
+            BeatsPassed++;
+            StartCoroutine(AnimateBeats(interval));
+        }
+        interval = (interval + Time.deltaTime)% intervalMax;
+        /*intervalHalfPoint = Mathf.MoveTowards(intervalHalfPoint, 0, Time.deltaTime);
+        visualizer.GetComponent<RectTransform>().sizeDelta = (50 + (interval * 50)) * Vector2.one;
 
-        interval = Mathf.MoveTowards(interval, 0, Time.deltaTime);
-        intervalHalfPoint = Mathf.MoveTowards(intervalHalfPoint, 0, Time.deltaTime);
-        //visualizer.GetComponent<RectTransform>().sizeDelta = (50 + (interval * 50)) * Vector2.one;
-
-/*        if (interval / (GetInterval() / 2) >= 1 - forgivness || interval / (GetInterval() / 2) <= forgivness)
+        if (interval / (GetInterval() / 2) >= 1 - forgivness || interval / (GetInterval() / 2) <= forgivness)
         {
             onBeat = true;
             GetComponent<Image>().color = new Color(0, 1, 0);
@@ -74,7 +77,7 @@ public class Metronome : MonoBehaviour
         {
             onBeat = false;
             GetComponent<Image>().color = new Color(1, 1, 1);
-        }*/
+        }
 
         if ((intervalHalfPoint - (framesToSkip * Time.deltaTime)) <= 0)
         {
@@ -86,7 +89,7 @@ public class Metronome : MonoBehaviour
             BeatsPassed++;
             //create animation components
             StartCoroutine(AnimateBeats(interval));
-        }
+        }*/
 
 
         GetComponent<AudioSource>().pitch = Time.timeScale;
