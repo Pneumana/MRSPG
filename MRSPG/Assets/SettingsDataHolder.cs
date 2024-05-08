@@ -22,8 +22,6 @@ public class SettingsDataHolder : MonoBehaviour
             if(inst!=this)
                 Destroy(gameObject);
         }
-        
-        SceneManager.sceneLoaded += LoadCallback;
     }
 
     void LoadCallback(Scene scene, LoadSceneMode sceneType)
@@ -35,5 +33,13 @@ public class SettingsDataHolder : MonoBehaviour
             var set = FindFirstObjectByType<ChangeSettingData>();
             set.transform.GetChild(1).GetComponent<Slider>().value = pulseIntensity;
         }
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += LoadCallback;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= LoadCallback;
     }
 }
