@@ -55,14 +55,16 @@ public class Settings : MonoBehaviour
 
     #endregion
 
+
     private void Start ( )
     {
         _sfxSlider.value = PlayerPrefs.GetFloat ( "SFX Volume" );
         _musicSlider.value = PlayerPrefs.GetFloat ( "Music Volume" );
         _antiAliasing.value = PlayerPrefs.GetInt ( "Anti Aliasing" );
         _fullscreenToggle.isOn = PlayerPrefs.GetInt ( "Fullscreen" ) != 0;
+        GetResolutions();
         _resDropdown.value = PlayerPrefs.GetInt ( "Resolution" );
-        GetResolutions ( );
+
         _camSenseXDecel.value = PlayerPrefs.GetFloat ( "Camera X Sense" );
         _camSenseXAccel.value = PlayerPrefs.GetFloat ( "Camera X Accel" );
         _camSenseYDecel.value = PlayerPrefs.GetFloat ( "Camera Y Sense" );
