@@ -156,7 +156,7 @@ public class LockOnSystem : MonoBehaviour
                 if (!freeAim)
                 {
                     Metronome.inst.transform.position = trackedScreenPos;
-                    lockon.color = new Color(1, 1, 1, 1);
+                    //lockon.color = new Color(1, 1, 1, 1);
                 }
                 else
                 {
@@ -731,6 +731,8 @@ public class LockOnSystem : MonoBehaviour
         if (closestTarget != null)
         {
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
+            if(!freeAim)
+                closestTarget.GetComponent<Image>().color = Color.clear;
         }
 
         if (trackedEnemy != closestEnemy && closestEnemy != null)
