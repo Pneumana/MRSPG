@@ -41,6 +41,7 @@ public class Health : MonoBehaviour
     IEnumerator HurtHUD()
     {
         damageHUD.SetActive(true);
+        healHUD.SetActive(false);
         mat.SetFloat("_Fade", 0);
         yield return new WaitForSecondsRealtime(hurtDisplayTime);
 
@@ -60,6 +61,7 @@ public class Health : MonoBehaviour
     public IEnumerator HealHUD()
     {
         healHUD.SetActive(true);
+        damageHUD.SetActive(false);
         mat2.SetFloat("_Fade", 0);
         yield return new WaitForSecondsRealtime(hurtDisplayTime);
 
@@ -78,13 +80,29 @@ public class Health : MonoBehaviour
 
     private void Update ( )
     {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            LoseHealth(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            LoseHealth(1);
+        }
         UIUpdateHealth ( );
     }
 
     public void LoseHealth(int amount)
     {
+        StopAllCoroutines();
         currentHealth -= amount;
-        StartCoroutine(HurtHUD());
+        if(amount > 0)
+        {
+            StartCoroutine(HurtHUD());
+        }
+        else
+        {
+            StartCoroutine(HealHUD());
+        }
         UIUpdateHealth();
     }
 
