@@ -216,7 +216,7 @@ public class EnemyBody : MonoBehaviour
             {
                 //Debug.DrawLine(transform.position + rb.velocity.normalized, hit.point, Color.white, 10);
                 //Debug.Log(hit.collider.name + " ouched " + gameObject.name, hit.collider.gameObject);
-                if (hit.collider.gameObject.CompareTag("Enemy")) { return; }
+                if (hit.collider.gameObject.CompareTag("Enemy") || hit.collider.gameObject.CompareTag("Player")) { return; }
                 ModifyHealth(5, DamageTypes.Impact);
                 DoWallDamage = false;
                 rb.velocity = Vector3.zero;
@@ -230,7 +230,7 @@ public class EnemyBody : MonoBehaviour
                         StartCoroutine(painter.PaintDecal(point, normal, hit.collider));
                 }
             }
-            if (Mathf.Abs(rb.velocity.magnitude) < 0.1f && !disablePathfinding)
+            if (Mathf.Abs(rb.velocity.magnitude) < 1f && !disablePathfinding)
             {
                 if (me != null)
                 {
