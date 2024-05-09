@@ -87,19 +87,11 @@ public class PauseMenu : MonoBehaviour
         if ( _isPaused == true )
         {
             lvlMusic.Stop ( );
-            lvlMusic.mute = true;   
-            lvlMusic.enabled = false;
-            pausedMusic.enabled = true;
-            pausedMusic.mute = false;
             pausedMusic.Play ( );
         }
         else if ( _isPaused == false )
         {
             pausedMusic.Stop ( );
-            pausedMusic.mute = true;
-            pausedMusic.enabled = false;
-            lvlMusic.enabled = true;       
-            lvlMusic.mute = false;
             lvlMusic.Play ( );
         }
     }

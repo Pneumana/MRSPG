@@ -5,23 +5,45 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
 using System;
+using Cinemachine;
 
 
 public class Settings : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] TMP_Dropdown _resDropdown;
-    [SerializeField] TMP_Dropdown _antiAliasing; 
-    [SerializeField] AudioMixer _gameMixer;
-    [SerializeField] Slider _sfxSlider;
-    [SerializeField] Slider _musicSlider;
-    [SerializeField] Toggle _fullscreenToggle;
+    [Header ( "Values" )]
+    public float sfxVolumeValue;
+    public float musicVolumeValue;
+    public float camSenseXDecelValue;
+    public float camSenseYDecelValue;
+    public float camSenceXAccelValue;
+    public float camSenseYAccelValue;
 
-    public float sfxVolumeValue, musicVolumeValue;
-    public int antiAliasingValue, resolutionValue = 0;
+    public int antiAliasingValue;
+    public int resolutionValue;
+
     public bool fullscreen;
 
+    [Space ( 10 )]
+    [Header ( "Ref" )]
+    [SerializeField] AudioMixer _gameMixer;
+    [SerializeField] CinemachineFreeLook _playerCam;
+    [SerializeField] TMP_Dropdown _resDropdown;
+    [SerializeField] TMP_Dropdown _antiAliasing;
+    [SerializeField] TMP_Text _sfxValue;
+    [SerializeField] TMP_Text _musicValue;
+    [SerializeField] TMP_Text _camXDecelValue;
+    [SerializeField] TMP_Text _camYDecelValue;
+    [SerializeField] TMP_Text _camXAccelValue;
+    [SerializeField] TMP_Text _camYAccelValue;
+    [SerializeField] Slider _sfxSlider;
+    [SerializeField] Slider _musicSlider;
+    [SerializeField] Slider _camSenseXDecel;
+    [SerializeField] Slider _camSenseYDecel;
+    [SerializeField] Slider _camSenseXAccel;
+    [SerializeField] Slider _camSenseYAccel;
+    [SerializeField] Toggle _fullscreenToggle;
     /*
     [SerializeField] Toggle _noAA;
     [SerializeField] Toggle _2xAA;
@@ -38,10 +60,49 @@ public class Settings : MonoBehaviour
         _sfxSlider.value = PlayerPrefs.GetFloat ( "SFX Volume" );
         _musicSlider.value = PlayerPrefs.GetFloat ( "Music Volume" );
         _antiAliasing.value = PlayerPrefs.GetInt ( "Anti Aliasing" );
-        _fullscreenToggle.isOn = PlayerPrefs.GetInt ( "Fullscreen" ) > 0;
+        _fullscreenToggle.isOn = PlayerPrefs.GetInt ( "Fullscreen" ) != 0;
         _resDropdown.value = PlayerPrefs.GetInt ( "Resolution" );
         GetResolutions ( );
+        _camSenseXDecel.value = PlayerPrefs.GetFloat ( "Camera X Sense" );
+        _camSenseXAccel.value = PlayerPrefs.GetFloat ( "Camera X Accel" );
+        _camSenseYDecel.value = PlayerPrefs.GetFloat ( "Camera Y Sense" );
+        _camSenseYAccel.value = PlayerPrefs.GetFloat ( "Camera Y Accel" );
     }
+
+    private void Update ( )
+    {
+        SoundValueUpdate ( );
+        CameraValueUpdate ( );
+    }
+
+    public void SaveSettings ( )
+    {
+        _gameMixer.SetFloat ( "SFX Volume" , sfxVolumeValue );
+        PlayerPrefs.SetFloat ( "SFX Volume" , sfxVolumeValue );
+
+        _gameMixer.SetFloat ( "Music" , musicVolumeValue );
+        PlayerPrefs.SetFloat ( "Music Volume" , musicVolumeValue );
+
+        QualitySettings.antiAliasing = antiAliasingValue;
+        PlayerPrefs.SetInt ( "Anti Aliasing" , antiAliasingValue );
+
+        Screen.fullScreen = fullscreen;
+        PlayerPrefs.SetInt ( "Fullscreen" , fullscreen ? 1 : 0 );
+
+        Resolution resolution = _resolutions [ resolutionValue ];
+        Screen.SetResolution ( resolution.width , resolution.height , Screen.fullScreen );
+        PlayerPrefs.SetInt ( "Resolution" , resolutionValue );
+
+        _playerCam.m_YAxis.m_DecelTime = camSenseYDecelValue;
+        _playerCam.m_YAxis.m_AccelTime = camSenceXAccelValue;
+        PlayerPrefs.SetFloat ( "Camera Y Sense" , camSenseYDecelValue );
+        PlayerPrefs.SetFloat ( "Camera Y Accel" , camSenseYAccelValue );
+
+        _playerCam.m_XAxis.m_DecelTime = camSenseXDecelValue;
+        _playerCam.m_XAxis.m_AccelTime += camSenceXAccelValue;
+        PlayerPrefs.SetFloat ( "Camera X Sense" , camSenseXDecelValue );
+        PlayerPrefs.SetFloat ( "Camera X Accel" , camSenceXAccelValue );
+        }
 
     void GetResolutions ( )
     {
@@ -61,6 +122,7 @@ public class Settings : MonoBehaviour
                 resolutionValue = i;
             }
         }
+
         _resDropdown.AddOptions ( options );
         _resDropdown.value = resolutionValue;
         _resDropdown.RefreshShownValue ( );
@@ -69,25 +131,6 @@ public class Settings : MonoBehaviour
     public void SetRes (int resolutionIndex )
     {
         resolutionValue = resolutionIndex;
-    }
-
-    public void SaveSettings ( )
-    {
-        _gameMixer.SetFloat ( "SFX Volume" , sfxVolumeValue );
-        PlayerPrefs.SetFloat ( "SFX Volume" , sfxVolumeValue );
-
-        _gameMixer.SetFloat ( "Music Volume, " , musicVolumeValue );
-        PlayerPrefs.SetFloat ( "Music Volume" , musicVolumeValue );
-
-        QualitySettings.antiAliasing = antiAliasingValue;
-        PlayerPrefs.SetInt ( "Anti Aliasing" , antiAliasingValue );
-
-        Screen.fullScreen = fullscreen;
-        PlayerPrefs.SetInt ( "Fullscreen" , fullscreen ? 1 : 0 );
-
-        Resolution resolution = _resolutions [ resolutionValue ];
-        Screen.SetResolution ( resolution.width , resolution.height , Screen.fullScreen );
-        PlayerPrefs.SetInt ( "Resolution" , resolutionValue );
     }
 
     public void SetFullScreen ( bool isFullscreen )
@@ -146,6 +189,40 @@ public class Settings : MonoBehaviour
     public void MusicControl ( float musicVolume )
     {
         musicVolumeValue = musicVolume;
+    }
+
+    public void SoundValueUpdate ( )
+    {
+        _sfxValue.text = sfxVolumeValue.ToString ( );
+        _musicValue.text = musicVolumeValue.ToString ( );
+    }
+
+    public void CameraSensitivityXDecel ( float camXSense)
+    {
+        camSenseXDecelValue = camXSense;
+    }
+
+    public void CameraSensitivityXAccel (float camXSense )
+    {
+        camSenceXAccelValue = camXSense;
+    }
+
+    public void CameraSensitivityYDecel ( float camYSense )
+    {
+        camSenseYDecelValue = camYSense;        
+    }
+
+    public void CameraSensitivityYAccel(float camYSense ) 
+    {
+        camSenseYAccelValue = camYSense;
+    }
+
+    public void CameraValueUpdate ( )
+    {
+        _camXDecelValue.text = camSenseXDecelValue.ToString ( );
+        _camXAccelValue.text = camSenceXAccelValue.ToString ( );
+        _camYDecelValue.text = camSenseYDecelValue.ToString ( );
+        _camYAccelValue.text = camSenseYAccelValue.ToString ( );
     }
 
    
