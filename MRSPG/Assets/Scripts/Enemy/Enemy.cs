@@ -39,7 +39,6 @@ public class Enemy : MonoBehaviour
     Rigidbody Rigidbody;
     Vector3 targetPos;
     Vector3 lookatvector;
-    public bool DisableAttack;
     [HideInInspector]public bool CanAttack = true;
     bool IsStaggered = false;
     int PauseBeat;
@@ -236,11 +235,6 @@ public class Enemy : MonoBehaviour
     {
         if (Animations != null && body.me != null)
             Animations.SetFloat("Speed", this.GetComponent<NavMeshAgent>().velocity.magnitude);
-
-        if(DisableAttack)
-        {
-            body.DisablePathfinding();
-        }
         //Find the player position to move and look at
         targetPos = _enemy.PlayerObject.transform.position - transform.position;
         lookatvector = _enemy.PlayerObject.transform.position;
@@ -513,63 +507,61 @@ public class Enemy : MonoBehaviour
     public IEnumerator StartAttack(Attack[] pattern)
     {
         Debug.Log("start attack", gameObject);
-        if(!DisableAttack)
+        CanAttack = false;
+        foreach (Attack attack in pattern)
         {
-            CanAttack = false;
-            foreach (Attack attack in pattern)
+            if (IsStaggered) { IsStaggered = false; yield return new WaitForSeconds(Metronome.GetInterval()); break; }
+            if (playerInRange || ShootingRange || aggro)
             {
-                if (IsStaggered) { IsStaggered = false; yield return new WaitForSeconds(Metronome.GetInterval()); break; }
-                if (playerInRange || ShootingRange || aggro)
+                switch (attack)
                 {
-                    switch (attack)
-                    {
-                        default:
-                            break;
-                        case Attack.Charge:
+                    default:
+                        break;
+                    case Attack.Charge:
 
-                            if (Animations != null)
-                                Animations.SetBool("Charge", true);
-                            StartCoroutine(Charge(1));
-                            break;
-                        case Attack.Light:
-                            if (Animations != null)
-                                Animations.SetTrigger("Attack");
-                            if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
-                            break;
-                        case Attack.Heavy:
-                            if (Animations != null)
-                                Animations.SetTrigger("Attack");
-                            if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
-                            break;
-                        case Attack.Load:
-                            if (Animations != null)
-                                Animations.SetBool("Charge", true);
-                            StartCoroutine(Load(1));
-                            break;
-                        case Attack.Shoot:
-                            if (Animations != null)
-                                Animations.SetTrigger("Attack");
-                            if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
-                            break;
-                        case Attack.Spin:
-                            if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
-                            break;
-                        case Attack.Lag:
-                            if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
-                            break;
-                    }
-                    yield return new WaitForSeconds(Metronome.GetInterval());
-                    if (Animations != null)
-                    {
-                        Animations.SetBool("Charge", false);
-                        //Animations.SetBool("Attack", false);
-                    }
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
+                        StartCoroutine(Charge(1));
+                        break;
+                    case Attack.Light:
+                        if (Animations != null)
+                            Animations.SetTrigger("Attack");
+                        if (PlayerIsInSight == true) LightAttack(_enemy.Damage);
+                        break;
+                    case Attack.Heavy:
+                        if (Animations != null)
+                            Animations.SetTrigger("Attack");
+                        if (PlayerIsInSight == true) HeavyAttack(_enemy.Damage);
+                        break;
+                    case Attack.Load:
+                        if (Animations != null)
+                            Animations.SetBool("Charge", true);
+                        StartCoroutine(Load(1));
+                        break;
+                    case Attack.Shoot:
+                        if (Animations != null)
+                            Animations.SetTrigger("Attack");
+                        if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
+                        break;
+                    case Attack.Spin:
+                        if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
+                        break;
+                    case Attack.Lag:
+                        if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
+                        break;
+                }
+                yield return new WaitForSeconds(Metronome.GetInterval());
+                if (Animations != null)
+                {
+                    Animations.SetBool("Charge", false);
+                    //Animations.SetBool("Attack", false);
                 }
             }
-            DoneAttacking();
-            CanAttack = true;
-
         }
+        DoneAttacking();
+        CanAttack = true;
+
+
     }
     #endregion
 }

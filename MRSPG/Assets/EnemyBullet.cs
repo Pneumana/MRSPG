@@ -106,6 +106,7 @@ public class EnemyBullet : MonoBehaviour
         {
             collision.gameObject.GetComponent<EnemyBody>().ModifyHealth(damage);
         }
+        transform.GetComponentInChildren<MeshRenderer>().enabled = false;
         destroyed = true;
         GetComponent<Collider>().enabled = false;
         var list = GetComponentsInChildren<ParticleSystem>();

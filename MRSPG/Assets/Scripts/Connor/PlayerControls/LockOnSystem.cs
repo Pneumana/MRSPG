@@ -175,7 +175,7 @@ public class LockOnSystem : MonoBehaviour
             lockon.transform.position = new Vector2(-100, -100);
             Metronome.inst.transform.localPosition = Metronome.inst.startPos;
         }
-        //Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
+        Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
     }
 
     private void Update()
@@ -328,17 +328,24 @@ public class LockOnSystem : MonoBehaviour
                     var d = look.eulerAngles.x;
                     var sample = look.eulerAngles.x;
 
-                    if(d > 300)
+                    if(d < 100)
                     {
-
-                            Debug.Log("remap less than 27");
-                            d = Remap(d, 359.1992f, 311.4044f, 0.44f, 0);
+                        if (d > 4.004173f)
+                        {
+                            d = Remap(d, 0.0134f, 4.004173f, 0.45f, 0.5f);
+                        }
+                        else
+                        {
+                            d = Remap(d, 4.004173f, 51.34019f, 0.5f, 1f);
+                        }
+                            
                             //remap this value 0 to 0.397372946f
                     }
                     else
                     {
                         //Debug.Log("remap 300 range");
-                        d = Remap(d, 0.01344982f, 51.3402f , 0.45f, 1f);
+                        //if()
+                        d = Remap(d, 359.1992f, 311.5497f , 0.44f, 0f);
                     }
                     Debug.DrawLine(player.transform.position, trackedEnemy.transform.position, Color.magenta);
                     //make the camera look in a direction
@@ -348,8 +355,8 @@ public class LockOnSystem : MonoBehaviour
                         //var lerp = Mathf.Lerp(freeLook.m_XAxis.Value, freeLook.m_XAxis.Value, distanceScaler);
                         freeLook.m_XAxis.Value = look.eulerAngles.y - 180;
                         //d = Mathf.Clamp(d, 0, 1);
-                        Debug.Log(d + " is the Y axis value, true angle is " + sample);
-                        freeLook.m_YAxis.Value = d;
+                        //Debug.Log(d + " is the Y axis value, true angle is " + sample);
+                        freeLook.m_YAxis.Value = 1 - d;
                     }
                     //remap function
                     float Remap(float value, float from1, float from2, float to1, float to2)

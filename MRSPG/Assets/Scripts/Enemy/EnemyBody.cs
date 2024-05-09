@@ -155,33 +155,35 @@ public class EnemyBody : MonoBehaviour
         //add some sort of airborne check?
         if (gravityAffected)
         {
-            if(!grounded)
-                grounded = Physics.Raycast(groundCheck.position, Vector3.down, (-rb.velocity.y*Time.deltaTime) + Time.deltaTime * 2, LayerMask.GetMask("Ground", "Default"));
-        Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((-rb.velocity.y * Time.deltaTime) + Time.deltaTime * 2)), Color.red, 10);
-        if (!grounded)
-        {
-                if(dragBeforeFall==-1)
+            if (!grounded)
+                grounded = Physics.Raycast(groundCheck.position, Vector3.down, (rb.velocity.y * Time.deltaTime) + 0.3f, LayerMask.GetMask("Ground", "Default"));
+            Debug.DrawLine(groundCheck.position, groundCheck.position + (Vector3.down * ((rb.velocity.y * Time.deltaTime) + 0.3f)), Color.red, 10);
+            if (!grounded)
+            {
+                if (dragBeforeFall == -1)
                     dragBeforeFall = rb.drag;
                 rb.drag = 0;
-            airTime += Time.deltaTime;
-            DisablePathfinding();
-        }
-        else
-        {
-            if(airTime > 1)
+                airTime += Time.deltaTime;
+                DisablePathfinding();
+
+            }
+
+            else
             {
+                if (airTime > 1)
+                {
                     airTime = 0;
                     Debug.Log("floor splat");
 
-                //take fall damage
+                    //take fall damage
                     ModifyHealth(1, DamageTypes.Impact);
                     EnablePathfinding();
-                    if(me != null)
+                    if (me != null)
                         me.enabled = true;
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
-                else if(airTime > 0)
+                else if (airTime > 0)
                 {
                     airTime = 0;
                     EnablePathfinding();
@@ -190,16 +192,15 @@ public class EnemyBody : MonoBehaviour
                     rb.isKinematic = true;
                     Debug.Log(gameObject.name + " recovered from fall");
                 }
-                
+
             }
             if (dragBeforeFall != -1)
             {
                 rb.drag = dragBeforeFall;
                 dragBeforeFall = -1;
             }
-
-
         }
+
         if(dp!=null)
         {
             if (transform.position.y < dp.yStart)
@@ -337,7 +338,6 @@ public class EnemyBody : MonoBehaviour
             GetComponent<Enemy>().CanAttack = true;
             //reset variables here
         }
-        ModifyHealth(0);
         if (GetComponent<HealthBar>() != null)
             GetComponent<HealthBar>().Refresh();
 
