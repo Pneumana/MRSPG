@@ -535,6 +535,7 @@ public class LockOnSystem : MonoBehaviour
 
         if(swapTargetCD <= 0)
         {
+            swapTargetCD = 0.1f;
             if (controller.lookInput.x > 0)
             {
                 //Debug.Log("looking right");
@@ -549,7 +550,7 @@ public class LockOnSystem : MonoBehaviour
                 if (leftTrackedEnemy != null)
                     trackedEnemy = leftTrackedEnemy;
             }
-            swapTargetCD = 0.1f;
+            
         }
         
 
@@ -735,7 +736,8 @@ public class LockOnSystem : MonoBehaviour
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
             if (freeAim)
-                trackedEnemy = closestEnemy;
+                if (closestEnemy.GetComponent<EnemyBody>()._enemy.type != EnemyType.Crystal)
+                    trackedEnemy = closestEnemy;
         }
         float left = float.MinValue;
         float right = float.MaxValue;
@@ -762,8 +764,10 @@ public class LockOnSystem : MonoBehaviour
                 //right
                 if (check < right)
                 {
-                    right = check;
-                    rightTrackedEnemy = enemies[i];
+                    if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
+                        continue;
+                        right = check;
+                        rightTrackedEnemy = enemies[i];
                 }
             }
             else if(check < 0)
@@ -771,8 +775,11 @@ public class LockOnSystem : MonoBehaviour
                 //left
                 if(check > left)
                 {
-                    left = check;
+
+                    if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
+                        continue;
                     leftTrackedEnemy = enemies[i];
+                    left = check;
                 }
             }
         }
