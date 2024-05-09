@@ -104,84 +104,13 @@ public class BattleBounds : MonoBehaviour
         {
             if (sphere)
             {
-                distance = Vector3.Distance(transform.position, player.position);
-                if (distance < boundSize)
-                {
-                    inBattle = true;
-                    foreach (GameObject enemy in enemies)
-                    {
-                        if (enemy != null)
-                        {
-                            if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
-                                enemy.GetComponent<Enemy>().aggro = true;
-                        }
-                    }
-                    targetManager.battlebounds = this;
-                    damageBuildup.Stop();
-                }
-                if (inBattle && distance > boundSize && !PlayerWithinBoundary)
-                {
-                    damageBuildup.gameObject.SetActive(true);
-                    damageBuildup.transform.position = player.transform.position;
-                }
-                else if (inBattle || PlayerWithinBoundary)
-                {
-                    damageBuildup.gameObject.SetActive(false);
-                    StopCoroutine(DrainHP());
-                }
-                if (inBattle && !running && distance > boundSize && !PlayerWithinBoundary)
-                {
-                    if (targetManager.battlebounds == this)
-                    {
-                        Debug.Log("The player is leaving the battle, " + distance);
-                        StartCoroutine(DrainHP());
-                    }
-                }
+                SphereBoundary();
             }else if(box)
             {
-                distance = Vector3.Distance(transform.position, player.position);
-                if (distance < boxSize.x && distance < boxSize.z)
-                {
-                    inBattle = true;
-                    foreach (GameObject enemy in enemies)
-                    {
-                        if (enemy != null)
-                        {
-                            if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
-                                enemy.GetComponent<Enemy>().aggro = true;
-                        }
-                    }
-                    targetManager.battlebounds = this;
-                    damageBuildup.Stop();
-                }
-                if (inBattle && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
-                {
-                    damageBuildup.gameObject.SetActive(true);
-                    damageBuildup.transform.position = player.transform.position;
-                }
-                else if (inBattle || PlayerWithinBoundary)
-                {
-                    damageBuildup.gameObject.SetActive(false);
-                    StopCoroutine(DrainHP());
-                }
-                if (inBattle && !running && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
-                {
-                    if (targetManager.battlebounds == this)
-                    {
-                        Debug.Log("The player is leaving the battle, " + distance);
-                        StartCoroutine(DrainHP());
-                    }
-                }
+                CubedBoundary();
             }
         }
         else { gameObject.SetActive(false);  }
-       /* foreach(GameObject body in enemies)
-        {
-            if(body == null)
-            {
-                enemies.Remove(body);
-            }
-        }*/
     }
 
     public IEnumerator DrainHP()
@@ -207,6 +136,80 @@ public class BattleBounds : MonoBehaviour
         running = false;
     }
 
+
+    void SphereBoundary()
+    {
+        distance = Vector3.Distance(transform.position, player.position);
+        if (distance < boundSize)
+        {
+            inBattle = true;
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy != null)
+                {
+                    if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
+                        enemy.GetComponent<Enemy>().aggro = true;
+                }
+            }
+            targetManager.battlebounds = this;
+            damageBuildup.Stop();
+        }
+        if (inBattle && distance > boundSize && !PlayerWithinBoundary)
+        {
+            damageBuildup.gameObject.SetActive(true);
+            damageBuildup.transform.position = player.transform.position;
+        }
+        else if (inBattle || PlayerWithinBoundary)
+        {
+            damageBuildup.gameObject.SetActive(false);
+            StopCoroutine(DrainHP());
+        }
+        if (inBattle && !running && distance > boundSize && !PlayerWithinBoundary)
+        {
+            if (targetManager.battlebounds == this)
+            {
+                Debug.Log("The player is leaving the battle, " + distance);
+                StartCoroutine(DrainHP());
+            }
+        }
+    }
+
+    void CubedBoundary()
+    {
+        distance = Vector3.Distance(transform.position, player.position);
+        if (distance < boxSize.x && distance < boxSize.z)
+        {
+            inBattle = true;
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy != null)
+                {
+                    if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
+                        enemy.GetComponent<Enemy>().aggro = true;
+                }
+            }
+            targetManager.battlebounds = this;
+            damageBuildup.Stop();
+        }
+        if (inBattle && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
+        {
+            damageBuildup.gameObject.SetActive(true);
+            damageBuildup.transform.position = player.transform.position;
+        }
+        else if (inBattle || PlayerWithinBoundary)
+        {
+            damageBuildup.gameObject.SetActive(false);
+            StopCoroutine(DrainHP());
+        }
+        if (inBattle && !running && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
+        {
+            if (targetManager.battlebounds == this)
+            {
+                Debug.Log("The player is leaving the battle, " + distance);
+                StartCoroutine(DrainHP());
+            }
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
