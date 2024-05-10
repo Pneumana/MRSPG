@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Sounds : MonoBehaviour
@@ -15,6 +13,7 @@ public class Sounds : MonoBehaviour
 
     private void Awake ( )
     {
+        //makes sure there is an instance of this script in the scene
         instance = this;
     }
 

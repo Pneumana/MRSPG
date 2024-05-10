@@ -34,6 +34,7 @@ public class PauseMenu : MonoBehaviour
     {
         StartCoroutine ( CheckForControllers ( ) );
 
+        //If a controller is detected hides and locks the cursor
         if ( _controllerDetected == true )
         {
             Cursor.visible = false;
@@ -46,20 +47,17 @@ public class PauseMenu : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+        //makes sure the levels music is playing and that the pause menu sound is not as well as making sure the game does not think it is paused.
         lvlMusic.Play ( );
         pausedMusic.Stop ( );
-<<<<<<< Updated upstream
-        Paused();
-        Resume();
-=======
         Resume ( );
->>>>>>> Stashed changes
     }
 
     private void Update ( )
     {
         StartCoroutine( CheckForControllers ( ) );
 
+        //If controller is Detected Hides and locks the Cursor
         if ( _controllerDetected == true )
         {
             Cursor.visible = false;
@@ -71,6 +69,7 @@ public class PauseMenu : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+        //If the Pause Button is pressed Pauses the game
         if ( control.controls.Gameplay.PauseGame.IsPressed ( ) )
         {
             _isPaused = true;
@@ -197,12 +196,10 @@ public class PauseMenu : MonoBehaviour
             if ( !_controllerDetected && controllers.Length > 0 )
             {
                 _controllerDetected = true;
-                Debug.Log ( "Controller Present" );
             }
             else if ( _controllerDetected && controllers.Length == 0 )
             {
                 _controllerDetected = false;
-                Debug.Log ( "No Controller" );
             }
             yield return new WaitForSeconds ( 1f );
         }

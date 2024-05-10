@@ -42,18 +42,8 @@ public class Settings : MonoBehaviour
     [SerializeField] Slider _camSenseXAccel;
     [SerializeField] Slider _camSenseYAccel;
     [SerializeField] Toggle _fullscreenToggle;
-<<<<<<< Updated upstream
 
     [SerializeField] List<ChangeSettingData> connorSettings = new List<ChangeSettingData>();
-
-    /*
-    [SerializeField] Toggle _noAA;
-    [SerializeField] Toggle _2xAA;
-    [SerializeField] Toggle _4xAA;
-    [SerializeField] Toggle _8xAA;
-    */
-=======
->>>>>>> Stashed changes
 
     Resolution [ ] _resolutions;
 
@@ -62,6 +52,7 @@ public class Settings : MonoBehaviour
 
     private void Start ( )
     {
+        //Gets all saved Player Settings Preferences
         _sfxSlider.value = PlayerPrefs.GetFloat ( "SFX Volume" );
         _musicSlider.value = PlayerPrefs.GetFloat ( "Music Volume" );
         _antiAliasing.value = PlayerPrefs.GetInt ( "Anti Aliasing" );
@@ -77,6 +68,7 @@ public class Settings : MonoBehaviour
 
     private void Update ( )
     {
+        //Updates the Valuse of the Sounds, Music and SFX, as well as the Camera X and Y as you change the slider value
         SoundValueUpdate ( );
         CameraValueUpdate ( );
     }

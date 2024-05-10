@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Linq;
-using UnityEngine.InputSystem.XR;
 
 public class Gun : MonoBehaviour
 {

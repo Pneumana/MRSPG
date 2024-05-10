@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 
 public class MainMenu : MonoBehaviour
@@ -21,19 +20,23 @@ public class MainMenu : MonoBehaviour
 
     private void OnApplicationFocus ( bool focus )
     {
+        //Checks the computers focus
         _isPlayingGame = focus;
     }
 
     private void Awake ( )
     {
+        //Makes sure the computers focus is the game
         _isPlayingGame = true;
 
         if(_isPlayingGame == true )
         {
+            //Makes sure the correct button is the the first one selected
             EventSystem.current.SetSelectedGameObject ( _newGameButton );
 
             StartCoroutine ( CheckForControllers ( ) );
 
+            //If a controller is detected hides and locks the cursor
             if ( _controllerConnected == true )
             {
                 Cursor.visible = false;
@@ -53,6 +56,7 @@ public class MainMenu : MonoBehaviour
         {
             StartCoroutine ( CheckForControllers ( ) );
 
+            //If a controller is detected hides and locks the cursor
             if ( _controllerConnected == true )
             {
                 Cursor.visible = false;
@@ -132,12 +136,10 @@ public class MainMenu : MonoBehaviour
             if ( !_controllerConnected && controllers.Length > 0 )
             {
                 _controllerConnected = true;
-                Debug.Log ( "Controller Present" );
             }
             else if ( _controllerConnected && controllers.Length == 0 )
             {
                 _controllerConnected = false;
-                Debug.Log ( "No Controller" );
             }
             yield return new WaitForSeconds ( 1f );
         }
