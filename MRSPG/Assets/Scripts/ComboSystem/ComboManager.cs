@@ -32,6 +32,9 @@ public class ComboManager : MonoBehaviour
     public float currentPoints;
     public int currentTier;
 
+    public float pointLossPerSecond;
+    public float pointLossPerTierMultiplier;
+
     public float startedTimestamp;
     // Start is called before the first frame update
     void Start()
@@ -65,7 +68,7 @@ public class ComboManager : MonoBehaviour
 
         if(currentPoints > 0)
         {
-            currentPoints -= Time.deltaTime * 15;
+            currentPoints -= Time.deltaTime * (pointLossPerSecond * (1 + pointLossPerTierMultiplier * currentTier));
             if(currentTier< pointsPerTier.Count - 1)
             {
             while(currentPoints > pointsPerTier[currentTier])
