@@ -19,22 +19,9 @@ public class ChangeSettingData : MonoBehaviour
     }*/
     public void ChangeSetting()
     {
-        if (!SceneManager.GetSceneByName(SceneManager.GetActiveScene().name).isLoaded)
-        {
-            awakeCheck = false;
-            return;
-        }
-        Debug.Log("setting changed");
 
-        if(awakeCheck == true)
-        {
+
             Debug.Log("allowed because its not awake");
             SettingsDataHolder.inst.pulseIntensity = transform.GetComponentInChildren<Slider>().value;
-        }
-        else
-        {
-            Debug.Log("denied because it's awake");
-            awakeCheck = true;
-        }
     }
 }

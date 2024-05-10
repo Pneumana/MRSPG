@@ -10,6 +10,14 @@ public class PulseTextures : MonoBehaviour
 
     [Range(0,0.7f)]
     [SerializeField] float eyebleed = 0.5f;
+    public static PulseTextures Instance;
+
+
+    private void Awake()
+    {
+        if(Instance==null)
+            Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()

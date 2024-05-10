@@ -44,6 +44,9 @@ public class Settings : MonoBehaviour
     [SerializeField] Slider _camSenseXAccel;
     [SerializeField] Slider _camSenseYAccel;
     [SerializeField] Toggle _fullscreenToggle;
+
+    [SerializeField] List<ChangeSettingData> connorSettings = new List<ChangeSettingData>();
+
     /*
     [SerializeField] Toggle _noAA;
     [SerializeField] Toggle _2xAA;
@@ -104,6 +107,15 @@ public class Settings : MonoBehaviour
         _playerCam.m_XAxis.m_AccelTime += camSenceXAccelValue;
         PlayerPrefs.SetFloat ( "Camera X Sense" , camSenseXDecelValue );
         PlayerPrefs.SetFloat ( "Camera X Accel" , camSenceXAccelValue );
+
+        foreach(ChangeSettingData csd in connorSettings)
+        {
+            csd.ChangeSetting();
+        }
+        if (PulseTextures.Instance!=null)
+        {
+            PulseTextures.Instance.Refresh();
+        }
         }
 
     void GetResolutions ( )
