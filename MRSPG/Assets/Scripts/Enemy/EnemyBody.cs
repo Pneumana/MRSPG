@@ -79,7 +79,7 @@ public class EnemyBody : MonoBehaviour
         if(Immunities.Contains(type))
             return;
         health -= mod;
-        //Sounds.instance.PlaySFX ( "Hit Marker" );
+        Sounds.instance.PlaySFX ( "Hit Marker" );
         StartCoroutine(Wait(1f));
         if(this.GetComponent<Animator>()!=null)
             this.GetComponent<Animator>().SetBool("TakeDamage", true);
@@ -89,7 +89,7 @@ public class EnemyBody : MonoBehaviour
         if (Metronome.inst.IsOnBeat(true))
         {
             ComboManager.inst.AddEvent("On Beat Attack", 15);
-            //Sounds.instance.PlaySFX ( "On Beat" );
+            Sounds.instance.PlaySFX ( "On Beat" );
         }
 
         if(health <= 0)

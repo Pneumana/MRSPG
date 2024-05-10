@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
-using System;
 using Cinemachine;
 
 
@@ -44,6 +42,7 @@ public class Settings : MonoBehaviour
     [SerializeField] Slider _camSenseXAccel;
     [SerializeField] Slider _camSenseYAccel;
     [SerializeField] Toggle _fullscreenToggle;
+<<<<<<< Updated upstream
 
     [SerializeField] List<ChangeSettingData> connorSettings = new List<ChangeSettingData>();
 
@@ -53,6 +52,8 @@ public class Settings : MonoBehaviour
     [SerializeField] Toggle _4xAA;
     [SerializeField] Toggle _8xAA;
     */
+=======
+>>>>>>> Stashed changes
 
     Resolution [ ] _resolutions;
 
@@ -156,44 +157,6 @@ public class Settings : MonoBehaviour
     {
         antiAliasingValue = qualityIndex;
     }
-
-    /*
-    public void SetAntiAliasingTwo (int qualityIndex )
-    {
-        QualitySettings.antiAliasing = qualityIndex;
-
-        if ( _2xAA.isOn == true )
-        {
-            _noAA.isOn = false;
-            _4xAA.isOn = false;
-            _8xAA.isOn = false;
-        }
-    }
-
-    public void SetAntiAliasingFour (int qualityIndex )
-    {
-        QualitySettings.antiAliasing = qualityIndex;
-
-        if ( _4xAA.isOn == true )
-        {
-            _noAA.isOn = false;
-            _2xAA.isOn = false;
-            _8xAA.isOn = false;
-        }
-    }
-
-    public void SetAntiAliasingEight (int qualityIndex )
-    {
-        QualitySettings.antiAliasing = qualityIndex;
-
-        if ( _8xAA.isOn == true )
-        {
-            _noAA.isOn = false;
-            _2xAA.isOn = false;
-            _4xAA.isOn = false;
-        }
-    }
-    */
 
     public void SFXControl ( float sfxvolume )
     {

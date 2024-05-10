@@ -391,10 +391,10 @@ public class Enemy : MonoBehaviour
             dv.damage = Damage;
             dv.Clear();
         }
+        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         }*/
     }
     void DoneAttacking()
@@ -411,6 +411,7 @@ public class Enemy : MonoBehaviour
             dv.damage = Damage;
             dv.Clear();
         }
+        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
@@ -444,7 +445,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log("shoot");
         Animations.SetBool("Charge", false);
         Animations.Update(Time.deltaTime); 
-        //Sounds.instance.PlaySFX ( "Enemy Shoot" );
+        Sounds.instance.PlaySFX ( "Enemy Shoot" );
 
         /*LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");

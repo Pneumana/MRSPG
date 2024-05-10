@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -23,7 +20,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject _howToContinue;
     [SerializeField] GameObject _creditsContinue;
 
-    bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused;
+    bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused, _controllerDetected = false;
 
     [Space(10)]
     [Header("Needed Objects")]
@@ -34,29 +31,59 @@ public class PauseMenu : MonoBehaviour
     #endregion
 
     private void Awake ( )
-    {        
+    {
+        StartCoroutine ( CheckForControllers ( ) );
+
+        if ( _controllerDetected == true )
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            EventSystem.current.SetSelectedGameObject ( _pauseContinue );
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         lvlMusic.Play ( );
         pausedMusic.Stop ( );
+<<<<<<< Updated upstream
         Paused();
         Resume();
+=======
+        Resume ( );
+>>>>>>> Stashed changes
     }
 
     private void Update ( )
     {
+        StartCoroutine( CheckForControllers ( ) );
+
+        if ( _controllerDetected == true )
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         if ( control.controls.Gameplay.PauseGame.IsPressed ( ) )
         {
             _isPaused = true;
             Paused ( );
         }
 
-    }    
+    }
 
     public void Paused ( )
     {
         if ( _settingsOpen == false && _howToOpen == false && _creditsOpen == false )
         {
             lockOn.paused = true;
-            Cursor.visible = false;
             _pauseMenu.gameObject.SetActive ( true );
             EventSystem.current.SetSelectedGameObject ( _pauseContinue );
             _settingsMenu.gameObject.SetActive ( false );
@@ -68,7 +95,6 @@ public class PauseMenu : MonoBehaviour
         else
         {
             lockOn.paused = true;
-            Cursor.visible = false;
             _pauseMenu.gameObject.SetActive ( true );
             EventSystem.current.SetSelectedGameObject ( _pauseContinue );
             _settingsMenu.gameObject.SetActive ( false );
@@ -160,6 +186,26 @@ public class PauseMenu : MonoBehaviour
     public void BackToPause ( )
     {
         Paused ( );
+    }
+
+    IEnumerator CheckForControllers ( )
+    {
+        while ( true )
+        {
+            var controllers = Input.GetJoystickNames ( );
+
+            if ( !_controllerDetected && controllers.Length > 0 )
+            {
+                _controllerDetected = true;
+                Debug.Log ( "Controller Present" );
+            }
+            else if ( _controllerDetected && controllers.Length == 0 )
+            {
+                _controllerDetected = false;
+                Debug.Log ( "No Controller" );
+            }
+            yield return new WaitForSeconds ( 1f );
+        }
     }
 
 }
