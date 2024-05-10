@@ -14,7 +14,7 @@ public class PlayerPresenceTrigger : MonoBehaviour
         if(other.gameObject.name == "PlayerObj")
         {
             parent.TriggerAll();
-            Debug.Log("Move");
+            //Debug.Log("Move");
         }
     }
 }

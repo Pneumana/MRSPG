@@ -108,7 +108,7 @@ public class EnemyBody : MonoBehaviour
     void Die(DamageTypes type)
     {
         EnemyTracker.inst.ActiveEnemiesInScene.Remove(gameObject);
-        Debug.Log("die");
+        //Debug.Log("die");
         if (bounds != null)
         { bounds.defeated++; }
         var energy = GameObject.FindFirstObjectByType<Energy>();
@@ -173,7 +173,7 @@ public class EnemyBody : MonoBehaviour
                 if (airTime > 1)
                 {
                     airTime = 0;
-                    Debug.Log("floor splat");
+                    //Debug.Log("floor splat");
 
                     //take fall damage
                     ModifyHealth(1, DamageTypes.Impact);
@@ -181,7 +181,7 @@ public class EnemyBody : MonoBehaviour
                     if (me != null)
                         me.enabled = true;
                     rb.isKinematic = true;
-                    Debug.Log(gameObject.name + " recovered from fall");
+                    //Debug.Log(gameObject.name + " recovered from fall");
                 }
                 else if (airTime > 0)
                 {
@@ -190,7 +190,7 @@ public class EnemyBody : MonoBehaviour
                     if (me != null)
                         me.enabled = true;
                     rb.isKinematic = true;
-                    Debug.Log(gameObject.name + " recovered from fall");
+                    //Debug.Log(gameObject.name + " recovered from fall");
                 }
 
             }

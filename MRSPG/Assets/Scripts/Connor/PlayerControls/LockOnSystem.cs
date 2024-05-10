@@ -92,7 +92,7 @@ public class LockOnSystem : MonoBehaviour
     }
     private void Start()
     {
-        Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
+        //Debug.LogWarning("Screen size is " + Screen.width + "x"+Screen.height);
         energy = FindFirstObjectByType<Energy>();
         try
         {
@@ -175,7 +175,7 @@ public class LockOnSystem : MonoBehaviour
             lockon.transform.position = new Vector2(-100, -100);
             Metronome.inst.transform.localPosition = Metronome.inst.startPos;
         }
-        Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
+        //Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
     }
 
     private void Update()

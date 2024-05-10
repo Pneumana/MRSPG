@@ -178,6 +178,7 @@ public class Health : MonoBehaviour
         LockOnSystem.LOS.StopLockOn();
         currentHealth = 5;
         UIUpdateHealth();
+        GameObject.Find("PlayerObj").GetComponent<SybilLedgeGrab>().DropLedge();
         yield return null;
     }
 

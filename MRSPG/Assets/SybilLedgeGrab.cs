@@ -15,7 +15,7 @@ public class SybilLedgeGrab : MonoBehaviour
     [SerializeField] string currentState;
     public Vector3 normal;
 
-    bool grabbed;
+    public bool grabbed;
 
     [SerializeField] float ledgeJumpStr;
     bool dropping;
@@ -179,7 +179,7 @@ public class SybilLedgeGrab : MonoBehaviour
         return dir;
     }
 
-    void DropLedge()
+    public void DropLedge()
     {
         //Debug.Log("dropping ledge");
         dropping = true;

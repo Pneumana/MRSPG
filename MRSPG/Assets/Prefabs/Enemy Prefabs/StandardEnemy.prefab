@@ -5199,7 +5199,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
-  DisableAttack: 0
   CanAttack: 1
   Animations: {fileID: 0}
   PlayerIsInSight: 0
@@ -5269,7 +5268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 0228b42201078cb478fda71d208123ac, type: 2}
   health: 10000
-  dashImpact: 3
+  dashImpact: 30
   grounded: 0
   pushedBack: 0
   disablePathfinding: 0
@@ -5294,6 +5293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 3668016280016945854}
   EnemyHealthBar: {fileID: 0}
+  Trailer: {fileID: 0}
   Fill: {fileID: 0}
   gradient:
     serializedVersion: 2

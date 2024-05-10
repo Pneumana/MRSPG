@@ -171,12 +171,11 @@ public class InputControls : MonoBehaviour
 
     public IEnumerator ApplyDash(Vector3 direction, float speed, float time, bool liveUpdate, string type)
     {
-
+        if (playerObj.GetComponent<SybilLedgeGrab>().grabbed) playerObj.GetComponent<SybilLedgeGrab>().DropLedge();
         animator.SetTrigger("Dash");
         float startTime = Time.time;
         if (type == "Movement")
         {
-            
             canDash = false;
             dashing = true;
             DashParticle.Play();

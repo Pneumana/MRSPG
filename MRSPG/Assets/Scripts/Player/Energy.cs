@@ -33,7 +33,7 @@ public class Energy : MonoBehaviour
                 cells.Add(child.GetComponent<Image>());
             }
         }
-        Debug.Log("found " + cells.Count + " energy cells");
+        //Debug.Log("found " + cells.Count + " energy cells");
         UIUpdateEnergy();
 
 

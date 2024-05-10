@@ -419,7 +419,7 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator Load(int beats)
     {
-        Debug.Log(gameObject.name + " loading");
+        //Debug.Log(gameObject.name + " loading");
             /*if (Animations != null)
                 Animations.SetBool("Charge", true);*/
         Flare.SetActive(true);
@@ -441,7 +441,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Shoot(int Damage)
     {
-        Debug.Log("shoot");
+        //Debug.Log("shoot");
         Animations.SetBool("Charge", false);
         Animations.Update(Time.deltaTime); 
         //Sounds.instance.PlaySFX ( "Enemy Shoot" );
@@ -506,7 +506,7 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator StartAttack(Attack[] pattern)
     {
-        Debug.Log("start attack", gameObject);
+        //Debug.Log("start attack", gameObject);
         CanAttack = false;
         foreach (Attack attack in pattern)
         {

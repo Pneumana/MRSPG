@@ -40,7 +40,7 @@ public class CheckpointObelisk : MonoBehaviour, IEnvTriggered
         if (activated)
             return;
         activated = true;
-        Debug.Log("triggered");
+        //Debug.Log("triggered");
         player.GetComponent<Health>().currentCheckpoint = this;
         if (anim != null)
             anim.StartCoroutine("AnimateWakeUp");

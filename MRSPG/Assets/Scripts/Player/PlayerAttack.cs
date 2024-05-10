@@ -53,7 +53,7 @@ public class PlayerAttack : MonoBehaviour
         if (RecentAttack + 2 <= metronome.BeatsPassed || RecentAttack == metronome.BeatsPassed || !DealtDamage || MeleeCombo == 3) //reset melee combo conditions
         {
             if(MeleeCombo!=1)
-                Debug.LogWarning("reset combo count " + MeleeCombo + " to 1");
+                //Debug.LogWarning("reset combo count " + MeleeCombo + " to 1");
             MeleeCombo = 1;
             HealCombo = true;
         }
@@ -77,7 +77,7 @@ public class PlayerAttack : MonoBehaviour
             EnemyDir = player.transform.forward;
         }
         playerObj.GetComponent<Animator>().SetInteger("AttackChain", MeleeCombo);
-        Debug.LogWarning("processing melee combo " + MeleeCombo);
+        //Debug.LogWarning("processing melee combo " + MeleeCombo);
 
         if (MeleeCombo == 1)
         {
@@ -128,7 +128,7 @@ public class PlayerAttack : MonoBehaviour
             float zeroToOne = a / Metronome.inst.GetInterval();
             zeroToOne = Mathf.Clamp01(zeroToOne);
             playerObj.GetComponent<Animator>().SetLayerWeight(1, 1 - zeroToOne);
-            Debug.LogWarning("attack animation layer fade " + zeroToOne);
+            //Debug.LogWarning("attack animation layer fade " + zeroToOne);
             yield return new WaitForSeconds(0);
         }
 
