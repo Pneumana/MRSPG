@@ -123,7 +123,7 @@ public class LockOnSystem : MonoBehaviour
             rangeFinder.transform.SetParent(player.transform);
             rangeFinder.SetActive(false);
         }
-
+        paused = false;
         backpoint = new GameObject();
         backpoint.name = "Backpoint";
         enemyTracker.GetComponent<Image>().color = Color.clear;
