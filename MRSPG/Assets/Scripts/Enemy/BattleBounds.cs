@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class BattleBounds : MonoBehaviour
@@ -28,10 +29,12 @@ public class BattleBounds : MonoBehaviour
 
     [HideInInspector]public bool PlayerWithinBoundary;
 
+    public bool leftBattle;
+
 
     private void Awake()
     {
-        if(sphere == false && box == false)
+        if (sphere == false && box == false)
         {
             sphere = true;
         }
@@ -70,10 +73,14 @@ public class BattleBounds : MonoBehaviour
                         }
                     }
                 }
-                effectiveRange.localScale = new Vector3(boxSize.x * 2, boxSize.y * 2, boxSize.z * 2);
+                effectiveRange.localScale = new Vector3(boxSize.x, boxSize.y, boxSize.z);
+                BoxCollider bc = gameObject.AddComponent(typeof(BoxCollider)) as BoxCollider;
+                bc.size = new Vector3(boxSize.x, boxSize.y, boxSize.z);
+                bc.isTrigger = true;
             }
         }
         targetManager = GameObject.FindAnyObjectByType<TargetManager>();
+        targetManager.battlebounds = this;
     }
 
     public void RespawnAll()
@@ -118,20 +125,34 @@ public class BattleBounds : MonoBehaviour
         running = true;
         damageBuildup.Play();
         yield return new WaitForSeconds(1f);
-        if(distance > boundSize)
+        if(sphere)
         {
-            if (PlayerWithinBoundary)
+            if(distance > boundSize)
+            {
+                if (PlayerWithinBoundary)
+                {
+                    yield break;
+                }
+                else
+                {
+                    damageBurst.transform.position = player.transform.position + Vector3.down;
+                    damageBurst.Play();
+                    Debug.Log("out of bounds");
+                    player.parent.GetComponent<Health>().LoseHealth(1);
+                }
+                //play hurt particles on player
+            }
+        }else if(box)
+        {
+            if (!leftBattle)
             {
                 yield break;
             }
             else
             {
-                damageBurst.transform.position = player.transform.position + Vector3.down;
                 damageBurst.Play();
-                Debug.Log("out of bounds");
                 player.parent.GetComponent<Health>().LoseHealth(1);
             }
-            //play hurt particles on player
         }
         yield return new WaitForSeconds(.5f);
         running = false;
@@ -152,7 +173,6 @@ public class BattleBounds : MonoBehaviour
                         enemy.GetComponent<Enemy>().aggro = true;
                 }
             }
-            targetManager.battlebounds = this;
             damageBuildup.Stop();
         }
         if (inBattle && distance > boundSize && !PlayerWithinBoundary)
@@ -177,8 +197,7 @@ public class BattleBounds : MonoBehaviour
 
     void CubedBoundary()
     {
-        distance = Vector3.Distance(transform.position, player.position);
-        if (distance < boxSize.x && distance < boxSize.z)
+        if (!inBattle)
         {
             inBattle = true;
             foreach (GameObject enemy in enemies)
@@ -189,26 +208,35 @@ public class BattleBounds : MonoBehaviour
                         enemy.GetComponent<Enemy>().aggro = true;
                 }
             }
-            targetManager.battlebounds = this;
             damageBuildup.Stop();
         }
-        if (inBattle && distance > boxSize.x && distance > boxSize.z && !PlayerWithinBoundary)
-        {
-            damageBuildup.gameObject.SetActive(true);
-            damageBuildup.transform.position = player.transform.position;
-        }
-        else if (inBattle || PlayerWithinBoundary)
+        
+        if (inBattle && !leftBattle)
         {
             damageBuildup.gameObject.SetActive(false);
             StopCoroutine(DrainHP());
-        }
-        if (inBattle && !running && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
+        }else if (leftBattle)
         {
-            if (targetManager.battlebounds == this)
-            {
-                Debug.Log("The player is leaving the battle, " + distance);
+            damageBuildup.gameObject.SetActive(true);
+            damageBuildup.transform.position = player.transform.position;
+            if(!running)
                 StartCoroutine(DrainHP());
-            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            inBattle = true;
+            leftBattle = false;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            leftBattle = true;
         }
     }
     private void OnDrawGizmos()
