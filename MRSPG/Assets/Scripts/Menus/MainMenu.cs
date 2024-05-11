@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject _lvlPanel;
     [SerializeField] GameObject _tutorialButton;
 
+    [SerializeField] GameObject[] disableOtherUI;
 
     bool _controllerConnected = false;
 
@@ -59,6 +60,10 @@ public class MainMenu : MonoBehaviour
     public void NewGame ( )
     {
         _lvlPanel.SetActive ( true );
+        foreach(GameObject obj in disableOtherUI)
+        {
+            obj.SetActive(false);
+        }
         EventSystem.current.SetSelectedGameObject ( _tutorialButton );
     }
 
