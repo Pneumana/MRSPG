@@ -11,62 +11,44 @@ public class MainMenu : MonoBehaviour
     [Header("Gameobj Ref")]
     [SerializeField] GameObject _lvlPanel;
     [SerializeField] GameObject _tutorialButton;
-    [SerializeField] GameObject _newGameButton;
 
+    [SerializeField] GameObject[] disableOtherUI;
 
-    bool _controllerConnected = false, _isPlayingGame;
+    bool _controllerConnected = false;
 
     #endregion
 
-    private void OnApplicationFocus ( bool focus )
-    {
-        //Checks the computers focus
-        _isPlayingGame = focus;
-    }
-
     private void Awake ( )
     {
-        //Makes sure the computers focus is the game
-        _isPlayingGame = true;
+        StartCoroutine ( CheckForControllers ( ) );
 
-        if(_isPlayingGame == true )
+        //If a controller is detected hides and locks the cursor
+        if ( _controllerConnected == true )
         {
-            //Makes sure the correct button is the the first one selected
-            EventSystem.current.SetSelectedGameObject ( _newGameButton );
-
-            StartCoroutine ( CheckForControllers ( ) );
-
-            //If a controller is detected hides and locks the cursor
-            if ( _controllerConnected == true )
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
     private void Update ( )
     {
-        if ( _isPlayingGame == true )
-        {
-            StartCoroutine ( CheckForControllers ( ) );
+        StartCoroutine ( CheckForControllers ( ) );
 
-            //If a controller is detected hides and locks the cursor
-            if ( _controllerConnected == true )
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
+        //If a controller is detected hides and locks the cursor
+        if ( _controllerConnected == true )
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }    
 
@@ -78,6 +60,10 @@ public class MainMenu : MonoBehaviour
     public void NewGame ( )
     {
         _lvlPanel.SetActive ( true );
+        foreach(GameObject obj in disableOtherUI)
+        {
+            obj.SetActive(false);
+        }
         EventSystem.current.SetSelectedGameObject ( _tutorialButton );
     }
 
