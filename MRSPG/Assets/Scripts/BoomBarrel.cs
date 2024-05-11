@@ -103,7 +103,8 @@ public class BoomBarrel : MonoBehaviour
         DetectionAfterExplosion();
 
         yield return new WaitForSeconds ( 0.6f );
-        Destroy ( this.gameObject );
+        //Destroy ( this.gameObject );
+        gameObject.SetActive(false);
     }
 
 

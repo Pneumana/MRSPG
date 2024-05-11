@@ -164,6 +164,12 @@ public class Health : MonoBehaviour
             {
                 bb.RespawnAll();
             }
+
+            foreach (BoomBarrel bb in FindObjectsByType<BoomBarrel>( FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                bb.gameObject.SetActive(true);
+            }
+
             GameObject.Find("PlayerCam").GetComponent<CinemachineInputProvider>().enabled = true;
             GameObject.Find("PlayerCam").GetComponent<CinemachineFreeLook>().LookAt = obj.transform;
             
