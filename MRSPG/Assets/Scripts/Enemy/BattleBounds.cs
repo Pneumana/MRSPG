@@ -128,6 +128,7 @@ public class BattleBounds : MonoBehaviour
             {
                 damageBurst.transform.position = player.transform.position + Vector3.down;
                 damageBurst.Play();
+                Debug.Log("out of bounds");
                 player.parent.GetComponent<Health>().LoseHealth(1);
             }
             //play hurt particles on player
@@ -191,7 +192,7 @@ public class BattleBounds : MonoBehaviour
             targetManager.battlebounds = this;
             damageBuildup.Stop();
         }
-        if (inBattle && distance < boxSize.x && distance < boxSize.z && !PlayerWithinBoundary)
+        if (inBattle && distance > boxSize.x && distance > boxSize.z && !PlayerWithinBoundary)
         {
             damageBuildup.gameObject.SetActive(true);
             damageBuildup.transform.position = player.transform.position;
