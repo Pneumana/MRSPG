@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5295155220849103397
 Transform:
   m_ObjectHideFlags: 0
@@ -599,7 +599,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 6cf533dc63ff7e7429855d88c940c59e, type: 2}
-  DisableAttack: 0
   CanAttack: 1
   Animations: {fileID: 0}
   PlayerIsInSight: 0
@@ -694,6 +693,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 1806071533087472895}
   EnemyHealthBar: {fileID: 0}
+  Trailer: {fileID: 0}
   Fill: {fileID: 0}
   gradient:
     serializedVersion: 2

@@ -30,7 +30,24 @@ public class EnemyTracker : MonoBehaviour
     private void Update()
     {
         CheckEnemyActiveState();
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("killing all enemies");
+            StartCoroutine(KillAll());
+        }
     }
+
+    IEnumerator KillAll()
+    {
+        while(ActiveEnemiesInScene.Count > 0)
+        {
+            var go = ActiveEnemiesInScene[0];
+            if (go.GetComponent<EnemyBody>() != null)
+                go.GetComponent<EnemyBody>().Die(EnemyBody.DamageTypes.DeathPlane);
+            yield return new WaitForSeconds(0);
+        }
+    }
+
     void CheckEnemyActiveState()
     {
         if(ActiveEnemiesInScene.Count == 0)

@@ -738,7 +738,8 @@ public class LockOnSystem : MonoBehaviour
         if (trackedEnemy != closestEnemy && closestEnemy != null)
         {
             if (freeAim)
-                if (closestEnemy.GetComponent<EnemyBody>()._enemy.type != EnemyType.Crystal)
+                if(closestEnemy.GetComponent<EnemyBody>()!=null)
+                    if (closestEnemy.GetComponent<EnemyBody>()._enemy.type != EnemyType.Crystal)
                     trackedEnemy = closestEnemy;
         }
         float left = float.MinValue;
@@ -766,8 +767,9 @@ public class LockOnSystem : MonoBehaviour
                 //right
                 if (check < right)
                 {
-                    if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
-                        continue;
+                    if(enemies[i].GetComponent<EnemyBody>()!=null)
+                        if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
+                            continue;
                         right = check;
                         rightTrackedEnemy = enemies[i];
                 }
@@ -777,11 +779,11 @@ public class LockOnSystem : MonoBehaviour
                 //left
                 if(check > left)
                 {
-
-                    if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
+                    if (enemies[i].GetComponent<EnemyBody>() != null)
+                        if (enemies[i].gameObject.GetComponent<EnemyBody>()._enemy.type == EnemyType.Crystal)
                         continue;
-                    leftTrackedEnemy = enemies[i];
-                    left = check;
+                        leftTrackedEnemy = enemies[i];
+                        left = check;
                 }
             }
         }

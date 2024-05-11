@@ -70,7 +70,8 @@ public class EnemyBody : MonoBehaviour
         health = _enemy.EnemyHealth;
         if(health >= 1 && _enemy.type != EnemyType.Crystal)
         {
-            EnemyTracker.inst.ActiveEnemiesInScene.Add(gameObject);
+            if(!EnemyTracker.inst.ActiveEnemiesInScene.Contains(gameObject))
+                EnemyTracker.inst.ActiveEnemiesInScene.Add(gameObject);
         }
     }
 
@@ -105,7 +106,7 @@ public class EnemyBody : MonoBehaviour
         if (this.GetComponent<Animator>() != null)
             this.GetComponent<Animator>().SetBool("TakeDamage", false);
     }
-    void Die(DamageTypes type)
+    public void Die(DamageTypes type)
     {
         EnemyTracker.inst.ActiveEnemiesInScene.Remove(gameObject);
         //Debug.Log("die");
