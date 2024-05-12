@@ -6,11 +6,12 @@ using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
-    #region
+    #region Variables
 
     [Header("Gameobj Ref")]
     [SerializeField] GameObject _lvlPanel;
     [SerializeField] GameObject _tutorialButton;
+    [SerializeField] GameObject _newgameButton;
 
     [SerializeField] GameObject[] disableOtherUI;
 
@@ -20,6 +21,8 @@ public class MainMenu : MonoBehaviour
 
     private void Awake ( )
     {
+        EventSystem.current.SetSelectedGameObject ( _newgameButton );
+
         StartCoroutine ( CheckForControllers ( ) );
 
         //If a controller is detected hides and locks the cursor
@@ -28,7 +31,7 @@ public class MainMenu : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else
+        else if ( _controllerConnected == false )
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -45,7 +48,7 @@ public class MainMenu : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else
+        else if( _controllerConnected == false )
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -60,10 +63,23 @@ public class MainMenu : MonoBehaviour
     public void NewGame ( )
     {
         _lvlPanel.SetActive ( true );
-        foreach(GameObject obj in disableOtherUI)
+
+        if ( _controllerConnected == true )
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else if ( _controllerConnected == false )
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        foreach (GameObject obj in disableOtherUI)
         {
             obj.SetActive(false);
         }
+
         EventSystem.current.SetSelectedGameObject ( _tutorialButton );
     }
 

@@ -193,6 +193,4 @@ public class Settings : MonoBehaviour
         _camYDecelValue.text = camSenseYDecelValue.ToString ( );
         _camYAccelValue.text = camSenseYAccelValue.ToString ( );
     }
-
-   
 }

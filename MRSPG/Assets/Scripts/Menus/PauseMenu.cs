@@ -41,7 +41,7 @@ public class PauseMenu : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             EventSystem.current.SetSelectedGameObject ( _pauseContinue );
         }
-        else
+        else if ( _controllerDetected == false )
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -63,7 +63,7 @@ public class PauseMenu : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else
+        else if ( _controllerDetected == false )
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
