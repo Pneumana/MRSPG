@@ -391,10 +391,11 @@ public class Enemy : MonoBehaviour
             dv.damage = Damage;
             dv.Clear();
         }
+        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*if(Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
+           
         }*/
     }
     void DoneAttacking()
@@ -411,10 +412,11 @@ public class Enemy : MonoBehaviour
             dv.damage = Damage;
             dv.Clear();
         }
+        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity, PlayerMask))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
+            
         }*/
     }
     private IEnumerator Load(int beats)
@@ -437,15 +439,15 @@ public class Enemy : MonoBehaviour
         bullet.transform.forward = playerObj.transform.position - Gun.position;
         bullet.GetComponent<EnemyBullet>().enabled = true;
         bullet.GetComponent<EnemyBullet>().homingTarget = playerObj.transform;
+        Sounds.instance.PlaySFX ( "Enemy Shoot" );
     }
 
     private IEnumerator Shoot(int Damage)
     {
         //Debug.Log("shoot");
         Animations.SetBool("Charge", false);
-        Animations.Update(Time.deltaTime); 
-        //Sounds.instance.PlaySFX ( "Enemy Shoot" );
-
+        Animations.Update(Time.deltaTime);
+        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);

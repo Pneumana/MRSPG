@@ -33,7 +33,6 @@ public class MainMenu : MonoBehaviour
         }
         else if ( _controllerConnected == false )
         {
-            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -50,7 +49,6 @@ public class MainMenu : MonoBehaviour
         }
         else if( _controllerConnected == false )
         {
-            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
     }    
@@ -71,7 +69,6 @@ public class MainMenu : MonoBehaviour
         }
         else if ( _controllerConnected == false )
         {
-            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 

@@ -43,7 +43,6 @@ public class PauseMenu : MonoBehaviour
         }
         else if ( _controllerDetected == false )
         {
-            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -65,7 +64,6 @@ public class PauseMenu : MonoBehaviour
         }
         else if ( _controllerDetected == false )
         {
-            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
