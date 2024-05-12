@@ -108,7 +108,8 @@ public class Health : MonoBehaviour
 
     void UIUpdateHealth ( )
     {
-        _healthImg.sprite = _healthSprite[_healthSprite.Length - (currentHealth + 1)];
+        var sanitized = Mathf.Clamp(_healthSprite.Length - (currentHealth + 1), 0, _healthSprite.Length - 1);
+        _healthImg.sprite = _healthSprite[sanitized];
 
         /*if ( currentHealth == 5 )
         {
@@ -130,7 +131,7 @@ public class Health : MonoBehaviour
         {
             _healthImg.sprite = _healthSprite [ 4 ];
         }*/
-        if ( currentHealth == 0 )
+        if ( currentHealth <= 0 )
         {
             _healthImg.sprite = _healthSprite [ 5 ];
             StartCoroutine(Die());
