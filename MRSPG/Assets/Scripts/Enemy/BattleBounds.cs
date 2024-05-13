@@ -57,6 +57,9 @@ public class BattleBounds : MonoBehaviour
                     }
                 }
                 effectiveRange.localScale = new Vector3(boundSize * 2, boundSize * 2, boundSize * 2);
+                SphereCollider sc = gameObject.AddComponent(typeof(SphereCollider)) as SphereCollider;
+                sc.radius = boundSize;
+                sc.isTrigger = true;
             }
             else if(box)
             {
@@ -108,13 +111,7 @@ public class BattleBounds : MonoBehaviour
         effectiveRange.GetComponent<MeshRenderer>().material.SetVector("_playerPosition", player.position);
         if(enemies.Count > defeated)
         {
-            if (sphere)
-            {
-                SphereBoundary();
-            }else if(box)
-            {
-                CubedBoundary();
-            }
+            ActiveBoundary();
         }
         else { gameObject.SetActive(false);  }
     }
@@ -124,77 +121,20 @@ public class BattleBounds : MonoBehaviour
         running = true;
         damageBuildup.Play();
         yield return new WaitForSeconds(1f);
-        if(sphere)
+        if (!leftBattle)
         {
-            if(distance > boundSize)
-            {
-                if (PlayerWithinBoundary)
-                {
-                    yield break;
-                }
-                else
-                {
-                    damageBurst.transform.position = player.transform.position + Vector3.down;
-                    damageBurst.Play();
-                    Debug.Log("out of bounds");
-                    player.parent.GetComponent<Health>().LoseHealth(1);
-                }
-                //play hurt particles on player
-            }
-        }else if(box)
+            yield break;
+        }
+        else
         {
-            if (!leftBattle)
-            {
-                yield break;
-            }
-            else
-            {
-                damageBurst.Play();
-                player.parent.GetComponent<Health>().LoseHealth(1);
-            }
+            damageBurst.Play();
+            player.parent.GetComponent<Health>().LoseHealth(1);
         }
         yield return new WaitForSeconds(.5f);
         running = false;
     }
 
-
-    void SphereBoundary()
-    {
-        distance = Vector3.Distance(transform.position, player.position);
-        if (distance < boundSize)
-        {
-            inBattle = true;
-            foreach (GameObject enemy in enemies)
-            {
-                if (enemy != null)
-                {
-                    if (!enemy.GetComponent<Enemy>().aggro && enemy.activeInHierarchy)
-                        enemy.GetComponent<Enemy>().aggro = true;
-                }
-            }
-            damageBuildup.Stop();
-        }
-        if (inBattle && distance > boundSize && !PlayerWithinBoundary)
-        {
-            damageBuildup.gameObject.SetActive(true);
-            damageBuildup.transform.position = player.transform.position;
-        }
-        else if (inBattle || PlayerWithinBoundary)
-        {
-            damageBuildup.gameObject.SetActive(false);
-            StopCoroutine(DrainHP());
-        }
-        if (inBattle && !running && distance > boundSize && !PlayerWithinBoundary)
-        {
-            if (targetManager.battlebounds == this)
-            {
-                Debug.Log("The player is leaving the battle, " + distance);
-                StartCoroutine(DrainHP());
-            }
-        }
-    }
-
-    void CubedBoundary()
+    void ActiveBoundary()
     {
         if (!inBattle)
         {
