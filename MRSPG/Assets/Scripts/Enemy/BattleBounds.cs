@@ -136,9 +136,8 @@ public class BattleBounds : MonoBehaviour
 
     void ActiveBoundary()
     {
-        if (!inBattle)
+        if (inBattle && !leftBattle)
         {
-            inBattle = true;
             foreach (GameObject enemy in enemies)
             {
                 if (enemy != null)
