@@ -494,7 +494,7 @@ public class Enemy : MonoBehaviour
         Debug.Log("boss go spinny");
         if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity))
         {
-            _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
+            //_enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
             Sounds.instance.PlaySFX ( "Boss Hit Marker" );
         }
     }

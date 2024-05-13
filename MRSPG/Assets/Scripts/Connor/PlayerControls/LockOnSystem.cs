@@ -733,6 +733,10 @@ public class LockOnSystem : MonoBehaviour
             closestTarget.GetComponent<Image>().sprite = lockedSprite;
             if(!freeAim)
                 closestTarget.GetComponent<Image>().color = Color.clear;
+            else
+            {
+                closestTarget.GetComponent<Image>().color = Color.white;
+            }
         }
 
         if (trackedEnemy != closestEnemy && closestEnemy != null)
