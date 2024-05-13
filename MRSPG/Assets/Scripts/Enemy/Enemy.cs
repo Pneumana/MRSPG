@@ -433,7 +433,8 @@ public class Enemy : MonoBehaviour
 
     public void LaunchProjectile()
     {
-        
+        if (!PlayerIsInSight)
+            return;
         GameObject bullet = Instantiate(ranged_enemy.Bullet);
         bullet.transform.position = Gun.position;
         bullet.transform.forward = playerObj.transform.position - Gun.position;
