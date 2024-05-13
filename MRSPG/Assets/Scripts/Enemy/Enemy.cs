@@ -440,8 +440,8 @@ public class Enemy : MonoBehaviour
         bullet.transform.forward = playerObj.transform.position - Gun.position;
         bullet.GetComponent<EnemyBullet>().enabled = true;
         bullet.GetComponent<EnemyBullet>().homingTarget = playerObj.transform;
-        //Sounds.instance.PlaySFX ( "Enemy Shoot" );
-        AudioSource.PlayClipAtPoint(Sounds.instance.sfx_enemyShoot, transform.position);
+        Sounds.instance.PlaySFX ( "Enemy Shoot" );
+        //AudioSource.PlayClipAtPoint(Sounds.instance.sfx_enemyShoot, transform.position);
     }
 
     private IEnumerator Shoot(int Damage)
