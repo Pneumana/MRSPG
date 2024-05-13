@@ -495,7 +495,7 @@ public class Enemy : MonoBehaviour
         if (Physics.CheckBox(transform.position + transform.forward, _enemy.Hitbox, Quaternion.identity))
         {
             _enemy.PlayerSettings.GetComponent<Health>().LoseHealth(Damage);
-            //Sounds.instance.PlaySFX ( "Boss Hit Marker" );
+            Sounds.instance.PlaySFX ( "Boss Hit Marker" );
         }
     }
     private IEnumerator EndLag(int beats)

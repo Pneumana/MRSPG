@@ -179,7 +179,7 @@ public class InputControls : MonoBehaviour
             canDash = false;
             dashing = true;
             DashParticle.Play();
-            //Sounds.instance.PlaySFX ( "Dash" );
+            Sounds.instance.PlaySFX ( "Dash" );
         }
         while (Time.time < startTime + time)
         {
