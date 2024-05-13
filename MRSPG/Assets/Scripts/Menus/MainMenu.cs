@@ -15,13 +15,23 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] GameObject[] disableOtherUI;
 
-    bool _controllerConnected = false;
+    bool _controllerConnected = false, _isPlaying=true;
 
     #endregion
+
+    private void OnApplicationFocus ( bool focus )
+    {
+        _isPlaying = focus;
+    }
 
     private void Awake ( )
     {
         EventSystem.current.SetSelectedGameObject ( _newgameButton );
+
+        if (_isPlaying==true )
+        {
+            Cursor.visible = false;
+        }
 
         StartCoroutine ( CheckForControllers ( ) );
 
@@ -33,6 +43,7 @@ public class MainMenu : MonoBehaviour
         }
         else if ( _controllerConnected == false )
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -41,14 +52,20 @@ public class MainMenu : MonoBehaviour
     {
         StartCoroutine ( CheckForControllers ( ) );
 
+        if (_isPlaying==true)
+        {
+            Cursor.visible = false;
+        }
+
         //If a controller is detected hides and locks the cursor
         if ( _controllerConnected == true )
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else if( _controllerConnected == false )
+        else if ( _controllerConnected == false )
         {
+            Cursor.visible= false;
             Cursor.lockState = CursorLockMode.None;
         }
     }    

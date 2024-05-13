@@ -20,7 +20,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject _howToContinue;
     [SerializeField] GameObject _creditsContinue;
 
-    bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused, _controllerDetected = false;
+    bool _settingsOpen, _howToOpen, _creditsOpen, _isPaused, _controllerDetected = false, _isPlaying = true;
 
     [Space(10)]
     [Header("Needed Objects")]
@@ -30,9 +30,20 @@ public class PauseMenu : MonoBehaviour
 
     #endregion
 
+
+    private void OnApplicationFocus ( bool focus )
+    {
+        _isPlaying = focus;
+    }
+
     private void Awake ( )
     {
         StartCoroutine ( CheckForControllers ( ) );
+
+        if( _isPlaying==true )
+        {
+            Cursor.visible = false;
+        }
 
         //If a controller is detected hides and locks the cursor
         if ( _controllerDetected == true )
@@ -43,6 +54,7 @@ public class PauseMenu : MonoBehaviour
         }
         else if ( _controllerDetected == false )
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -56,6 +68,11 @@ public class PauseMenu : MonoBehaviour
     {
         StartCoroutine( CheckForControllers ( ) );
 
+        if( _isPlaying==true )
+        {
+            Cursor.visible= false;
+        }
+
         //If controller is Detected Hides and locks the Cursor
         if ( _controllerDetected == true )
         {
@@ -64,6 +81,7 @@ public class PauseMenu : MonoBehaviour
         }
         else if ( _controllerDetected == false )
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.None;
         }
 
