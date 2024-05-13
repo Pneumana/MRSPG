@@ -439,7 +439,8 @@ public class Enemy : MonoBehaviour
         bullet.transform.forward = playerObj.transform.position - Gun.position;
         bullet.GetComponent<EnemyBullet>().enabled = true;
         bullet.GetComponent<EnemyBullet>().homingTarget = playerObj.transform;
-        Sounds.instance.PlaySFX ( "Enemy Shoot" );
+        //Sounds.instance.PlaySFX ( "Enemy Shoot" );
+        AudioSource.PlayClipAtPoint(Sounds.instance.sfx_enemyShoot, transform.position);
     }
 
     private IEnumerator Shoot(int Damage)
@@ -447,7 +448,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log("shoot");
         Animations.SetBool("Charge", false);
         Animations.Update(Time.deltaTime);
-        Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
+        //Sounds.instance.PlaySFX ( "Enemy Hit Marker" );
         /*LayerMask Player = LayerMask.GetMask("Player");
         LayerMask Enemy = LayerMask.GetMask("Enemy");
         GameObject bullet = Instantiate(ranged_enemy.Bullet, Gun.position, Quaternion.identity);
