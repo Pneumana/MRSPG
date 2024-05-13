@@ -18,7 +18,14 @@ public class EnemyAbsenceTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //this is horrible
+        foreach(EnemyBody body in enemies)
+        {
+            if (!body.gameObject.activeInHierarchy)
+            {
+                UpdateEnemyList(body, true);
+            }
+        }
     }
 
     public void UpdateEnemyList(EnemyBody removed, bool dead)

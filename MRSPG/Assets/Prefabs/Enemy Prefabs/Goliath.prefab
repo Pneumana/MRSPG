@@ -54,7 +54,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 11400000, guid: 33c9da18514c7ef40b1a314806ddd10c, type: 2}
-  DisableAttack: 0
+  CanAttack: 1
+  Animations: {fileID: 0}
   PlayerIsInSight: 0
   LookAt: 1
   aggro: 0
@@ -427,7 +428,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4646564856642786921
 Transform:
   m_ObjectHideFlags: 0

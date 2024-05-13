@@ -15,7 +15,7 @@ public class HealthBar : MonoBehaviour
     private float target;
     private bool running;
 
-    private void Start()
+    private void Awake()
     {
         max = enemy._enemy.EnemyHealth;
         EnemyHealthBar = transform.Find("EnemyCanvas").transform.Find("HealthBorder").GetComponent<Image>();
@@ -25,7 +25,8 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        enemy.health = (int)max;
+        //enemy.health = (int)max;
+        Refresh();
     }
 
     private void Update()
@@ -57,6 +58,6 @@ public class HealthBar : MonoBehaviour
     {
         StopAllCoroutines();
         running = false;
-        Fill.fillAmount = enemy._enemy.EnemyHealth;
+        Fill.fillAmount = 1;
     }
 }
