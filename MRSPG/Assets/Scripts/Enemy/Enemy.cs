@@ -547,7 +547,13 @@ public class Enemy : MonoBehaviour
                         if (PlayerIsInSight == true) StartCoroutine(Shoot(ranged_enemy.BulletDamage));
                         break;
                     case Attack.Spin:
+                        if (Animations != null)
+                            Animations.SetTrigger("Spin");
                         if (PlayerIsInSight == true) SpinAttack(_enemy.Damage);
+                        break;
+                    case Attack.Lunge:
+                        if (Animations != null)
+                            Animations.SetTrigger("Lunge");
                         break;
                     case Attack.Lag:
                         if (PlayerIsInSight == true) StartCoroutine(EndLag(1));
