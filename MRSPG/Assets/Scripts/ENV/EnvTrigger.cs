@@ -44,7 +44,7 @@ public class EnvTrigger : MonoBehaviour
             yield return new WaitForSeconds(Metronome.inst.interval);
         }
         int loops = 0;
-        if(triggers.Count < 0)
+        if(triggers.Count > 0)
         {
             do
             {

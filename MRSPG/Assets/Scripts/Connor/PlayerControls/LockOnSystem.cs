@@ -626,9 +626,9 @@ public class LockOnSystem : MonoBehaviour
                 else
                     targetTime = maxTimeScale;
                 UpdateTargetUI();
-            }
-            else
-            {
+        }
+        else
+        {
             targetTime = maxTimeScale;
             if (subtractEnergy != null)
                     StopCoroutine(subtractEnergy);
@@ -638,7 +638,19 @@ public class LockOnSystem : MonoBehaviour
             if (remainingTime >= 0)
                 remainingTime -= Time.unscaledDeltaTime;
                 targetTime = minTimeScale;
+            showTarget();
         }
+
+        void showTarget()
+        {
+            if (freeAim)
+                enemyTracker.GetComponent<Image>().color = Color.white;
+            else
+            {
+                enemyTracker.GetComponent<Image>().color = Color.clear;
+            }
+        }
+
     }
     //Specifically ran for the time slowdown ending
     public void InputEventEndSlowDown(bool dontSwapPositions = false)
@@ -662,6 +674,7 @@ public class LockOnSystem : MonoBehaviour
             HideTargets();
 
             rangeFinder.SetActive(false);
+
         }
         
     }
@@ -817,6 +830,7 @@ public class LockOnSystem : MonoBehaviour
 
     public void HideTargets()
     {
+        enemyTracker.GetComponent<Image>().color = Color.clear;
         foreach (GameObject targeter in targeters)
         {
             Destroy(targeter);
