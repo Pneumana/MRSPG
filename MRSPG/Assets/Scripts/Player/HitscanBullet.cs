@@ -56,6 +56,7 @@ public class HitscanBullet : MonoBehaviour
                         if (body != null)
                         {
                             body.ModifyHealth(5);
+                            Debug.Log("hurting " + body.gameObject.name);
                         }
                         //var AI = hit.collider.gameObject.GetComponent<CircleStrafePlayerAI>();
                         /*if (AI != null)
@@ -85,7 +86,7 @@ public class HitscanBullet : MonoBehaviour
             if (enemyCast.Length > 0)
             {
                 Debug.Log("Hit enemy x " + enemyCast.Length + " " + enemyCast[0].collider.gameObject.name, enemyCast[0].collider.gameObject);
-                enemyCast[0].collider.gameObject.SetActive(false);
+                //enemyCast[0].collider.gameObject.SetActive(false);
                 //Destroy(enemyCast[0].collider.gameObject);
 
                 foreach (RaycastHit hit in enemyCast)
@@ -93,6 +94,12 @@ public class HitscanBullet : MonoBehaviour
                     Debug.DrawLine(transform.position, hit.point, Color.red, 10);
                     if (hit.collider != null)
                     {
+                        var body = hit.collider.gameObject.GetComponent<EnemyBody>();
+                        if (body != null)
+                        {
+                            body.ModifyHealth(5);
+                            Debug.Log("hurting " + body.gameObject.name);
+                        }
                         var AI = hit.collider.gameObject.GetComponent<CircleStrafePlayerAI>();
                         if (AI != null)
                         {

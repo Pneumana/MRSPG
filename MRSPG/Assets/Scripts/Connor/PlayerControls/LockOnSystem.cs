@@ -155,7 +155,11 @@ public class LockOnSystem : MonoBehaviour
                 lockon.transform.position = trackedScreenPos;
                 if (!freeAim)
                 {
-                    Metronome.inst.transform.position = trackedScreenPos;
+                    if (Metronome.inst.transform.parent.parent != null)
+                    {
+                        //Metronome.inst.transform.parent.transform.SetParent(null);
+                    }
+                    Metronome.inst.GetComponent<RectTransform>().anchoredPosition = trackedScreenPos + ((Screen.width/2) * Vector3.left);
                     //lockon.color = new Color(1, 1, 1, 1);
                 }
                 else
@@ -167,13 +171,23 @@ public class LockOnSystem : MonoBehaviour
             else
             {
                 lockon.transform.position = new Vector2(-100, -100);
-                Metronome.inst.transform.localPosition = Metronome.inst.startPos;
+                if (Metronome.inst.transform.parent.parent == null)
+                {
+                    //Metronome.inst.transform.parent.transform.SetParent(GameObject.Find("Canvas").transform);
+                    Metronome.inst.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 230); ;
+                }
             }
         }
         else
         {
             lockon.transform.position = new Vector2(-100, -100);
-            Metronome.inst.transform.localPosition = Metronome.inst.startPos;
+            if(Metronome.inst.transform.parent.parent == null)
+            {
+                Metronome.inst.transform.parent.transform.SetParent(GameObject.Find("Canvas").transform);
+                Metronome.inst.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 230); ;
+            }
+            
+
         }
         //Debug.Log(Camera.main.gameObject.transform.rotation.eulerAngles.x);
     }

@@ -45,7 +45,7 @@ public class Metronome : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        startPos = transform.localPosition;
+        startPos = new Vector3(0, 230);
         intervalMax = GetInterval();
         try
         {

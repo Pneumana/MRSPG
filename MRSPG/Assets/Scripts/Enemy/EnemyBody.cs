@@ -109,7 +109,7 @@ public class EnemyBody : MonoBehaviour
     public void Die(DamageTypes type)
     {
         EnemyTracker.inst.ActiveEnemiesInScene.Remove(gameObject);
-        //Debug.Log("die");
+        Debug.Log(gameObject.name + "died");
         if (bounds != null)
         { bounds.defeated++; }
         var energy = GameObject.FindFirstObjectByType<Energy>();
