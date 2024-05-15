@@ -17,7 +17,7 @@ public class BossEnd : MonoBehaviour
     {
         if(body.health <= 0)
         {
-            SceneManager.LoadScene("Level 1.5");
+            SceneManager.LoadScene("Hospital");
         }
     }
 }
